@@ -18,6 +18,8 @@ class CreateFormCompletionsTable extends Migration
             $table->timestamps();
 
             //fk: form_id
+            $table->foreignId('form_id')->constrained('forms');
+
         });
     }
 

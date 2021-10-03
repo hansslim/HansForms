@@ -19,6 +19,9 @@ class CreateBooleanInputsAnswersTable extends Migration
             $table->timestamps();
 
             //fk: form_completion_id, boolean_input_id
+            $table->foreignId('form_completion_id')->constrained('form_completions');
+            $table->foreignId('boolean_input_id')->constrained('boolean_inputs');
+
         });
     }
 

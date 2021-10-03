@@ -22,6 +22,8 @@ class CreateInputElementsTable extends Migration
             $table->timestamps();
 
             //fk: form_element_id
+            $table->foreignId('form_element_id')->constrained('form_elements');
+
         });
     }
 
