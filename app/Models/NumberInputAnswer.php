@@ -8,4 +8,18 @@ use Illuminate\Database\Eloquent\Model;
 class NumberInputAnswer extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'value',
+        'form_completion_id',
+        'number_input_id'
+    ];
+
+    public function formCompletion() {
+        return $this->belongsTo(FormCompletion::class);
+    }
+
+    public function numberInput() {
+        return $this->belongsTo(NumberInput::class);
+    }
 }
