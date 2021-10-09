@@ -20,8 +20,8 @@ class CreateNumberInputsTable extends Migration
             $table->boolean("can_be_decimal")->nullable();
             $table->timestamps();
 
-            //fk: form_input_id
-            $table->foreignId('form_element_id')->constrained('form_elements');
+            //fk: input_element_id
+            $table->foreignId('input_element_id')->constrained('input_elements');
 
         });
     }
