@@ -8,10 +8,11 @@
     <title>Document</title>
 </head>
 <body>
-    @if ($forms->count() >= 1)
+    {{--@if ($forms->count() >= 1)
     @foreach($forms as $form)
         <p>{{$form}}</p>
     @endforeach
-    @endif
+    @endif--}}
+test
 </body>
 </html>
