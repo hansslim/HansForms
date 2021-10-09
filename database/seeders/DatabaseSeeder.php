@@ -40,7 +40,7 @@ class DatabaseSeeder extends Seeder
 
         $myForm = Form::factory()->create(['user_id' => 1]);
 
-        for ($i = 0; $i < 30; $i++) {
+        for ($i = 0; $i < 15; $i++) {
             $formElement = FormElement::create([
                 'order' => $i,
                 'form_id' => $myForm->id
@@ -49,10 +49,23 @@ class DatabaseSeeder extends Seeder
                 $inputElement = InputElement::factory()->create(['form_element_id' => $formElement->id]);
 
                 $randomInput = random_int(0,1);
+                //error_log($randomInput);
                 switch ($randomInput) {
-                    case 0: NumberInput::create(['input_element_id' => $inputElement->id]); break;
-                    case 1: TextInput::create(['input_element_id' => $inputElement->id]); break;
-                    default: BooleanInput::create(['input_element_id' => $inputElement->id]); break;
+                    case 0:
+                    {
+                        NumberInput::create(['input_element_id' => $inputElement->id]);
+                        break;
+                    }
+                    case 1:
+                    {
+                        TextInput::create(['input_element_id' => $inputElement->id]);
+                        break;
+                    }
+                    default:
+                    {
+                        BooleanInput::create(['input_element_id' => $inputElement->id]);
+                        break;
+                    }
                 }
             }
             else {
