@@ -8,11 +8,14 @@
     <title>Document</title>
 </head>
 <body>
-    {{--@if ($forms->count() >= 1)
-    @foreach($forms as $form)
-        <p>{{$form}}</p>
-    @endforeach
-    @endif--}}
-test
+@if ($forms->count() >= 1)
+@foreach($forms as $form)
+    type: {{$form->type}}<br>
+    question: {{$form->header}}<br>
+    id: {{$form->input_element_id}}<br>
+    order: {{$form->order}}<br>
+    <br><br>
+@endforeach
+@endif
 </body>
 </html>
