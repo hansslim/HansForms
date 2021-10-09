@@ -40,7 +40,7 @@ class DatabaseSeeder extends Seeder
 
         $myForm = Form::factory()->create(['user_id' => 1]);
 
-        for ($i = 0; $i < 5; $i++) {
+        for ($i = 0; $i < 30; $i++) {
             $formElement = FormElement::create([
                 'order' => $i,
                 'form_id' => $myForm->id
@@ -48,7 +48,7 @@ class DatabaseSeeder extends Seeder
             if ($i !== 3) {
                 $inputElement = InputElement::factory()->create(['form_element_id' => $formElement->id]);
 
-                $randomInput = random_int(0,2);
+                $randomInput = random_int(0,1);
                 switch ($randomInput) {
                     case 0: NumberInput::create(['input_element_id' => $inputElement->id]); break;
                     case 1: TextInput::create(['input_element_id' => $inputElement->id]); break;

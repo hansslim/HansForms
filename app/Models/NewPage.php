@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class NewPage extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'form_element_id'
+    ];
 }

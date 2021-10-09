@@ -13,4 +13,16 @@ class FormElement extends Model
         'order',
         'form_id'
     ];
+
+    public function form() {
+        return $this->belongsTo(Form::class);
+    }
+
+    public function inputElements(){
+        return $this->hasMany(InputElement::class);
+    }
+
+    public function newPages(){
+        return $this->hasMany(NewPage::class);
+    }
 }
