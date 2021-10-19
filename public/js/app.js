@@ -37825,13 +37825,20 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { attrs: { id: "main" } }, [
-    _c("header", [_c("app-header")], 1),
-    _vm._v(" "),
-    _c("main", [_c("div", [_c("login")], 1)])
-  ])
+  return _vm._m(0)
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { attrs: { id: "main" } }, [
+      _c("header"),
+      _vm._v(" "),
+      _c("main", [_c("div")])
+    ])
+  }
+]
 render._withStripped = true
 
 
