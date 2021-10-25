@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Form;
+use Illuminate\Support\Facades\Auth;
 
 class FormsController extends Controller
 {
@@ -11,9 +13,9 @@ class FormsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return "haf";
+        return Form::where(['user_id' => Auth::user()->id])->get();
     }
 
     /**
@@ -33,9 +35,9 @@ class FormsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($slug)
     {
-        //
+        return Form::where(['slug' => $slug])->first();
     }
 
     /**

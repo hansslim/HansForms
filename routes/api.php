@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FormsController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,19 +16,22 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/login', [UserController::class, 'login']);
+Route::post('/register', [UserController::class, 'register']);
+Route::get('/logged_user', [UserController::class, 'show']);
+
 Route::post('/form/{slug}', [FormsController::class, 'show']);
 
+//require user privileges
 Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::get('/forms', [FormsController::class, 'index']);
     Route::put('/forms/{id}', [FormsController::class, 'update']);
     Route::post('/forms', [FormsController::class, 'store']);
     Route::delete('/forms/{id}', [FormsController::class, 'destroy']);
 
-    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/logout', [UserController::class, 'logout']);
 });
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+/*Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
-});
+});*/
