@@ -14,6 +14,12 @@ class FormElement extends Model
         'form_id'
     ];
 
+    protected $visible = [
+        'order',
+        'inputElements',
+        'newPages'
+    ];
+
     protected $with = ['inputElements', 'newPages'];
 
     public function form() {

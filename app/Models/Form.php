@@ -18,6 +18,15 @@ class Form extends Model
       'user_id'
     ];
 
+    protected $visible = [
+        'slug',
+        'name',
+        'description',
+        'end_time',
+        'formElements',
+        'user'
+    ];
+
     protected $with = ['formElements'];
 
     public function user() {

@@ -16,6 +16,25 @@ class InputElement extends Model
         'form_element_id'
     ];
 
+    protected $visible = [
+        'header',
+        'description',
+        'is_mandatory',
+        'booleanInput',
+        'dateInput',
+        'textInput',
+        'numberInput',
+        'selectInput'
+    ];
+
+    protected $with = [
+        'booleanInput',
+        'dateInput',
+        'textInput',
+        'numberInput',
+        'selectInput'
+    ];
+
     public function formElement() {
         return $this->belongsTo(FormElement::class);
     }

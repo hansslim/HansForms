@@ -17,7 +17,9 @@ class FormsController extends Controller
      */
     public function index(Request $request)
     {
-        return Form::where(['user_id' => Auth::user()->id])->get();
+        return Form::where('user_id', Auth::user()->id)
+            ->without('formElements', 'user')
+            ->get();
     }
 
     /**
@@ -39,44 +41,15 @@ class FormsController extends Controller
      */
     public function show($slug)
     {
-        /*$response = [
-            'textInputs' => [],
-            'numberInputs' => [],
-            'booleanInputs' => [],
-            'dateInputs' => [],
-            //'selectInputs' => [] //todo:
-        ];*/
+        $form = Form::where('slug', $slug)
+            ->with("user")
+            ->first();
+        if ($form) {
+            unset($form->user->email);
+        }
+        return $form;
 
-        /*//textInputs
-        $response['textInputs'] = DB::table('forms')
-            ->join('form_elements', 'forms.id', '=', 'form_elements.form_id')
-            ->join('input_elements', 'form_elements.id', '=', 'input_elements.form_element_id')
-            ->join('text_inputs', 'input_elements.id', '=', 'text_inputs.input_element_id')
-            ->select('input_element_id', "form_elements.order", "input_elements.header")
-            ->where("forms.slug", $slug)
-            ->get();
 
-        //numberInputs
-        $response['numberInputs'] = DB::table('forms')
-            ->join('form_elements', 'forms.id', '=', 'form_elements.form_id')
-            ->join('input_elements', 'form_elements.id', '=', 'input_elements.form_element_id')
-            ->join('number_inputs', 'input_elements.id', '=', 'number_inputs.input_element_id')
-            ->select('input_element_id', "form_elements.order", "input_elements.header")
-            ->where("forms.slug", $slug)
-            ->get();
-
-        //booleanInputs
-        $response['numberInputs'] = DB::table('forms')
-            ->join('form_elements', 'forms.id', '=', 'form_elements.form_id')
-            ->join('input_elements', 'form_elements.id', '=', 'input_elements.form_element_id')
-            ->join('boolean_inputs', 'input_elements.id', '=', 'boolean_inputs.input_element_id')
-            ->select('input_element_id', "form_elements.order", "input_elements.header")
-            ->where("forms.slug", $slug)
-            ->get();*/
-
-        return Form::where('slug', $slug)->get();
-
-        //return $response;
     }
 
     /**
