@@ -20,7 +20,7 @@ Route::post('/login', [UserController::class, 'login']);
 Route::post('/register', [UserController::class, 'register']);
 Route::get('/logged_user', [UserController::class, 'show']);
 
-Route::post('/form/{slug}', [FormsController::class, 'show']);
+Route::get('/form/{slug}', [FormsController::class, 'show']);
 
 //require user privileges
 Route::group(['middleware' => ['auth:sanctum']], function() {

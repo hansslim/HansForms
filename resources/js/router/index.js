@@ -7,6 +7,7 @@ import Register from "../views/Register.vue";
 
 import store from "../store";
 import Profile from "../views/Profile";
+import Form from "../views/Form";
 
 Vue.use(VueRouter);
 
@@ -39,11 +40,10 @@ const routes = [
         component: Profile,
         meta: { requiresAuth: true }
     },
-    { //todo: nastudovat formát přesměrování
-        path: "/form/:{slug}",
+    {
+        path: "/form/:slug",
         name: "form",
-        component: Home
-
+        component: Form,
     },
 ];
 

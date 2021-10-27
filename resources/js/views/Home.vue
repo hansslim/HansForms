@@ -10,7 +10,7 @@
       <div v-else>
           <h1>Welcome, {{this.$store.getters['user'].name}}.</h1>
           <hr>
-          <FormPreview v-for="form in forms" :key="form.id" :created_at="form.created_at" :description="form.description" :name="form.name" :slug="form.slug"></FormPreview>
+          <FormPreview v-for="form in forms" :key="form.id" :created_at="form.created_at" :description="form.description" :name="form.name" :slug="getSlugPath(form)"></FormPreview>
       </div>
 
 
@@ -40,7 +40,13 @@ export default {
                 this.forms = getforms.data;
             }
 
+        },
+        getSlugPath(form) {
+            if (this.forms !== {} && form !== null) {
+                return "/form/" + form.slug;
+            }
         }
+
     }
 };
 </script>
