@@ -1,9 +1,9 @@
 <template>
     <div>
         <div v-if="!this.loading">
-            <div>{{this.form.name}}</div>
-            <div>{{this.form.description}}</div>
-            <form-element v-for="item in this.form.form_elements" :obj="item"></form-element>
+            <h1>{{this.form.name}}</h1>
+            <h3>{{this.form.description}}</h3>
+            <form-element v-for="item in this.form.form_elements" :obj="item" :key="item.order"></form-element>
         </div>
         <div v-else>
             {{"loading"}}
@@ -28,7 +28,9 @@ export default {
     async mounted() {
         this.slug = this.getSlug();
         await this.getThisForm().then(()=> {
+            this.sortElements();
             this.loading = false;
+
         });
 
     },
@@ -39,6 +41,17 @@ export default {
         },
         getSlug() {
             return this.$route.params['slug'] ?? '';
+        },
+        sortElements() {
+            this.form.form_elements.sort(( a, b ) => {
+                if ( a.order < b.order ){
+                    return -1;
+                }
+                if ( a.order > b.order ){
+                    return 1;
+                }
+                return 0;
+            });
         }
     },
     computed: {

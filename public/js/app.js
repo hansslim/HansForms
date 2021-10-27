@@ -2134,6 +2134,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var v_switch_case__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! v-switch-case */ "./node_modules/v-switch-case/dist/v-switch.js");
+/* harmony import */ var v_switch_case__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(v_switch_case__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
 //
 //
 //
@@ -2142,16 +2145,33 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+
+
+vue__WEBPACK_IMPORTED_MODULE_1__["default"].use((v_switch_case__WEBPACK_IMPORTED_MODULE_0___default()));
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "FormElement",
   props: ['obj'],
   data: function data() {
     return {
-      element: {}
+      inputType: ''
     };
   },
   mounted: function mounted() {
     this.element = this.$props["obj"];
+    this.inputType = this.getType(this.$props["obj"]);
+    console.log(this.element);
+  },
+  methods: {
+    getType: function getType(element) {
+      /*console.log(element);*/
+      if (element.new_pages === null) {
+        if (element.input_elements !== null) {
+          if (element.input_elements.boolean_input !== null) return "boolean";else if (element.input_elements.date_input !== null) return "date";else if (element.input_elements.number_input !== null) return "number";else if (element.input_elements.text_input !== null) return "text";else throw new Error("Invalid type of input element");
+        }
+      } else return "new_page";
+    }
   }
 });
 
@@ -2319,6 +2339,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               _this.slug = _this.getSlug();
               _context.next = 3;
               return _this.getThisForm().then(function () {
+                _this.sortElements();
+
                 _this.loading = false;
               });
 
@@ -2359,6 +2381,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _this$$route$params$s;
 
       return (_this$$route$params$s = this.$route.params['slug']) !== null && _this$$route$params$s !== void 0 ? _this$$route$params$s : '';
+    },
+    sortElements: function sortElements() {
+      this.form.form_elements.sort(function (a, b) {
+        if (a.order < b.order) {
+          return -1;
+        }
+
+        if (a.order > b.order) {
+          return 1;
+        }
+
+        return 0;
+      });
     }
   },
   computed: {
@@ -39958,6 +39993,16 @@ module.exports = function (list, options) {
 
 /***/ }),
 
+/***/ "./node_modules/v-switch-case/dist/v-switch.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/v-switch-case/dist/v-switch.js ***!
+  \*****************************************************/
+/***/ (() => {
+
+throw new Error("Module build failed: Error: ENOENT: no such file or directory, open 'E:\\Moje\\Programming\\Laravel\\Surveys\\node_modules\\v-switch-case\\dist\\v-switch.js'");
+
+/***/ }),
+
 /***/ "./resources/js/App.vue":
 /*!******************************!*\
   !*** ./resources/js/App.vue ***!
@@ -40790,7 +40835,25 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [_vm._v("\n    " + _vm._s(this.element) + "\n")])
+  return _vm.inputType === "text"
+    ? _c("div", [
+        _vm._v(
+          "\n    " + _vm._s(this.$props["obj"].input_elements.header) + " "
+        ),
+        _c("br"),
+        _vm._v(" " + _vm._s("text") + " "),
+        _c("br")
+      ])
+    : _vm.inputType === "number"
+    ? _c("div", [
+        _vm._v(
+          "\n    " + _vm._s(this.$props["obj"].input_elements.header) + " "
+        ),
+        _c("br"),
+        _vm._v(_vm._s("number") + " "),
+        _c("br")
+      ])
+    : _c("div", [_vm._v(_vm._s("new page?"))])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -40995,12 +41058,15 @@ var render = function() {
       ? _c(
           "div",
           [
-            _c("div", [_vm._v(_vm._s(this.form.name))]),
+            _c("h1", [_vm._v(_vm._s(this.form.name))]),
             _vm._v(" "),
-            _c("div", [_vm._v(_vm._s(this.form.description))]),
+            _c("h3", [_vm._v(_vm._s(this.form.description))]),
             _vm._v(" "),
             _vm._l(this.form.form_elements, function(item) {
-              return _c("form-element", { attrs: { obj: item } })
+              return _c("form-element", {
+                key: item.order,
+                attrs: { obj: item }
+              })
             })
           ],
           2
