@@ -14,15 +14,17 @@ class FormElement extends Model
         'form_id'
     ];
 
+    protected $with = ['inputElements', 'newPages'];
+
     public function form() {
         return $this->belongsTo(Form::class);
     }
 
     public function inputElements(){
-        return $this->hasMany(InputElement::class);
+        return $this->hasOne(InputElement::class);
     }
 
     public function newPages(){
-        return $this->hasMany(NewPage::class);
+        return $this->hasOne(NewPage::class);
     }
 }

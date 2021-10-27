@@ -18,6 +18,8 @@ class Form extends Model
       'user_id'
     ];
 
+    protected $with = ['formElements'];
+
     public function user() {
         return $this->belongsTo(User::class);
     }
