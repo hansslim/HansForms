@@ -22,7 +22,7 @@ class InputElementFactory extends Factory
     public function definition()
     {
         return [
-            'header' => $this->faker->sentence(),
+            'header' => substr_replace($this->faker->sentence(), "?", -1),
             'description' =>  $this->faker->sentence(12),
             'is_mandatory' => true,
             'form_element_id' => 1

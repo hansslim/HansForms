@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\BooleanInput;
+use App\Models\DateInput;
 use App\Models\Form;
 use App\Models\FormElement;
 use App\Models\InputElement;
@@ -45,10 +46,10 @@ class DatabaseSeeder extends Seeder
                 'order' => $i,
                 'form_id' => $myForm->id
             ]);
-            if ($i !== 3) {
+            if ($i !== 3 && $i !== 10) {
                 $inputElement = InputElement::factory()->create(['form_element_id' => $formElement->id]);
 
-                $randomInput = random_int(0,1);
+                $randomInput = random_int(0,3);
                 //error_log($randomInput);
                 switch ($randomInput) {
                     case 0:
@@ -61,10 +62,20 @@ class DatabaseSeeder extends Seeder
                         TextInput::create(['input_element_id' => $inputElement->id]);
                         break;
                     }
-                    default:
+                    case 2:
                     {
                         BooleanInput::create(['input_element_id' => $inputElement->id]);
                         break;
+                    }
+                    case 3:
+                    {
+                        DateInput::create(['input_element_id' => $inputElement->id]);
+                        break;
+                    }
+                    default:
+                    {
+                        /*TextInput::create(['input_element_id' => $inputElement->id]);
+                        break;*/
                     }
                 }
             }
