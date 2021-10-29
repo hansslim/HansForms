@@ -2338,6 +2338,25 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "FormElement",
   props: ['obj'],
@@ -41153,6 +41172,39 @@ var render = function() {
             attrs: {
               name: _vm.id,
               type: "number",
+              label: _vm.header,
+              validation: ""
+            }
+          })
+        ],
+        1
+      )
+    : _vm.inputType === "boolean"
+    ? _c(
+        "div",
+        [
+          _vm._v("\n    " + _vm._s("boolean") + "\n    "),
+          _c("FormulateInput", {
+            attrs: {
+              name: _vm.id,
+              type: "radio",
+              label: _vm.header,
+              validation: "",
+              options: { true: "Yes", false: "No" }
+            }
+          })
+        ],
+        1
+      )
+    : _vm.inputType === "date"
+    ? _c(
+        "div",
+        [
+          _vm._v("\n    " + _vm._s("date") + "\n    "),
+          _c("FormulateInput", {
+            attrs: {
+              name: _vm.id,
+              type: "date",
               label: _vm.header,
               validation: ""
             }

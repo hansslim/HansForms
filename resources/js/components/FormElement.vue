@@ -17,6 +17,25 @@
             validation=""
         />
     </div>
+    <div v-else-if="inputType==='boolean'">
+        {{ "boolean" }}
+        <FormulateInput
+            :name="id"
+            type="radio"
+            :label="header"
+            validation=""
+            :options="{true: 'Yes', false: 'No'}"
+        />
+    </div>
+    <div v-else-if="inputType==='date'">
+        {{ "date" }}
+        <FormulateInput
+            :name="id"
+            type="date"
+            :label="header"
+            validation=""
+        />
+    </div>
     <div v-else>
         <hr>
         {{ "new page" }}
