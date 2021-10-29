@@ -1,30 +1,74 @@
 <template>
     <div v-if="inputType==='text'">
-        {{this.$props["obj"].input_elements.header}} <br> {{"text"}} <br>
+        {{ "text" }}
+        <FormulateInput
+            :name="id"
+            type="text"
+            :label="header"
+            validation=""
+        />
     </div>
     <div v-else-if="inputType==='number'">
-        {{this.$props["obj"].input_elements.header}} <br>{{"number"}} <br>
+        {{ "number" }}
+        <FormulateInput
+            :name="id"
+            type="number"
+            :label="header"
+            validation=""
+        />
     </div>
-    <div v-else>{{"new page?"}}</div>
+    <div v-else>
+        <hr>
+        {{ "new page" }}
+        <hr>
+    </div>
+
+
 </template>
 
 <script>
-import VueSwitch from 'v-switch-case';
-import Vue from "vue";
-Vue.use(VueSwitch);
-
 export default {
     name: "FormElement",
     props: ['obj'],
     data() {
-      return {
-          inputType: ''
-      }
+        return {
+            inputType: ''
+        }
     },
     mounted() {
         this.element = this.$props["obj"];
         this.inputType = this.getType(this.$props["obj"]);
         console.log(this.element);
+    },
+    computed: {
+        header() {
+            return this.$props["obj"].input_elements.header;
+        },
+        id() {
+            const fullId = (id) => {
+                return `${this.inputType}-${id}`;
+            }
+            switch (this.inputType) {
+                case 'boolean': {
+                    return fullId(this.$props["obj"].input_elements.boolean_input.id);
+                }
+                case 'date': {
+                    return fullId(this.$props["obj"].input_elements.date_input.id);
+                }
+                case 'number': {
+                    return fullId(this.$props["obj"].input_elements.number_input.id);
+                }
+                case 'text': {
+                    return fullId(this.$props["obj"].input_elements.text_input.id);
+                }
+                case 'new_page': {
+                    return fullId(this.$props["obj"].new_pages.id);
+                }
+                default: {
+                    throw new Error("Invalid type of input element")
+                }
+            }
+        }
     },
     methods: {
         getType(element) {
@@ -37,8 +81,7 @@ export default {
                     else if (element.input_elements.text_input !== null) return "text";
                     else throw new Error("Invalid type of input element");
                 }
-            }
-            else return "new_page";
+            } else return "new_page";
         }
     },
 }

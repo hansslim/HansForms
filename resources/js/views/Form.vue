@@ -3,7 +3,13 @@
         <div v-if="!this.loading">
             <h1>{{this.form.name}}</h1>
             <h3>{{this.form.description}}</h3>
-            <form-element v-for="item in this.form.form_elements" :obj="item" :key="item.order"></form-element>
+            <FormulateForm v-model="formValues" @submit="submitForm">
+                <form-element v-for="item in this.form.form_elements" :obj="item" :key="item.order"></form-element>
+                <FormulateInput
+                    type="submit"
+                    name="Submit this form!"
+                />
+            </FormulateForm>
         </div>
         <div v-else>
             {{"loading"}}
@@ -17,11 +23,14 @@ import FormElement from "../components/FormElement";
 
 export default {
     name: "Form",
-    components: {"form-element": FormElement},
+    components: {
+        "form-element": FormElement,
+    },
     data() {
         return {
             slug: '',
             form: {},
+            formValues: {},
             loading: true
         }
     },
@@ -30,7 +39,7 @@ export default {
         await this.getThisForm().then(()=> {
             this.sortElements();
             this.loading = false;
-
+            console.log(this.form);
         });
 
     },
@@ -52,6 +61,9 @@ export default {
                 }
                 return 0;
             });
+        },
+        submitForm() {
+            console.log(this.formValues)
         }
     },
     computed: {
