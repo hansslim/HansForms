@@ -2357,12 +2357,29 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "FormElement",
   props: ['obj'],
   data: function data() {
     return {
-      inputType: ''
+      inputType: '',
+      element: {}
     };
   },
   mounted: function mounted() {
@@ -2402,6 +2419,11 @@ __webpack_require__.r(__webpack_exports__);
             return fullId(this.$props["obj"].input_elements.text_input.id);
           }
 
+        case 'select':
+          {
+            return fullId(this.$props["obj"].input_elements.select_input.id);
+          }
+
         case 'new_page':
           {
             return fullId(this.$props["obj"].new_pages.id);
@@ -2412,6 +2434,29 @@ __webpack_require__.r(__webpack_exports__);
             throw new Error("Invalid type of input element");
           }
       }
+    },
+    selectChoices: function selectChoices() {
+      if (this.inputType === 'select') {
+        var options = this.$props["obj"].input_elements.select_input.select_input_choices.sort(function (a, b) {
+          if (a.order < b.order) {
+            return -1;
+          }
+
+          if (a.order > b.order) {
+            return 1;
+          }
+
+          return 0;
+        });
+        var selectChoices = [];
+        options.forEach(function (option) {
+          selectChoices.push({
+            value: "choice-".concat(option.id),
+            label: "".concat(option.text)
+          });
+        });
+        return selectChoices;
+      } else return null;
     }
   },
   methods: {
@@ -2419,7 +2464,7 @@ __webpack_require__.r(__webpack_exports__);
       /*console.log(element);*/
       if (element.new_pages === null) {
         if (element.input_elements !== null) {
-          if (element.input_elements.boolean_input !== null) return "boolean";else if (element.input_elements.date_input !== null) return "date";else if (element.input_elements.number_input !== null) return "number";else if (element.input_elements.text_input !== null) return "text";else throw new Error("Invalid type of input element");
+          if (element.input_elements.boolean_input !== null) return "boolean";else if (element.input_elements.date_input !== null) return "date";else if (element.input_elements.number_input !== null) return "number";else if (element.input_elements.text_input !== null) return "text";else if (element.input_elements.select_input !== null) return "select";else throw new Error("Invalid type of input element");
         }
       } else return "new_page";
     }
@@ -41147,76 +41192,101 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm.inputType === "text"
-    ? _c(
-        "div",
-        [
-          _vm._v("\n    " + _vm._s("text") + "\n    "),
-          _c("FormulateInput", {
-            attrs: {
-              name: _vm.id,
-              type: "text",
-              label: _vm.header,
-              validation: ""
-            }
-          })
-        ],
-        1
-      )
-    : _vm.inputType === "number"
-    ? _c(
-        "div",
-        [
-          _vm._v("\n    " + _vm._s("number") + "\n    "),
-          _c("FormulateInput", {
-            attrs: {
-              name: _vm.id,
-              type: "number",
-              label: _vm.header,
-              validation: ""
-            }
-          })
-        ],
-        1
-      )
-    : _vm.inputType === "boolean"
-    ? _c(
-        "div",
-        [
-          _vm._v("\n    " + _vm._s("boolean") + "\n    "),
-          _c("FormulateInput", {
-            attrs: {
-              name: _vm.id,
-              type: "radio",
-              label: _vm.header,
-              validation: "",
-              options: { true: "Yes", false: "No" }
-            }
-          })
-        ],
-        1
-      )
-    : _vm.inputType === "date"
-    ? _c(
-        "div",
-        [
-          _vm._v("\n    " + _vm._s("date") + "\n    "),
-          _c("FormulateInput", {
-            attrs: {
-              name: _vm.id,
-              type: "date",
-              label: _vm.header,
-              validation: ""
-            }
-          })
-        ],
-        1
-      )
-    : _c("div", [
-        _c("hr"),
-        _vm._v("\n    " + _vm._s("new page") + "\n    "),
-        _c("hr")
-      ])
+  return _c("div", [
+    _c("hr"),
+    _vm._v(" "),
+    _vm.inputType === "text"
+      ? _c(
+          "div",
+          [
+            _vm._v("\n        " + _vm._s("text") + "\n        "),
+            _c("FormulateInput", {
+              attrs: {
+                name: _vm.id,
+                type: "text",
+                label: _vm.header,
+                validation: ""
+              }
+            })
+          ],
+          1
+        )
+      : _vm.inputType === "number"
+      ? _c(
+          "div",
+          [
+            _vm._v("\n        " + _vm._s("number") + "\n        "),
+            _c("FormulateInput", {
+              attrs: {
+                name: _vm.id,
+                type: "number",
+                label: _vm.header,
+                validation: ""
+              }
+            })
+          ],
+          1
+        )
+      : _vm.inputType === "boolean"
+      ? _c(
+          "div",
+          [
+            _vm._v("\n        " + _vm._s("boolean") + "\n        "),
+            _c("FormulateInput", {
+              attrs: {
+                name: _vm.id,
+                type: "radio",
+                label: _vm.header,
+                validation: "",
+                options: { true: "Yes", false: "No" }
+              }
+            })
+          ],
+          1
+        )
+      : _vm.inputType === "date"
+      ? _c(
+          "div",
+          [
+            _vm._v("\n        " + _vm._s("date") + "\n        "),
+            _c("FormulateInput", {
+              attrs: {
+                name: _vm.id,
+                type: "date",
+                label: _vm.header,
+                validation: ""
+              }
+            })
+          ],
+          1
+        )
+      : _vm.inputType === "select"
+      ? _c(
+          "div",
+          [
+            _vm._v("\n        " + _vm._s("select") + "\n        "),
+            _c("FormulateInput", {
+              attrs: {
+                name: _vm.id,
+                type: "radio",
+                label: _vm.header,
+                validation: "",
+                options: _vm.selectChoices
+              }
+            })
+          ],
+          1
+        )
+      : _vm.inputType === "new_page"
+      ? _c("div", { staticStyle: { "font-weight": "bold" } }, [
+          _vm._v("\n            " + _vm._s("new page") + "\n    ")
+        ])
+      : _c("div", [
+          _vm._v("\n\n        " + _vm._s("unknown element") + "\n\n    ")
+        ]),
+    _vm._v(" "),
+    _c("hr")
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true

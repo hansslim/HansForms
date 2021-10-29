@@ -9,6 +9,8 @@ use App\Models\FormElement;
 use App\Models\InputElement;
 use App\Models\NewPage;
 use App\Models\NumberInput;
+use App\Models\SelectInput;
+use App\Models\SelectInputChoice;
 use App\Models\TextInput;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -49,7 +51,7 @@ class DatabaseSeeder extends Seeder
             if ($i !== 3 && $i !== 10) {
                 $inputElement = InputElement::factory()->create(['form_element_id' => $formElement->id]);
 
-                $randomInput = random_int(0,3);
+                $randomInput = random_int(0,4);
                 //error_log($randomInput);
                 switch ($randomInput) {
                     case 0:
@@ -72,10 +74,26 @@ class DatabaseSeeder extends Seeder
                         DateInput::create(['input_element_id' => $inputElement->id]);
                         break;
                     }
+                    case 4:
+                    {
+                        $selectInput = SelectInput::create([
+                            'is_multiselect' => true,
+                            'is_dropdown' => false,
+                            'input_element_id' => $inputElement->id
+                        ]);
+                        for ($j = 0; $j < 3; $j++) {
+                            SelectInputChoice::factory()->create([
+                                'hidden_label' => $j,
+                                'order'=>$j,
+                                'select_input_id'=>$selectInput->id
+                            ]);
+                        }
+                        break;
+                    }
                     default:
                     {
-                        /*TextInput::create(['input_element_id' => $inputElement->id]);
-                        break;*/
+                       $i--;
+                       break;
                     }
                 }
             }

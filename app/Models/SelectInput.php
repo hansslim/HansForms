@@ -16,6 +16,10 @@ class SelectInput extends Model
         'strict_amount_of_answers',
     ];
 
+    protected $with = [
+      'selectInputChoices'
+    ];
+
     public function inputElement() {
         return $this->belongsTo(InputElement::class);
     }

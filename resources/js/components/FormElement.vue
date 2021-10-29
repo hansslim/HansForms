@@ -1,47 +1,63 @@
 <template>
-    <div v-if="inputType==='text'">
-        {{ "text" }}
-        <FormulateInput
-            :name="id"
-            type="text"
-            :label="header"
-            validation=""
-        />
-    </div>
-    <div v-else-if="inputType==='number'">
-        {{ "number" }}
-        <FormulateInput
-            :name="id"
-            type="number"
-            :label="header"
-            validation=""
-        />
-    </div>
-    <div v-else-if="inputType==='boolean'">
-        {{ "boolean" }}
-        <FormulateInput
-            :name="id"
-            type="radio"
-            :label="header"
-            validation=""
-            :options="{true: 'Yes', false: 'No'}"
-        />
-    </div>
-    <div v-else-if="inputType==='date'">
-        {{ "date" }}
-        <FormulateInput
-            :name="id"
-            type="date"
-            :label="header"
-            validation=""
-        />
-    </div>
-    <div v-else>
+    <div>
         <hr>
-        {{ "new page" }}
-        <hr>
-    </div>
+        <div v-if="inputType==='text'">
+            {{ "text" }}
+            <FormulateInput
+                :name="id"
+                type="text"
+                :label="header"
+                validation=""
+            />
+        </div>
+        <div v-else-if="inputType==='number'">
+            {{ "number" }}
+            <FormulateInput
+                :name="id"
+                type="number"
+                :label="header"
+                validation=""
+            />
+        </div>
+        <div v-else-if="inputType==='boolean'">
+            {{ "boolean" }}
+            <FormulateInput
+                :name="id"
+                type="radio"
+                :label="header"
+                validation=""
+                :options="{true: 'Yes', false: 'No'}"
+            />
+        </div>
+        <div v-else-if="inputType==='date'">
+            {{ "date" }}
+            <FormulateInput
+                :name="id"
+                type="date"
+                :label="header"
+                validation=""
+            />
+        </div>
+        <div v-else-if="inputType==='select'">
+            {{ "select" }}
+            <FormulateInput
+                :name="id"
+                type="radio"
+                :label="header"
+                validation=""
+                :options="selectChoices"
+            />
+        </div>
+        <div v-else-if="inputType==='new_page'" style="font-weight: bold">
+                {{ "new page" }}
+        </div>
+        <div v-else>
 
+            {{ "unknown element" }}
+
+        </div>
+        <hr>
+    </div>
 
 </template>
 
@@ -51,7 +67,8 @@ export default {
     props: ['obj'],
     data() {
         return {
-            inputType: ''
+            inputType: '',
+            element: {}
         }
     },
     mounted() {
@@ -80,6 +97,9 @@ export default {
                 case 'text': {
                     return fullId(this.$props["obj"].input_elements.text_input.id);
                 }
+                case 'select': {
+                    return fullId(this.$props["obj"].input_elements.select_input.id);
+                }
                 case 'new_page': {
                     return fullId(this.$props["obj"].new_pages.id);
                 }
@@ -87,6 +107,26 @@ export default {
                     throw new Error("Invalid type of input element")
                 }
             }
+        },
+        selectChoices() {
+            if (this.inputType === 'select') {
+
+                const options = this.$props["obj"].input_elements.select_input.select_input_choices.sort(( a, b ) => {
+                    if ( a.order < b.order ){
+                        return -1;
+                    }
+                    if ( a.order > b.order ){
+                        return 1;
+                    }
+                    return 0;
+                });
+                let selectChoices = [];
+                options.forEach((option) => {
+                    selectChoices.push({value: `choice-${option.id}`, label: `${option.text}`})
+                })
+                return selectChoices;
+            }
+            else return null
         }
     },
     methods: {
@@ -98,6 +138,7 @@ export default {
                     else if (element.input_elements.date_input !== null) return "date";
                     else if (element.input_elements.number_input !== null) return "number";
                     else if (element.input_elements.text_input !== null) return "text";
+                    else if (element.input_elements.select_input !== null) return "select";
                     else throw new Error("Invalid type of input element");
                 }
             } else return "new_page";
