@@ -8,7 +8,7 @@ use App\Models\Form;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class FormsController extends Controller
+class FormController extends Controller
 {
     /**
      * Display a listing of the resource.
