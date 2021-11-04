@@ -48,8 +48,6 @@ class FormController extends Controller
             unset($form->user->email);
         }
         return $form;
-
-
     }
 
     /**

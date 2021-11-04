@@ -71,7 +71,6 @@ export default {
             return this.$props["obj"].input_elements.header;
         },
         isMandatory() {
-/*            console.log(this.$props["obj"].input_elements.is_mandatory)*/
             return this.$props["obj"].input_elements.is_mandatory;
         }
     },
