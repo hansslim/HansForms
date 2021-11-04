@@ -8,7 +8,7 @@
             :validation="validationRules"
             validationName="Boolean input"
             validation-behavior="live"
-            :options="{true: 'Yes', false: 'No'}"
+            :options="this.options"
         />
         <FormulateErrors/>
     </div>
@@ -20,12 +20,18 @@ import {FormElementDefaultComputedProps, FormElementDefaultMethods, FormElementD
 
 export default {
     name: "BooleanInput",
+    data() {
+        return {
+            options: {true: 'Yes', false: 'No'}
+        }
+    },
     props: [...FormElementDefaultProps],
     computed: {
         ...FormElementDefaultComputedProps,
         validationRules() {
             let validation = [];
-            if (this.propsIsMandatory) validation.push(['required']);
+            if (!this.propsIsMandatory) this.options = {...this.options, null: "I don't want to answer" }
+            else validation.push(['required']);
 
             return validation;
         }
