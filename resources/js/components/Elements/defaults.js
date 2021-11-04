@@ -5,6 +5,9 @@ export const FormElementDefaultComputedProps = {
     propsIsMandatory() {
         return this.$props["isMandatory"];
     },
+    propsObj() {
+        return this.$props["obj"];
+    }
 }
 
 export const FormElementDefaultMethods = {
