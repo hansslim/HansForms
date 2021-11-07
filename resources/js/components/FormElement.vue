@@ -3,36 +3,36 @@
         <hr>
         <div v-if="inputType==='text'">
             <text-input
-                :isMandatory="this.$props['obj'].input_elements.is_mandatory"
+                :isMandatory="this.$props['obj'].input_element.is_mandatory"
                 :label="label"
-                :obj="this.$props['obj'].input_elements.text_input"
+                :obj="this.$props['obj'].input_element.text_input"
             />
         </div>
         <div v-if="inputType==='number'">
             <number-input
                 :label="label"
-                :obj="this.$props['obj'].input_elements.number_input"
+                :obj="this.$props['obj'].input_element.number_input"
                 :isMandatory="isMandatory"
             />
         </div>
         <div v-if="inputType==='date'">
             <date-input
                 :label="label"
-                :obj="this.$props['obj'].input_elements.date_input"
+                :obj="this.$props['obj'].input_element.date_input"
                 :isMandatory="isMandatory"
             />
         </div>
         <div v-if="inputType==='boolean'">
             <boolean-input
                 :label="label"
-                :obj="this.$props['obj'].input_elements.boolean_input"
+                :obj="this.$props['obj'].input_element.boolean_input"
                 :isMandatory="isMandatory"
             />
         </div>
         <div v-if="inputType==='select'">
             <select-input
                 :label="label"
-                :obj="this.$props['obj'].input_elements.select_input"
+                :obj="this.$props['obj'].input_element.select_input"
                 :isMandatory="isMandatory"
             />
         </div>
@@ -68,22 +68,22 @@ export default {
     },
     computed: {
         label() {
-            return this.$props["obj"].input_elements.header;
+            return this.$props["obj"].input_element.header;
         },
         isMandatory() {
-            return this.$props["obj"].input_elements.is_mandatory;
+            return this.$props["obj"].input_element.is_mandatory;
         }
     },
     methods: {
         getType(element) {
-            /*console.log(element);*/
-            if (element.new_pages === null) {
-                if (element.input_elements !== null) {
-                    if (element.input_elements.boolean_input !== null) return "boolean";
-                    else if (element.input_elements.date_input !== null) return "date";
-                    else if (element.input_elements.number_input !== null) return "number";
-                    else if (element.input_elements.text_input !== null) return "text";
-                    else if (element.input_elements.select_input !== null) return "select";
+            //console.log(element);
+            if (element.new_page === null) {
+                if (element.input_element !== null) {
+                    if (element.input_element.boolean_input !== null) return "boolean";
+                    else if (element.input_element.date_input !== null) return "date";
+                    else if (element.input_element.number_input !== null) return "number";
+                    else if (element.input_element.text_input !== null) return "text";
+                    else if (element.input_element.select_input !== null) return "select";
                     else throw new Error("Invalid type of input element");
                 }
             } else return "new_page";

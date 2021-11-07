@@ -16,21 +16,21 @@ class FormElement extends Model
 
     protected $visible = [
         'order',
-        'inputElements',
-        'newPages'
+        'inputElement',
+        'newPage'
     ];
 
-    protected $with = ['inputElements', 'newPages'];
+    protected $with = ['inputElement', 'newPage'];
 
     public function form() {
         return $this->belongsTo(Form::class);
     }
 
-    public function inputElements(){
+    public function inputElement(){
         return $this->hasOne(InputElement::class);
     }
 
-    public function newPages(){
+    public function newPage(){
         return $this->hasOne(NewPage::class);
     }
 }
