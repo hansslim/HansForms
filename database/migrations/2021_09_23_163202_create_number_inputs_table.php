@@ -17,7 +17,7 @@ class CreateNumberInputsTable extends Migration
             $table->id();
             $table->decimal("min")->nullable();
             $table->decimal("max")->nullable();
-            $table->boolean("can_be_decimal")->nullable();
+            $table->boolean("can_be_decimal");
             $table->timestamps();
 
             //fk: input_element_id
