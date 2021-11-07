@@ -4,7 +4,7 @@
         <FormulateInput
             :name="this.propsId('number')"
             type="number"
-            step="any"
+            :step="this.step"
             :label="propsLabel"
             :validation="validationRules"
             validationName="Number input"
@@ -20,6 +20,11 @@ import {FormElementDefaultComputedProps, FormElementDefaultMethods, FormElementD
 
 export default {
     name: "NumberInput",
+    data() {
+        return {
+            step: "0.0"
+        }
+    },
     props: [...FormElementDefaultProps],
     computed: {...FormElementDefaultComputedProps,
         validationRules() {
@@ -29,8 +34,14 @@ export default {
             if (this.propsObj.min) validation.push(['min', this.propsObj.min]);
             if (this.propsObj.max) validation.push(['max', this.propsObj.max]);
 
-            if (this.propsObj.can_be_decimal) validation.push(['matches', '/(^[0-9]+[,|.][0-9]+)|(^[0-9]*$)/']);
-            else validation.push(['matches', '/^[0-9]*$/']);
+            if (this.propsObj.can_be_decimal) {
+                validation.push(['matches', '/(^[0-9]+[,|.][0-9]+)|(^[0-9]*$)/']);
+                this.step = "any";
+            }
+            else {
+                validation.push(['matches', '/^[0-9]*$/']);
+                this.step = "0.0";
+            }
 
             return validation;
         }},

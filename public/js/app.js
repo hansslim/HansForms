@@ -2470,6 +2470,11 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "NumberInput",
+  data: function data() {
+    return {
+      step: "0.0"
+    };
+  },
   props: _toConsumableArray(_defaults__WEBPACK_IMPORTED_MODULE_0__.FormElementDefaultProps),
   computed: _objectSpread(_objectSpread({}, _defaults__WEBPACK_IMPORTED_MODULE_0__.FormElementDefaultComputedProps), {}, {
     validationRules: function validationRules() {
@@ -2477,7 +2482,15 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       if (this.propsIsMandatory) validation.push(['required']);
       if (this.propsObj.min) validation.push(['min', this.propsObj.min]);
       if (this.propsObj.max) validation.push(['max', this.propsObj.max]);
-      if (this.propsObj.can_be_decimal) validation.push(['matches', '/(^[0-9]+[,|.][0-9]+)|(^[0-9]*$)/']);else validation.push(['matches', '/^[0-9]*$/']);
+
+      if (this.propsObj.can_be_decimal) {
+        validation.push(['matches', '/(^[0-9]+[,|.][0-9]+)|(^[0-9]*$)/']);
+        this.step = "any";
+      } else {
+        validation.push(['matches', '/^[0-9]*$/']);
+        this.step = "0.0";
+      }
+
       return validation;
     }
   }),
@@ -41979,7 +41992,7 @@ var render = function() {
         attrs: {
           name: this.propsId("number"),
           type: "number",
-          step: "any",
+          step: this.step,
           label: _vm.propsLabel,
           validation: _vm.validationRules,
           validationName: "Number input",
