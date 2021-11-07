@@ -78,7 +78,6 @@ class DatabaseSeeder extends Seeder
                     {
                         $selectInput = SelectInput::create([
                             'is_multiselect' => true,
-                            'is_dropdown' => false,
                             'input_element_id' => $inputElement->id
                         ]);
                         for ($j = 0; $j < 3; $j++) {
