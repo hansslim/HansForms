@@ -1,8 +1,8 @@
 <template>
     <div>
         <div v-if="!this.loading">
-            <h1>{{this.form.name}}</h1>
-            <h3>{{this.form.description}}</h3>
+            <h1>{{ this.form.name }}</h1>
+            <h3>{{ this.form.description }}</h3>
             <FormulateForm v-model="formValues" @submit="submitForm">
                 <form-element v-for="item in this.form.form_elements" :obj="item" :key="item.order"></form-element>
                 <FormulateInput
@@ -12,7 +12,7 @@
             </FormulateForm>
         </div>
         <div v-else>
-            {{"loading"}}
+            {{ "loading" }}
         </div>
     </div>
 </template>
@@ -36,7 +36,7 @@ export default {
     },
     async mounted() {
         this.slug = this.getSlug();
-        await this.getThisForm().then(()=> {
+        await this.getThisForm().then(() => {
             this.sortElements();
             this.loading = false;
             console.log(this.form);
@@ -52,18 +52,24 @@ export default {
             return this.$route.params['slug'] ?? '';
         },
         sortElements() {
-            this.form.form_elements.sort(( a, b ) => {
-                if ( a.order < b.order ){
+            this.form.form_elements.sort((a, b) => {
+                if (a.order < b.order) {
                     return -1;
                 }
-                if ( a.order > b.order ){
+                if (a.order > b.order) {
                     return 1;
                 }
                 return 0;
             });
         },
-        submitForm() {
+        async submitForm() {
             console.log(this.formValues)
+            try {
+                const response = await Form.postFormCompletion(this.formValues, this.slug);
+            }
+            catch (error) {
+                console.log(error);
+            }
         }
     },
     computed: {

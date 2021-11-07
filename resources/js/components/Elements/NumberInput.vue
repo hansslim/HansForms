@@ -22,7 +22,7 @@ export default {
     name: "NumberInput",
     data() {
         return {
-            step: "0.0"
+            step: "any"
         }
     },
     props: [...FormElementDefaultProps],
@@ -30,10 +30,10 @@ export default {
         validationRules() {
             let validation = [];
 
+/*
             if (this.propsIsMandatory) validation.push(['required']);
             if (this.propsObj.min) validation.push(['min', this.propsObj.min]);
             if (this.propsObj.max) validation.push(['max', this.propsObj.max]);
-
             if (this.propsObj.can_be_decimal) {
                 validation.push(['matches', '/(^[0-9]+[,|.][0-9]+)|(^[0-9]*$)/']);
                 this.step = "any";
@@ -42,6 +42,7 @@ export default {
                 validation.push(['matches', '/^[0-9]*$/']);
                 this.step = "0.0";
             }
+*/
 
             return validation;
         }},

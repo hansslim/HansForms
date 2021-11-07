@@ -32,6 +32,7 @@ export default {
         validationRules() {
             let validation = [];
 
+/*
             if (this.propsIsMandatory) validation.push(['required']);
             if (this.type === "checkbox") {
                 if (this.propsIsMandatory) {
@@ -51,6 +52,8 @@ export default {
             else if (this.type === "radio" && !this.propsIsMandatory){
                 this.choices = [...this.choices, {value: `choice-null`, label: `I don't want to answer.`}];
             }
+*/
+
             return validation;
         },
 

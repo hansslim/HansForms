@@ -30,8 +30,10 @@ export default {
         ...FormElementDefaultComputedProps,
         validationRules() {
             let validation = [];
+/*
             if (!this.propsIsMandatory) this.options = {...this.options, null: "I don't want to answer" }
             else validation.push(['required']);
+*/
 
             return validation;
         }
