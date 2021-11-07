@@ -6,5 +6,8 @@ export default {
     },
     async getSpecificForm(slug) {
         return Api.get('/form/' + slug)
+    },
+    async postFormCompletion(formCompletion, slug) {
+        return Api.post('/form/complete/' + slug, formCompletion);
     }
 };

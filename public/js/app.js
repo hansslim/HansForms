@@ -2331,9 +2331,11 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   computed: _objectSpread(_objectSpread({}, _defaults__WEBPACK_IMPORTED_MODULE_0__.FormElementDefaultComputedProps), {}, {
     validationRules: function validationRules() {
       var validation = [];
-      if (!this.propsIsMandatory) this.options = _objectSpread(_objectSpread({}, this.options), {}, {
-        "null": "I don't want to answer"
-      });else validation.push(['required']);
+      /*
+                  if (!this.propsIsMandatory) this.options = {...this.options, null: "I don't want to answer" }
+                  else validation.push(['required']);
+      */
+
       return validation;
     }
   }),
@@ -2401,17 +2403,17 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   computed: _objectSpread(_objectSpread({}, _defaults__WEBPACK_IMPORTED_MODULE_0__.FormElementDefaultComputedProps), {}, {
     validationRules: function validationRules() {
       var validation = [];
-      if (this.propsIsMandatory) validation.push(['required']);
-
-      if (this.propsObj.min) {
-        validation.push(['after', this.propsObj.min]);
-        this.min = this.propsObj.min;
-      }
-
-      if (this.propsObj.max) {
-        validation.push(['before', this.propsObj.max]);
-        this.max = this.propsObj.max;
-      }
+      /*
+                  if (this.propsIsMandatory) validation.push(['required']);
+                  if (this.propsObj.min) {
+                      validation.push(['after', this.propsObj.min]);
+                      this.min = this.propsObj.min;
+                  }
+                  if (this.propsObj.max) {
+                      validation.push(['before', this.propsObj.max]);
+                      this.max = this.propsObj.max;
+                  }
+      */
 
       return validation;
     }
@@ -2472,24 +2474,26 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   name: "NumberInput",
   data: function data() {
     return {
-      step: "0.0"
+      step: "any"
     };
   },
   props: _toConsumableArray(_defaults__WEBPACK_IMPORTED_MODULE_0__.FormElementDefaultProps),
   computed: _objectSpread(_objectSpread({}, _defaults__WEBPACK_IMPORTED_MODULE_0__.FormElementDefaultComputedProps), {}, {
     validationRules: function validationRules() {
       var validation = [];
-      if (this.propsIsMandatory) validation.push(['required']);
-      if (this.propsObj.min) validation.push(['min', this.propsObj.min]);
-      if (this.propsObj.max) validation.push(['max', this.propsObj.max]);
-
-      if (this.propsObj.can_be_decimal) {
-        validation.push(['matches', '/(^[0-9]+[,|.][0-9]+)|(^[0-9]*$)/']);
-        this.step = "any";
-      } else {
-        validation.push(['matches', '/^[0-9]*$/']);
-        this.step = "0.0";
-      }
+      /*
+                  if (this.propsIsMandatory) validation.push(['required']);
+                  if (this.propsObj.min) validation.push(['min', this.propsObj.min]);
+                  if (this.propsObj.max) validation.push(['max', this.propsObj.max]);
+                  if (this.propsObj.can_be_decimal) {
+                      validation.push(['matches', '/(^[0-9]+[,|.][0-9]+)|(^[0-9]*$)/']);
+                      this.step = "any";
+                  }
+                  else {
+                      validation.push(['matches', '/^[0-9]*$/']);
+                      this.step = "0.0";
+                  }
+      */
 
       return validation;
     }
@@ -2558,26 +2562,27 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   computed: _objectSpread(_objectSpread({}, _defaults__WEBPACK_IMPORTED_MODULE_0__.FormElementDefaultComputedProps), {}, {
     validationRules: function validationRules() {
       var validation = [];
-      if (this.propsIsMandatory) validation.push(['required']);
-
-      if (this.type === "checkbox") {
-        if (this.propsIsMandatory) {
-          if (this.propsObj.strict_amount_of_answers) {
-            validation.push(['min', this.propsObj.strict_amount_of_answers]);
-            validation.push(['max', this.propsObj.strict_amount_of_answers]);
-          } else {
-            if (this.propsObj.min_amount_of_answers) validation.push(['min', this.propsObj.min_amount_of_answers]);
-            if (this.propsObj.max_amount_of_answers) validation.push(['max', this.propsObj.max_amount_of_answers]);
-          }
-        } else {
-          if (this.propsObj.max_amount_of_answers) validation.push(['max', this.propsObj.max_amount_of_answers]);
-        }
-      } else if (this.type === "radio" && !this.propsIsMandatory) {
-        this.choices = [].concat(_toConsumableArray(this.choices), [{
-          value: "choice-null",
-          label: "I don't want to answer."
-        }]);
-      }
+      /*
+                  if (this.propsIsMandatory) validation.push(['required']);
+                  if (this.type === "checkbox") {
+                      if (this.propsIsMandatory) {
+                          if (this.propsObj.strict_amount_of_answers) {
+                              validation.push(['min', this.propsObj.strict_amount_of_answers]);
+                              validation.push(['max', this.propsObj.strict_amount_of_answers]);
+                          } else {
+                              if (this.propsObj.min_amount_of_answers) validation.push(['min', this.propsObj.min_amount_of_answers]);
+                              if (this.propsObj.max_amount_of_answers) validation.push(['max', this.propsObj.max_amount_of_answers]);
+                          }
+                      }
+                      else {
+                          if (this.propsObj.max_amount_of_answers) validation.push(['max', this.propsObj.max_amount_of_answers]);
+                      }
+      
+                  }
+                  else if (this.type === "radio" && !this.propsIsMandatory){
+                      this.choices = [...this.choices, {value: `choice-null`, label: `I don't want to answer.`}];
+                  }
+      */
 
       return validation;
     }
@@ -2668,15 +2673,17 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   computed: _objectSpread(_objectSpread({}, _defaults__WEBPACK_IMPORTED_MODULE_0__.FormElementDefaultComputedProps), {}, {
     validationRules: function validationRules() {
       var validation = [];
-      if (this.propsIsMandatory === true) validation.push(['required']);
-
-      if (this.propsObj.strict_length) {
-        validation.push(['min', this.propsObj.strict_length]);
-        validation.push(['max', this.propsObj.strict_length]);
-      } else {
-        if (this.propsObj.min_length) validation.push(['min', this.propsObj.min_length]);
-        if (this.propsObj.max_length) validation.push(['max', this.propsObj.max_length]);
-      }
+      /*
+                  if (this.propsIsMandatory === true) validation.push(['required']);
+                  if (this.propsObj.strict_length) {
+                      validation.push(['min', this.propsObj.strict_length]);
+                      validation.push(['max', this.propsObj.strict_length]);
+                  }
+                  else {
+                      if (this.propsObj.min_length) validation.push(['min', this.propsObj.min_length]);
+                      if (this.propsObj.max_length) validation.push(['max', this.propsObj.max_length]);
+                  }
+      */
 
       return validation;
     }
@@ -2799,18 +2806,18 @@ __webpack_require__.r(__webpack_exports__);
   },
   computed: {
     label: function label() {
-      return this.$props["obj"].input_elements.header;
+      return this.$props["obj"].input_element.header;
     },
     isMandatory: function isMandatory() {
-      return this.$props["obj"].input_elements.is_mandatory;
+      return this.$props["obj"].input_element.is_mandatory;
     }
   },
   methods: {
     getType: function getType(element) {
-      /*console.log(element);*/
-      if (element.new_pages === null) {
-        if (element.input_elements !== null) {
-          if (element.input_elements.boolean_input !== null) return "boolean";else if (element.input_elements.date_input !== null) return "date";else if (element.input_elements.number_input !== null) return "number";else if (element.input_elements.text_input !== null) return "text";else if (element.input_elements.select_input !== null) return "select";else throw new Error("Invalid type of input element");
+      //console.log(element);
+      if (element.new_page === null) {
+        if (element.input_element !== null) {
+          if (element.input_element.boolean_input !== null) return "boolean";else if (element.input_element.date_input !== null) return "date";else if (element.input_element.number_input !== null) return "number";else if (element.input_element.text_input !== null) return "text";else if (element.input_element.select_input !== null) return "select";else throw new Error("Invalid type of input element");
         }
       } else return "new_page";
     }
@@ -3046,7 +3053,36 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       });
     },
     submitForm: function submitForm() {
-      console.log(this.formValues);
+      var _this3 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
+        var response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                console.log(_this3.formValues);
+                _context3.prev = 1;
+                _context3.next = 4;
+                return _apis_Form__WEBPACK_IMPORTED_MODULE_1__["default"].postFormCompletion(_this3.formValues, _this3.slug);
+
+              case 4:
+                response = _context3.sent;
+                _context3.next = 10;
+                break;
+
+              case 7:
+                _context3.prev = 7;
+                _context3.t0 = _context3["catch"](1);
+                console.log(_context3.t0);
+
+              case 10:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3, null, [[1, 7]]);
+      }))();
     }
   },
   computed: {
@@ -3537,6 +3573,22 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           }
         }
       }, _callee2);
+    }))();
+  },
+  postFormCompletion: function postFormCompletion(formCompletion, slug) {
+    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              return _context3.abrupt("return", _Api__WEBPACK_IMPORTED_MODULE_1__["default"].post('/form/complete/' + slug, formCompletion));
+
+            case 1:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3);
     }))();
   }
 });
@@ -42163,9 +42215,9 @@ var render = function() {
           [
             _c("text-input", {
               attrs: {
-                isMandatory: this.$props["obj"].input_elements.is_mandatory,
+                isMandatory: this.$props["obj"].input_element.is_mandatory,
                 label: _vm.label,
-                obj: this.$props["obj"].input_elements.text_input
+                obj: this.$props["obj"].input_element.text_input
               }
             })
           ],
@@ -42180,7 +42232,7 @@ var render = function() {
             _c("number-input", {
               attrs: {
                 label: _vm.label,
-                obj: this.$props["obj"].input_elements.number_input,
+                obj: this.$props["obj"].input_element.number_input,
                 isMandatory: _vm.isMandatory
               }
             })
@@ -42196,7 +42248,7 @@ var render = function() {
             _c("date-input", {
               attrs: {
                 label: _vm.label,
-                obj: this.$props["obj"].input_elements.date_input,
+                obj: this.$props["obj"].input_element.date_input,
                 isMandatory: _vm.isMandatory
               }
             })
@@ -42212,7 +42264,7 @@ var render = function() {
             _c("boolean-input", {
               attrs: {
                 label: _vm.label,
-                obj: this.$props["obj"].input_elements.boolean_input,
+                obj: this.$props["obj"].input_element.boolean_input,
                 isMandatory: _vm.isMandatory
               }
             })
@@ -42228,7 +42280,7 @@ var render = function() {
             _c("select-input", {
               attrs: {
                 label: _vm.label,
-                obj: this.$props["obj"].input_elements.select_input,
+                obj: this.$props["obj"].input_element.select_input,
                 isMandatory: _vm.isMandatory
               }
             })

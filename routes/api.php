@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FormCompletionController;
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -21,6 +22,7 @@ Route::post('/register', [UserController::class, 'register']);
 Route::get('/logged_user', [UserController::class, 'show']);
 
 Route::get('/form/{slug}', [FormController::class, 'show']);
+Route::post('/form/complete/{slug}', [FormCompletionController::class, 'store']);
 
 //require user privileges
 Route::group(['middleware' => ['auth:sanctum']], function() {
