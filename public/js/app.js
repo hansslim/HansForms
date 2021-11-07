@@ -2537,7 +2537,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   name: "SelectInput",
   data: function data() {
     return {
-      choices: {}
+      choices: [],
+      type: "radio"
     };
   },
   props: _toConsumableArray(_defaults__WEBPACK_IMPORTED_MODULE_0__.FormElementDefaultProps),
@@ -2545,15 +2546,36 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     validationRules: function validationRules() {
       var validation = [];
       if (this.propsIsMandatory) validation.push(['required']);
+
+      if (this.type === "checkbox") {
+        if (this.propsIsMandatory) {
+          if (this.propsObj.strict_amount_of_answers) {
+            validation.push(['min', this.propsObj.strict_amount_of_answers]);
+            validation.push(['max', this.propsObj.strict_amount_of_answers]);
+          } else {
+            if (this.propsObj.min_amount_of_answers) validation.push(['min', this.propsObj.min_amount_of_answers]);
+            if (this.propsObj.max_amount_of_answers) validation.push(['max', this.propsObj.max_amount_of_answers]);
+          }
+        } else {
+          if (this.propsObj.max_amount_of_answers) validation.push(['max', this.propsObj.max_amount_of_answers]);
+        }
+      } else if (this.type === "radio" && !this.propsIsMandatory) {
+        this.choices = [].concat(_toConsumableArray(this.choices), [{
+          value: "choice-null",
+          label: "I don't want to answer."
+        }]);
+      }
+
       return validation;
     }
   }),
   mounted: function mounted() {
     this.selectChoices();
+    this.selectType();
   },
   methods: _objectSpread(_objectSpread({}, _defaults__WEBPACK_IMPORTED_MODULE_0__.FormElementDefaultMethods), {}, {
     selectChoices: function selectChoices() {
-      var options = this.$props["obj"].select_input_choices.sort(function (a, b) {
+      var options = this.propsObj.select_input_choices.sort(function (a, b) {
         if (a.order < b.order) {
           return -1;
         }
@@ -2572,6 +2594,9 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         });
       });
       this.choices = selectChoices;
+    },
+    selectType: function selectType() {
+      if (this.propsObj.is_multiselect) this.type = "checkbox";else this.type = "radio";
     }
   })
 });
@@ -41993,11 +42018,11 @@ var render = function() {
   return _c(
     "div",
     [
-      _vm._v("\n    " + _vm._s("select") + "\n    "),
+      _vm._v("\n    " + _vm._s(this.type) + "\n    "),
       _c("FormulateInput", {
         attrs: {
           name: this.propsId("select"),
-          type: "radio",
+          type: this.type,
           label: _vm.propsLabel,
           validation: _vm.validationRules,
           validationName: "Select input",
