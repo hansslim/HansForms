@@ -20,7 +20,7 @@ class CreateSelectInputsAnswersTable extends Migration
             //fk: form_completion_id, select_input_id, select_choice_id
             $table->foreignId('form_completion_id')->constrained('form_completions');
             $table->foreignId('select_input_id')->constrained('select_inputs');
-            $table->foreignId('select_choice_id')->constrained('select_input_choices');
+            $table->foreignId('select_choice_id')->nullable()->constrained('select_input_choices');
         });
     }
 

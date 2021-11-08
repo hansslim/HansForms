@@ -9,6 +9,8 @@ class NumberInputAnswer extends Model
 {
     use HasFactory;
 
+    protected $table = "number_inputs_answers";
+
     protected $fillable = [
         'value',
         'form_completion_id',

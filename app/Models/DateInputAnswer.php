@@ -9,6 +9,8 @@ class DateInputAnswer extends Model
 {
     use HasFactory;
 
+    protected $table = "date_inputs_answers";
+
     protected $fillable = [
         'value',
         'form_completion_id',

@@ -9,6 +9,8 @@ class BooleanInputAnswer extends Model
 {
     use HasFactory;
 
+    protected $table = "boolean_inputs_answers";
+
     protected $fillable = [
       'value',
       'form_completion_id',

@@ -56,7 +56,7 @@ class DatabaseSeeder extends Seeder
                 switch ($randomInput) {
                     case 0:
                     {
-                        NumberInput::create(['input_element_id' => $inputElement->id]);
+                        NumberInput::create(['input_element_id' => $inputElement->id, 'can_be_decimal' => true]);
                         break;
                     }
                     case 1:
