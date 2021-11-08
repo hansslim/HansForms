@@ -3504,9 +3504,13 @@ Api.interceptors.response.use(function (response) {
     case 401:
     case 419:
     case 503:
-      _User__WEBPACK_IMPORTED_MODULE_2__["default"].logout().then(function () {
-        return _router__WEBPACK_IMPORTED_MODULE_1__["default"].push('/login');
-      });
+      try {
+        this.$store.logout();
+        _router__WEBPACK_IMPORTED_MODULE_1__["default"].push('/login');
+      } catch (e) {
+        console.log(e);
+      }
+
       break;
 
     case 500:

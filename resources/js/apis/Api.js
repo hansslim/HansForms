@@ -15,7 +15,11 @@ Api.interceptors.response.use(
             case 401:
             case 419:
             case 503:
-                UserApi.logout().then(() => router.push('/login'));
+                try {
+                        this.$store.logout();
+                        router.push('/login');
+                }
+                catch (e) {console.log(e)}
                 break;
             case 500:
                 alert('Internal Server Error');
