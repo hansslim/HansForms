@@ -2,11 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BooleanInputAnswer;
+use App\Models\DateInputAnswer;
 use App\Models\Form;
 use App\Models\FormCompletion;
+use App\Models\NumberInputAnswer;
+use App\Models\SelectInputAnswer;
+use App\Models\TextInputAnswer;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\DB;
 use mysql_xdevapi\Exception;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
@@ -256,7 +262,8 @@ class FormCompletionController extends Controller
                                         if ($cValue->id == $a) {
                                             $validChoiceFound = true;
 
-                                            $validatedChoices[] = [
+                                            //was $validatedChoices
+                                            $correspondingWithForm[] = [
                                                 "type" => "select",
                                                 "id" => $value->inputElement->selectInput->id,
                                                 "value" => $a
@@ -267,7 +274,7 @@ class FormCompletionController extends Controller
                                 }
 
                                 //todo: validate min/max amount of answers,...
-                                $correspondingWithForm[] = $validatedChoices;
+                                //$correspondingWithForm[] = $validatedChoices;
 
                                 if (!$validChoiceFound) abort(400);
                             }
@@ -313,8 +320,67 @@ class FormCompletionController extends Controller
             }
         }
 
+        try {
+            DB::transaction(function () use ($answeredForm, $correspondingWithForm) {
+                $formCompletion = FormCompletion::create(['form_id' => $answeredForm->id]);
+                foreach ($correspondingWithForm as $key => $value) {
+                    //dd($correspondingWithForm);
+                    switch ($value["type"]) {
+                        case "number": {
+                            NumberInputAnswer::create([
+                                "form_completion_id" => $formCompletion->id,
+                                "value" => $value['value'],
+                                "number_input_id" => $value['id']
+                            ]);
 
-        return $correspondingWithForm;
+                            break;
+                        }
+                        case "text": {
+                            TextInputAnswer::create([
+                                "form_completion_id" => $formCompletion->id,
+                                "value" => $value['value'],
+                                "text_input_id" => $value['id']
+                            ]);
+
+                            break;
+                        }
+                        case "date": {
+                            DateInputAnswer::create([
+                                "form_completion_id" => $formCompletion->id,
+                                "value" => $value['value'],
+                                "date_input_id" => $value['id']
+                            ]);
+
+                            break;
+                        }
+                        case "boolean": {
+                            BooleanInputAnswer::create([
+                                "form_completion_id" => $formCompletion->id,
+                                "value" => $value['value'],
+                                "boolean_input_id" => $value['id']
+                            ]);
+
+                            break;
+                        }
+                        case "select": {
+                            SelectInputAnswer::create([
+                                "form_completion_id" => $formCompletion->id,
+                                "select_input_id" => $value['id'],
+                                "select_choice_id" => $value['value'] ?? null
+                            ]);
+                            break;
+                        }
+                        default: break;
+                    }
+                }
+            });
+        }
+        catch (Exception $exception) {
+            error_log($exception->getMessage());
+
+        }
+
+        return response('Answer has been proceeded successfully.', 200);
     }
 
     /**
