@@ -4,7 +4,7 @@ import VuexPersistence from 'vuex-persist';
 
 Vue.use(Vuex);
 
-export default new Vuex.Store({
+const store = new Vuex.Store({
     state: {
         authenticated: false,
         user: null
@@ -40,3 +40,5 @@ export default new Vuex.Store({
     },
     plugins: [new VuexPersistence().plugin]
 });
+
+export default store;

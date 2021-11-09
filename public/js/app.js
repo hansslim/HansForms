@@ -2331,11 +2331,9 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   computed: _objectSpread(_objectSpread({}, _defaults__WEBPACK_IMPORTED_MODULE_0__.FormElementDefaultComputedProps), {}, {
     validationRules: function validationRules() {
       var validation = [];
-      /*
-                  if (!this.propsIsMandatory) this.options = {...this.options, null: "I don't want to answer" }
-                  else validation.push(['required']);
-      */
-
+      if (!this.propsIsMandatory) this.options = _objectSpread(_objectSpread({}, this.options), {}, {
+        "null": "I don't want to answer"
+      });else validation.push(['required']);
       return validation;
     }
   }),
@@ -2403,17 +2401,17 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   computed: _objectSpread(_objectSpread({}, _defaults__WEBPACK_IMPORTED_MODULE_0__.FormElementDefaultComputedProps), {}, {
     validationRules: function validationRules() {
       var validation = [];
-      /*
-                  if (this.propsIsMandatory) validation.push(['required']);
-                  if (this.propsObj.min) {
-                      validation.push(['after', this.propsObj.min]);
-                      this.min = this.propsObj.min;
-                  }
-                  if (this.propsObj.max) {
-                      validation.push(['before', this.propsObj.max]);
-                      this.max = this.propsObj.max;
-                  }
-      */
+      if (this.propsIsMandatory) validation.push(['required']);
+
+      if (this.propsObj.min) {
+        validation.push(['after', this.propsObj.min]);
+        this.min = this.propsObj.min;
+      }
+
+      if (this.propsObj.max) {
+        validation.push(['before', this.propsObj.max]);
+        this.max = this.propsObj.max;
+      }
 
       return validation;
     }
@@ -2481,19 +2479,17 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   computed: _objectSpread(_objectSpread({}, _defaults__WEBPACK_IMPORTED_MODULE_0__.FormElementDefaultComputedProps), {}, {
     validationRules: function validationRules() {
       var validation = [];
-      /*
-                  if (this.propsIsMandatory) validation.push(['required']);
-                  if (this.propsObj.min) validation.push(['min', this.propsObj.min]);
-                  if (this.propsObj.max) validation.push(['max', this.propsObj.max]);
-                  if (this.propsObj.can_be_decimal) {
-                      validation.push(['matches', '/(^[0-9]+[,|.][0-9]+)|(^[0-9]*$)/']);
-                      this.step = "any";
-                  }
-                  else {
-                      validation.push(['matches', '/^[0-9]*$/']);
-                      this.step = "0.0";
-                  }
-      */
+      if (this.propsIsMandatory) validation.push(['required']);
+      if (this.propsObj.min) validation.push(['min', this.propsObj.min]);
+      if (this.propsObj.max) validation.push(['max', this.propsObj.max]);
+
+      if (this.propsObj.can_be_decimal) {
+        validation.push(['matches', '/(^[0-9]+[,|.][0-9]+)|(^[0-9]*$)/']);
+        this.step = "any";
+      } else {
+        validation.push(['matches', '/^[0-9]*$/']);
+        this.step = "0.0";
+      }
 
       return validation;
     }
@@ -2562,27 +2558,26 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   computed: _objectSpread(_objectSpread({}, _defaults__WEBPACK_IMPORTED_MODULE_0__.FormElementDefaultComputedProps), {}, {
     validationRules: function validationRules() {
       var validation = [];
-      /*
-                  if (this.propsIsMandatory) validation.push(['required']);
-                  if (this.type === "checkbox") {
-                      if (this.propsIsMandatory) {
-                          if (this.propsObj.strict_amount_of_answers) {
-                              validation.push(['min', this.propsObj.strict_amount_of_answers]);
-                              validation.push(['max', this.propsObj.strict_amount_of_answers]);
-                          } else {
-                              if (this.propsObj.min_amount_of_answers) validation.push(['min', this.propsObj.min_amount_of_answers]);
-                              if (this.propsObj.max_amount_of_answers) validation.push(['max', this.propsObj.max_amount_of_answers]);
-                          }
-                      }
-                      else {
-                          if (this.propsObj.max_amount_of_answers) validation.push(['max', this.propsObj.max_amount_of_answers]);
-                      }
-      
-                  }
-                  else if (this.type === "radio" && !this.propsIsMandatory){
-                      this.choices = [...this.choices, {value: `choice-null`, label: `I don't want to answer.`}];
-                  }
-      */
+      if (this.propsIsMandatory) validation.push(['required']);
+
+      if (this.type === "checkbox") {
+        if (this.propsIsMandatory) {
+          if (this.propsObj.strict_amount_of_answers) {
+            validation.push(['min', this.propsObj.strict_amount_of_answers]);
+            validation.push(['max', this.propsObj.strict_amount_of_answers]);
+          } else {
+            if (this.propsObj.min_amount_of_answers) validation.push(['min', this.propsObj.min_amount_of_answers]);
+            if (this.propsObj.max_amount_of_answers) validation.push(['max', this.propsObj.max_amount_of_answers]);
+          }
+        } else {
+          if (this.propsObj.max_amount_of_answers) validation.push(['max', this.propsObj.max_amount_of_answers]);
+        }
+      } else if (this.type === "radio" && !this.propsIsMandatory) {
+        this.choices = [].concat(_toConsumableArray(this.choices), [{
+          value: "choice-null",
+          label: "I don't want to answer."
+        }]);
+      }
 
       return validation;
     }
@@ -2673,17 +2668,15 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   computed: _objectSpread(_objectSpread({}, _defaults__WEBPACK_IMPORTED_MODULE_0__.FormElementDefaultComputedProps), {}, {
     validationRules: function validationRules() {
       var validation = [];
-      /*
-                  if (this.propsIsMandatory === true) validation.push(['required']);
-                  if (this.propsObj.strict_length) {
-                      validation.push(['min', this.propsObj.strict_length]);
-                      validation.push(['max', this.propsObj.strict_length]);
-                  }
-                  else {
-                      if (this.propsObj.min_length) validation.push(['min', this.propsObj.min_length]);
-                      if (this.propsObj.max_length) validation.push(['max', this.propsObj.max_length]);
-                  }
-      */
+      if (this.propsIsMandatory === true) validation.push(['required']);
+
+      if (this.propsObj.strict_length) {
+        validation.push(['min', this.propsObj.strict_length]);
+        validation.push(['max', this.propsObj.strict_length]);
+      } else {
+        if (this.propsObj.min_length) validation.push(['min', this.propsObj.min_length]);
+        if (this.propsObj.max_length) validation.push(['max', this.propsObj.max_length]);
+      }
 
       return validation;
     }
@@ -3056,32 +3049,34 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _this3 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
-        var response;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                console.log(_this3.formValues);
-                _context3.prev = 1;
-                _context3.next = 4;
-                return _apis_Form__WEBPACK_IMPORTED_MODULE_1__["default"].postFormCompletion(_this3.formValues, _this3.slug);
+                _context3.prev = 0;
+                _context3.next = 3;
+                return _apis_Form__WEBPACK_IMPORTED_MODULE_1__["default"].postFormCompletion(_this3.formValues, _this3.slug).then(function () {
+                  alert("Answer has been proceeded successfully.");
 
-              case 4:
-                response = _context3.sent;
-                _context3.next = 10;
+                  _this3.$router.push("/");
+                });
+
+              case 3:
+                _context3.next = 9;
                 break;
 
-              case 7:
-                _context3.prev = 7;
-                _context3.t0 = _context3["catch"](1);
+              case 5:
+                _context3.prev = 5;
+                _context3.t0 = _context3["catch"](0);
                 console.log(_context3.t0);
+                alert(_context3.t0);
 
-              case 10:
+              case 9:
               case "end":
                 return _context3.stop();
             }
           }
-        }, _callee3, null, [[1, 7]]);
+        }, _callee3, null, [[0, 5]]);
       }))();
     }
   },
@@ -3134,6 +3129,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -3149,34 +3149,53 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   mounted: function mounted() {
     this.getForms();
   },
+  computed: {
+    loggedUserName: function loggedUserName() {
+      if (this.$store.getters['user']) {
+        return this.$store.getters['user'].name;
+      } else return "";
+    }
+  },
   methods: {
     getForms: function getForms() {
       var _this = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
-        var getforms;
+        var getForms;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
                 if (!_this.$store.getters['authenticated']) {
-                  _context.next = 5;
+                  _context.next = 11;
                   break;
                 }
 
-                _context.next = 3;
+                _context.prev = 1;
+                _context.next = 4;
                 return _apis_Form__WEBPACK_IMPORTED_MODULE_1__["default"].getAllForms();
 
-              case 3:
-                getforms = _context.sent;
-                _this.forms = getforms.data;
+              case 4:
+                getForms = _context.sent;
 
-              case 5:
+                if (getForms) {
+                  _this.forms = getForms.data;
+                }
+
+                _context.next = 11;
+                break;
+
+              case 8:
+                _context.prev = 8;
+                _context.t0 = _context["catch"](1);
+                console.log(_context.t0);
+
+              case 11:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee);
+        }, _callee, null, [[1, 8]]);
       }))();
     },
     getSlugPath: function getSlugPath(form) {
@@ -3490,7 +3509,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../router */ "./resources/js/router/index.js");
-/* harmony import */ var _User__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./User */ "./resources/js/apis/User.js");
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../store */ "./resources/js/store/index.js");
+
 
 
 
@@ -3505,7 +3525,7 @@ Api.interceptors.response.use(function (response) {
     case 419:
     case 503:
       try {
-        this.$store.logout();
+        _store__WEBPACK_IMPORTED_MODULE_2__["default"].dispatch('logout');
         _router__WEBPACK_IMPORTED_MODULE_1__["default"].push('/login');
       } catch (e) {
         console.log(e);
@@ -3892,7 +3912,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 vue__WEBPACK_IMPORTED_MODULE_0__["default"].use(vuex__WEBPACK_IMPORTED_MODULE_1__["default"]);
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
+var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
   state: {
     authenticated: false,
     user: null
@@ -3930,7 +3950,8 @@ vue__WEBPACK_IMPORTED_MODULE_0__["default"].use(vuex__WEBPACK_IMPORTED_MODULE_1_
     }
   },
   plugins: [new vuex_persist__WEBPACK_IMPORTED_MODULE_2__["default"]().plugin]
-}));
+});
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (store);
 
 /***/ }),
 
@@ -42568,13 +42589,13 @@ var render = function() {
           _c(
             "p",
             [
-              _vm._v("Do you want to create your own survey? "),
+              _vm._v("Do you want to create your own survey?\n            "),
               _c("router-link", { attrs: { to: "/login" } }, [
                 _vm._v("Log in")
               ]),
-              _vm._v(" your account to start!"),
+              _vm._v("\n            your account to start!"),
               _c("br"),
-              _vm._v("\n           Don't you have any account? "),
+              _vm._v("\n            Don't you have any account?\n            "),
               _c("router-link", { attrs: { to: "/register" } }, [
                 _vm._v("Register here.")
               ])
@@ -42585,11 +42606,7 @@ var render = function() {
       : _c(
           "div",
           [
-            _c("h1", [
-              _vm._v(
-                "Welcome, " + _vm._s(this.$store.getters["user"].name) + "."
-              )
-            ]),
+            _c("h1", [_vm._v("Welcome, " + _vm._s(_vm.loggedUserName) + ".")]),
             _vm._v(" "),
             _c("hr"),
             _vm._v(" "),

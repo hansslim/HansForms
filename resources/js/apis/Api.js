@@ -1,6 +1,7 @@
 import axios from 'axios';
+import Vue from 'vue';
 import router from '../router';
-import UserApi from './User';
+import store from '../store';
 
 const Api = axios.create({
     baseURL: 'http://localhost:8000/api'
@@ -16,10 +17,11 @@ Api.interceptors.response.use(
             case 419:
             case 503:
                 try {
-                        this.$store.logout();
-                        router.push('/login');
+                    store.dispatch('logout');
+                    router.push('/login');
+                } catch (e) {
+                    console.log(e)
                 }
-                catch (e) {console.log(e)}
                 break;
             case 500:
                 alert('Internal Server Error');
