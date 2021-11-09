@@ -31,7 +31,6 @@ export default {
         validationRules() {
             let validation = [];
 
-/*
             if (this.propsIsMandatory) validation.push(['required']);
             if (this.propsObj.min) {
                 validation.push(['after', this.propsObj.min]);
@@ -41,7 +40,6 @@ export default {
                 validation.push(['before', this.propsObj.max]);
                 this.max = this.propsObj.max;
             }
-*/
 
             return validation;
         }},

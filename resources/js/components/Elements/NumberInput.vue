@@ -30,7 +30,6 @@ export default {
         validationRules() {
             let validation = [];
 
-/*
             if (this.propsIsMandatory) validation.push(['required']);
             if (this.propsObj.min) validation.push(['min', this.propsObj.min]);
             if (this.propsObj.max) validation.push(['max', this.propsObj.max]);
@@ -42,7 +41,6 @@ export default {
                 validation.push(['matches', '/^[0-9]*$/']);
                 this.step = "0.0";
             }
-*/
 
             return validation;
         }},

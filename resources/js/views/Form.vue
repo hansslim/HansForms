@@ -63,12 +63,16 @@ export default {
             });
         },
         async submitForm() {
-            console.log(this.formValues)
             try {
-                const response = await Form.postFormCompletion(this.formValues, this.slug);
+                await Form.postFormCompletion(this.formValues, this.slug).then(()=> {
+                    alert("Answer has been proceeded successfully.");
+                    this.$router.push("/");
+                });
+
             }
             catch (error) {
                 console.log(error);
+                alert(error);
             }
         }
     },

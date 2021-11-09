@@ -25,7 +25,6 @@ export default {
         validationRules() {
             let validation = [];
 
-/*
             if (this.propsIsMandatory === true) validation.push(['required']);
             if (this.propsObj.strict_length) {
                 validation.push(['min', this.propsObj.strict_length]);
@@ -35,7 +34,6 @@ export default {
                 if (this.propsObj.min_length) validation.push(['min', this.propsObj.min_length]);
                 if (this.propsObj.max_length) validation.push(['max', this.propsObj.max_length]);
             }
-*/
 
             return validation;
         },
