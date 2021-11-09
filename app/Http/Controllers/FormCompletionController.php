@@ -90,7 +90,6 @@ class FormCompletionController extends Controller
             }
         }
 
-
         $correspondingWithForm = [];
         foreach ($answeredForm->formElements as $key => $value) {
             if ($value->inputElement) {
@@ -100,8 +99,14 @@ class FormCompletionController extends Controller
                     $answer = getCorrespondingValue($request, "boolean", $value->inputElement->booleanInput->id);
                     switch ($answer['value']) {
                         case 'true':
+                        {
+                            $answer['value'] = true;
+                            $correspondingWithForm[] = $answer;
+                            break;
+                        }
                         case 'false':
                         {
+                            $answer['value'] = false;
                             $correspondingWithForm[] = $answer;
                             break;
                         }
@@ -110,6 +115,7 @@ class FormCompletionController extends Controller
                         case 'null':
                         {
                             if ($isMandatory) {
+                                error_log("Bad request (validation was not successful [boolean-{$answer['id']} is mandatory])", 400);
                                 abort(400);
                             } else {
                                 $answer['value'] = null;
@@ -118,6 +124,7 @@ class FormCompletionController extends Controller
                             break;
                         }
                         default:
+                            error_log("Bad request (validation was not successful [boolean-{$answer['id']} is invalid])", 400);
                             abort(400);
 
                     }
@@ -130,6 +137,7 @@ class FormCompletionController extends Controller
                         case '':
                         {
                             if ($isMandatory) {
+                                error_log("Bad request (validation was not successful [date-{$answer['id']} is mandatory])", 400);
                                 abort(400);
                             } else {
                                 $answer['value'] = null;
@@ -146,18 +154,27 @@ class FormCompletionController extends Controller
                                 return $d && $d->format($format) == $date;
                             }
 
-                            if (!validateDate($answer['value'], 'Y-m-d')) abort(400);
+                            if (!validateDate($answer['value'], 'Y-m-d')) {
+                                error_log("Bad request (validation was not successful [date-{$answer['id']} unsupported format])", 400);
+                                abort(400);
+                            }
 
                             //validate conditions
                             $answerDateTime = new DateTime($answer['value']);
 
                             if ($value->inputElement->dateInput->min) {
                                 $minDateTime = new DateTime($value->inputElement->dateInput->min);
-                                if ($answerDateTime < $minDateTime) abort(400);
+                                if ($answerDateTime < $minDateTime) {
+                                    error_log("Bad request (validation was not successful [date-{$answer['id']} is lower than expected])", 400);
+                                    abort(400);
+                                }
                             }
                             if ($value->inputElement->dateInput->max) {
                                 $maxDateTime = new DateTime($value->inputElement->dateInput->max);
-                                if ($answerDateTime > $maxDateTime) abort(400);
+                                if ($answerDateTime > $maxDateTime) {
+                                    error_log("Bad request (validation was not successful [date-{$answer['id']} is higher than expected])", 400);
+                                    abort(400);
+                                }
                             }
 
                             $correspondingWithForm[] = $answer;
@@ -172,6 +189,7 @@ class FormCompletionController extends Controller
                         case '':
                         {
                             if ($isMandatory) {
+                                error_log("Bad request (validation was not successful [text-{$answer['id']} is mandatory])", 400);
                                 abort(400);
                             } else {
                                 $answer['value'] = null;
@@ -182,13 +200,22 @@ class FormCompletionController extends Controller
                         default:
                         {
                             if ($value->inputElement->textInput->strict_length) {
-                                if (mb_strlen($answer['value']) != $value->inputElement->textInput->strict_length) abort(400);
+                                if (mb_strlen($answer['value']) != $value->inputElement->textInput->strict_length) {
+                                    error_log("Bad request (validation was not successful [text-{$answer['id']} doesn't fit strict length])", 400);
+                                    abort(400);
+                                }
                             } else {
                                 if ($value->inputElement->textInput->min_length) {
-                                    if (mb_strlen($answer['value']) < $value->inputElement->textInput->min_length) abort(400);
+                                    if (mb_strlen($answer['value']) < $value->inputElement->textInput->min_length) {
+                                        error_log("Bad request (validation was not successful [text-{$answer['id']} has lower length than expected])", 400);
+                                        abort(400);
+                                    }
                                 }
                                 if ($value->inputElement->textInput->max_length) {
-                                    if (mb_strlen($answer['value']) > $value->inputElement->textInput->max_length) abort(400);
+                                    if (mb_strlen($answer['value']) > $value->inputElement->textInput->max_length) {
+                                        error_log("Bad request (validation was not successful [text-{$answer['id']} has higher length than expected])", 400);
+                                        abort(400);
+                                    }
                                 }
                             }
 
@@ -204,6 +231,7 @@ class FormCompletionController extends Controller
                         case '':
                         {
                             if ($isMandatory) {
+                                error_log("Bad request (validation was not successful [number-{$answer['id']} is mandatory])", 400);
                                 abort(400);
                             } else {
                                 $answer['value'] = null;
@@ -217,19 +245,34 @@ class FormCompletionController extends Controller
                                 if (is_numeric($answer['value'])) {
 
                                     if (!$value->inputElement->numberInput->can_be_decimal) {
-                                        if (!preg_match('/^[0-9]*$/', $answer['value'])) abort(400);
+                                        if (!preg_match('/^[0-9]*$/', $answer['value'])) {
+                                            error_log("Bad request (validation was not successful [number-{$answer['id']} cannot be decimal])", 400);
+                                            abort(400);
+                                        }
                                     }
 
                                     if ($value->inputElement->numberInput->min) {
-                                        if ($answer['value'] < $value->inputElement->numberInput->min) abort(400);
+                                        if ($answer['value'] < $value->inputElement->numberInput->min) {
+                                            error_log("Bad request (validation was not successful [number-{$answer['id']} is lower than expected])", 400);
+                                            abort(400);
+                                        }
                                     }
                                     if ($value->inputElement->numberInput->max) {
-                                        if ($answer['value'] > $value->inputElement->numberInput->max) abort(400);
+                                        if ($answer['value'] > $value->inputElement->numberInput->max) {
+                                            error_log("Bad request (validation was not successful [number-{$answer['id']} is higher than expected])", 400);
+                                            abort(400);
+                                        }
                                     }
 
                                     $correspondingWithForm[] = $answer;
-                                } else abort(400);
-                            } else abort(400);
+                                } else {
+                                    error_log("Bad request (validation was not successful [number-{$answer['id']} isn't number])", 400);
+                                    abort(400);
+                                }
+                            } else {
+                                error_log("Bad request (validation was not successful [number-{$answer['id']} doesn't match number format])", 400);
+                                abort(400);
+                            }
                         }
                     }
 
@@ -243,6 +286,7 @@ class FormCompletionController extends Controller
                             case '':
                             {
                                 if ($isMandatory) {
+                                    error_log("Bad request (validation was not successful [select-{$answer['id']} (checkbox) is mandatory])", 400);
                                     abort(400);
                                 } else {
                                     $answer['value'] = null;
@@ -262,8 +306,7 @@ class FormCompletionController extends Controller
                                         if ($cValue->id == $a) {
                                             $validChoiceFound = true;
 
-                                            //was $validatedChoices
-                                            $correspondingWithForm[] = [
+                                            $validatedChoices[] = [
                                                 "type" => "select",
                                                 "id" => $value->inputElement->selectInput->id,
                                                 "value" => $a
@@ -273,10 +316,33 @@ class FormCompletionController extends Controller
                                     }
                                 }
 
-                                //todo: validate min/max amount of answers,...
-                                //$correspondingWithForm[] = $validatedChoices;
+                                if ($value->inputElement->selectInput->min_amount_of_answers) {
+                                    if (count($validatedChoices) < $value->inputElement->selectInput->min_amount_of_answers) {
+                                        error_log("Bad request (validation was not successful [select-{$answer['id']} (checkbox) expects more answers])", 400);
+                                        abort(400);
+                                    }
+                                }
 
-                                if (!$validChoiceFound) abort(400);
+                                if ($value->inputElement->selectInput->max_amount_of_answers) {
+                                    if (count($validatedChoices) > $value->inputElement->selectInput->max_amount_of_answers) {
+                                        error_log("Bad request (validation was not successful [select-{$answer['id']} (checkbox) expects less answers])", 400);
+                                        abort(400);
+                                    }
+                                }
+
+                                if ($value->inputElement->selectInput->strict_amount_of_answers) {
+                                    if (count($validatedChoices) != $value->inputElement->selectInput->strict_amount_of_answers) {
+                                        error_log("Bad request (validation was not successful [select-{$answer['id']} (checkbox) expects strict amount of answers])", 400);
+                                        abort(400);
+                                    }
+                                }
+
+
+                                $correspondingWithForm = array_merge($correspondingWithForm, $validatedChoices);
+                                if (!$validChoiceFound) {
+                                    error_log("Bad request (validation was not successful [select-{$answer['id']} (checkbox) invalid answers])", 400);
+                                    abort(400);
+                                }
                             }
                         }
 
@@ -287,6 +353,7 @@ class FormCompletionController extends Controller
                             case '':
                             {
                                 if ($isMandatory) {
+                                    error_log("Bad request (validation was not successful [select-{$answer['id']} (radio) is mandatory])", 400);
                                     abort(400);
                                 } else {
                                     $answer['value'] = null;
@@ -309,8 +376,12 @@ class FormCompletionController extends Controller
                                         }
                                     }
 
-                                    if (!$validChoiceFound) abort(400);
+                                    if (!$validChoiceFound) {
+                                        error_log("Bad request (validation was not successful [select-{$answer['id']} (radio) invalid answer])", 400);
+                                        abort(400);
+                                    }
                                 } catch (Exception $exception) {
+                                    error_log("Bad request (validation was not successful [select-{$answer['id']} (radio) invalid data])", 400);
                                     abort(400);
                                 }
                             }
@@ -324,9 +395,9 @@ class FormCompletionController extends Controller
             DB::transaction(function () use ($answeredForm, $correspondingWithForm) {
                 $formCompletion = FormCompletion::create(['form_id' => $answeredForm->id]);
                 foreach ($correspondingWithForm as $key => $value) {
-                    //dd($correspondingWithForm);
                     switch ($value["type"]) {
-                        case "number": {
+                        case "number":
+                        {
                             NumberInputAnswer::create([
                                 "form_completion_id" => $formCompletion->id,
                                 "value" => $value['value'],
@@ -335,7 +406,8 @@ class FormCompletionController extends Controller
 
                             break;
                         }
-                        case "text": {
+                        case "text":
+                        {
                             TextInputAnswer::create([
                                 "form_completion_id" => $formCompletion->id,
                                 "value" => $value['value'],
@@ -344,7 +416,8 @@ class FormCompletionController extends Controller
 
                             break;
                         }
-                        case "date": {
+                        case "date":
+                        {
                             DateInputAnswer::create([
                                 "form_completion_id" => $formCompletion->id,
                                 "value" => $value['value'],
@@ -353,7 +426,8 @@ class FormCompletionController extends Controller
 
                             break;
                         }
-                        case "boolean": {
+                        case "boolean":
+                        {
                             BooleanInputAnswer::create([
                                 "form_completion_id" => $formCompletion->id,
                                 "value" => $value['value'],
@@ -362,7 +436,8 @@ class FormCompletionController extends Controller
 
                             break;
                         }
-                        case "select": {
+                        case "select":
+                        {
                             SelectInputAnswer::create([
                                 "form_completion_id" => $formCompletion->id,
                                 "select_input_id" => $value['id'],
@@ -370,16 +445,15 @@ class FormCompletionController extends Controller
                             ]);
                             break;
                         }
-                        default: break;
+                        default:
+                            break;
                     }
                 }
             });
+        } catch (Exception $exception) {
+            error_log("Bad request (validation was not successful [Database manipulation failure])", 400);
+            abort(400);
         }
-        catch (Exception $exception) {
-            error_log($exception->getMessage());
-
-        }
-
         return response('Answer has been proceeded successfully.', 200);
     }
 
