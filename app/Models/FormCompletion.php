@@ -13,6 +13,14 @@ class FormCompletion extends Model
         'form_id'
     ];
 
+    protected $with = [
+        "booleanInputAnswers",
+        "dateInputAnswers",
+        "textInputAnswers",
+        "numberInputAnswers",
+        "selectInputAnswers"
+    ];
+
     public function form() {
         return $this->belongsTo(Form::class);
     }
