@@ -46,8 +46,9 @@ class FormController extends Controller
             ->first();
         if ($form) {
             unset($form->user->email);
+            return $form;
         }
-        return $form;
+        else return response('Not Found', 404);
     }
 
     /**
