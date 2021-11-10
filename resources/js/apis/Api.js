@@ -23,6 +23,10 @@ Api.interceptors.response.use(
                     console.log(e)
                 }
                 break;
+            case 404: {
+                router.push('/not-found');
+                break;
+            }
             case 500:
                 alert('Internal Server Error');
                 break;

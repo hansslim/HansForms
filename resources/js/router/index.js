@@ -8,6 +8,8 @@ import Register from "../views/Register.vue";
 import store from "../store";
 import Profile from "../views/Profile";
 import Form from "../views/Form";
+import NotFound from "../views/NotFound";
+import CreateForm from "../views/CreateForm";
 
 Vue.use(VueRouter);
 
@@ -42,8 +44,13 @@ const routes = [
     },
     {
         path: "/form/:slug",
-        name: "form",
+        name: "Form",
         component: Form,
+    },
+    {
+        path: "/create_form",
+        name: "CreateForm",
+        component: CreateForm,
     },
 ];
 
