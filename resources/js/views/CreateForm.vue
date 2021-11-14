@@ -34,7 +34,6 @@ export default {
         },
         handleItemsChanged() {
             this.items = createFormStore.getItems()
-            //console.log(this.items);
         },
 
     }
@@ -77,6 +76,7 @@ export let createFormStore = {
     },
     deleteItem(item) {
         this.data.items = this.data.items.filter((x)=>x.id!==item.id);
+        this.refreshItemsOrder();
     }
 }
 </script>
