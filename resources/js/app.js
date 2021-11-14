@@ -5,8 +5,10 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import VueFormulate from '@braid/vue-formulate'
+import VModal from 'vue-js-modal'
 
 Vue.use(VueFormulate);
+Vue.use(VModal)
 
 Vue.config.productionTip = false;
 

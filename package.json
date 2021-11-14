@@ -26,6 +26,8 @@
     },
     "dependencies": {
         "@braid/vue-formulate": "^2.5.2",
+        "uuid": "^8.3.2",
+        "vue-js-modal": "^2.0.1",
         "vue-router": "^3.5.2",
         "vuex": "^3.6.2",
         "vuex-persist": "^3.1.3"
