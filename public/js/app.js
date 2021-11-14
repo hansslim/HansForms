@@ -3040,6 +3040,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -3111,8 +3118,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   },
   methods: {
     handleFormSubmit: function handleFormSubmit() {
-      if (this.$props['purpose'] === "add") this.addNewItem();else if (this.$props['purpose'] === "update") this.updateItem();
-      this.$modal.hide(this.$parent.name);
+      if (this.validateSpecificFormData()) {
+        if (this.$props['purpose'] === "add") this.addNewItem();else if (this.$props['purpose'] === "update") this.updateItem();
+        this.$modal.hide(this.$parent.name);
+      }
     },
     addNewItem: function addNewItem() {
       _views_CreateForm__WEBPACK_IMPORTED_MODULE_0__.createFormStore.addItem(_objectSpread(_objectSpread({}, this.formValues), {}, {
@@ -3132,6 +3141,37 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           order: this.item.order
         }));
         this.$modal.hide(this.$parent.name);
+      }
+    },
+    validateSpecificFormData: function validateSpecificFormData() {
+      switch (this.item.type) {
+        case "text":
+          {
+            if (this.formValues.min_length && this.formValues.max_length) {
+              if (parseInt(this.formValues.max_length) <= parseInt(this.formValues.min_length)) {
+                this.trivialFormulateErrorHandler('Minimal and maximal values are invalid.');
+                return false;
+              } else {
+                this.trivialFormulateErrorHandler();
+                return true;
+              }
+            }
+
+            return true;
+          }
+      }
+    },
+    trivialFormulateErrorHandler: function trivialFormulateErrorHandler() {
+      var error = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+      if (error) {
+        this.$formulate.handle({
+          formErrors: [error]
+        }, 'modalForm');
+      } else {
+        this.$formulate.handle({
+          formErrors: []
+        }, 'modalForm');
       }
     }
   }
@@ -3288,8 +3328,42 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  name: "TextItem"
+  name: "TextItem",
+  data: function data() {
+    return {
+      min_length: "",
+      max_length: "",
+      strict_length: "",
+      strict: true,
+      range: true
+    };
+  },
+  methods: {
+    showWantedInputs: function showWantedInputs() {
+      if (this.max_length || this.min_length) {
+        this.strict = false;
+        this.range = true;
+      } else this.strict = true;
+
+      if (this.strict_length) {
+        this.range = false;
+        this.strict = true;
+      } else this.range = true;
+    }
+  }
 });
 
 /***/ }),
@@ -3360,7 +3434,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       });
     },
     handleItemsChanged: function handleItemsChanged() {
-      this.items = createFormStore.getItems(); //console.log(this.items);
+      this.items = createFormStore.getItems();
     }
   }
 });
@@ -3407,6 +3481,7 @@ var createFormStore = {
     this.data.items = this.data.items.filter(function (x) {
       return x.id !== item.id;
     });
+    this.refreshItemsOrder();
   }
 };
 
@@ -43826,6 +43901,7 @@ var render = function() {
       _c(
         "FormulateForm",
         {
+          attrs: { name: "modalForm" },
           on: { submit: _vm.handleFormSubmit },
           model: {
             value: _vm.formValues,
@@ -43844,7 +43920,8 @@ var render = function() {
               options: _vm.options,
               type: "select",
               placeholder: "Select an option",
-              label: "Select type of question"
+              label: "Select type of question",
+              validation: [["required"]]
             },
             model: {
               value: _vm.item.type,
@@ -43864,7 +43941,12 @@ var render = function() {
                   _c("h2", [_vm._v(_vm._s(_vm.item.type))]),
                   _vm._v(" "),
                   _c("FormulateInput", {
-                    attrs: { name: "header", label: "Question", type: "text" },
+                    attrs: {
+                      name: "header",
+                      label: "Question",
+                      type: "text",
+                      validation: [["required"]]
+                    },
                     model: {
                       value: _vm.item.question,
                       callback: function($$v) {
@@ -43905,6 +43987,8 @@ var render = function() {
                     : _vm._e(),
                   _vm._v(" "),
                   _c("hr"),
+                  _vm._v(" "),
+                  _c("FormulateErrors"),
                   _vm._v(" "),
                   _c("FormulateInput", {
                     attrs: { type: "submit", name: _vm.submitFormButtonText }
@@ -44103,23 +44187,73 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    [
-      _c("FormulateInput", {
-        attrs: { name: "min_length", label: "Minimal length", type: "number" }
-      }),
-      _vm._v(" "),
-      _c("FormulateInput", {
-        attrs: { name: "max_length", label: "Maximal length", type: "number" }
-      }),
-      _vm._v(" "),
-      _c("FormulateInput", {
-        attrs: { name: "strict_length", label: "Strict length", type: "number" }
-      })
-    ],
-    1
-  )
+  return _c("div", [
+    _vm.range
+      ? _c(
+          "div",
+          [
+            _c("FormulateInput", {
+              attrs: {
+                name: "min_length",
+                label: "Minimal length",
+                type: "number",
+                min: "0"
+              },
+              on: { input: _vm.showWantedInputs },
+              model: {
+                value: _vm.min_length,
+                callback: function($$v) {
+                  _vm.min_length = $$v
+                },
+                expression: "min_length"
+              }
+            }),
+            _vm._v(" "),
+            _c("FormulateInput", {
+              attrs: {
+                name: "max_length",
+                label: "Maximal length",
+                type: "number",
+                min: "0"
+              },
+              on: { input: _vm.showWantedInputs },
+              model: {
+                value: _vm.max_length,
+                callback: function($$v) {
+                  _vm.max_length = $$v
+                },
+                expression: "max_length"
+              }
+            })
+          ],
+          1
+        )
+      : _vm._e(),
+    _vm._v(" "),
+    _vm.strict
+      ? _c(
+          "div",
+          [
+            _c("FormulateInput", {
+              attrs: {
+                name: "strict_length",
+                label: "Strict length",
+                type: "number"
+              },
+              on: { input: _vm.showWantedInputs },
+              model: {
+                value: _vm.strict_length,
+                callback: function($$v) {
+                  _vm.strict_length = $$v
+                },
+                expression: "strict_length"
+              }
+            })
+          ],
+          1
+        )
+      : _vm._e()
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true

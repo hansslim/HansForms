@@ -1,6 +1,10 @@
 <template>
     <div class="container">
-        <FormulateForm @submit="handleFormSubmit" v-model="formValues">
+        <FormulateForm
+            @submit="handleFormSubmit"
+            v-model="formValues"
+            name="modalForm"
+        >
             <h2>{{modalHeaderText}}</h2>
             <FormulateInput
                 v-model="item.type"
@@ -9,6 +13,7 @@
                 type="select"
                 placeholder="Select an option"
                 label="Select type of question"
+                :validation="[['required']]"
             />
             <div v-if="item.type">
                 <hr>
@@ -18,6 +23,7 @@
                     label="Question"
                     type="text"
                     v-model="item.question"
+                    :validation="[['required']]"
                 />
                 <FormulateInput
                     name="is_mandatory"
@@ -31,6 +37,7 @@
                 <date-item v-if="item.type==='date'"/>
                 <select-item v-if="item.type==='select'" :obj="this.$props['obj']"/>
                 <hr>
+                <FormulateErrors />
                 <FormulateInput
                     type="submit"
                     :name="submitFormButtonText"
@@ -107,10 +114,11 @@ export default {
     },
     methods: {
         handleFormSubmit() {
-            if (this.$props['purpose'] === "add") this.addNewItem();
-            else if (this.$props['purpose'] === "update") this.updateItem();
-
-            this.$modal.hide(this.$parent.name)
+            if (this.validateSpecificFormData()) {
+                if (this.$props['purpose'] === "add") this.addNewItem();
+                else if (this.$props['purpose'] === "update") this.updateItem();
+                this.$modal.hide(this.$parent.name)
+            }
         },
         addNewItem() {
             createFormStore.addItem({...this.formValues, id: uuidv4()});
@@ -122,6 +130,35 @@ export default {
             if (confirm("Are you sure that you want to delete this item?")) {
                 createFormStore.deleteItem({...this.formValues, id: this.item.id, order: this.item.order});
                 this.$modal.hide(this.$parent.name)
+            }
+        },
+        validateSpecificFormData(){
+            switch (this.item.type) {
+                case "text": {
+                    if (this.formValues.min_length && this.formValues.max_length) {
+                        if (parseInt(this.formValues.max_length) <= (parseInt(this.formValues.min_length))) {
+                            this.trivialFormulateErrorHandler('Minimal and maximal values are invalid.');
+                            return false;
+                        }
+                        else {
+                            this.trivialFormulateErrorHandler();
+                            return true;
+                        }
+                    }
+                    return true;
+                }
+            }
+        },
+        trivialFormulateErrorHandler(error=null) {
+            if (error) {
+                this.$formulate.handle({
+                    formErrors: [error]
+                }, 'modalForm');
+            }
+            else {
+                this.$formulate.handle({
+                    formErrors: []
+                }, 'modalForm');
             }
         }
     }
