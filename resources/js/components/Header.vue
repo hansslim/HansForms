@@ -13,8 +13,9 @@
                             {{ accountText }}
                         </a>
                         <div class="dropdown-menu dropdown-menu-right">
-                          <template v-if="authenticated">
+                            <template v-if="authenticated">
                                 <router-link class="dropdown-item" to="/profile">Profile</router-link>
+                                <router-link class="dropdown-item" to="/create_form">Create new...</router-link>
                                 <a class="dropdown-item" href="#" @click.prevent="logout">Logout</a>
                             </template>
                             <template v-else>
@@ -38,8 +39,7 @@ export default {
         accountText() {
             if (this.$store.getters['user'] !== null) {
                 return this.$store.getters['user'].name;
-            }
-            else return "Account";
+            } else return "Account";
         },
         authenticated() {
             return this.$store.getters['authenticated'];

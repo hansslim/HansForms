@@ -1,24 +1,31 @@
 <template>
-    <div class="home container">
-        <div v-if="!this.$store.getters['authenticated']">
-            <br>
-            <h1>Surveys Application</h1>
-            <p>Do you want to create your own survey?
-                <router-link to="/login">Log in</router-link>
-                your account to start!<br>
-                Don't you have any account?
-                <router-link to="/register">Register here.</router-link>
-            </p>
+    <div>
+        <div v-if="!loading">
+            <div class="home container">
+                <div v-if="!this.$store.getters['authenticated']">
+                    <br>
+                    <h1>Surveys Application</h1>
+                    <p>Do you want to create your own survey?
+                        <router-link to="/login">Log in</router-link>
+                        your account to start!<br>
+                        Don't you have any account?
+                        <router-link to="/register">Register here.</router-link>
+                    </p>
 
+                </div>
+                <div v-else>
+                    <h1>Welcome, {{ loggedUserName }}.</h1>
+                    <hr>
+                    <FormPreview v-for="form in forms" :key="form.id" :created_at="form.created_at"
+                                 :description="form.description" :name="form.name" :slug="getSlugPath(form)"></FormPreview>
+                </div>
+
+
+            </div>
         </div>
         <div v-else>
-            <h1>Welcome, {{ loggedUserName }}.</h1>
-            <hr>
-            <FormPreview v-for="form in forms" :key="form.id" :created_at="form.created_at"
-                         :description="form.description" :name="form.name" :slug="getSlugPath(form)"></FormPreview>
+            loading
         </div>
-
-
     </div>
 </template>
 
@@ -32,11 +39,13 @@ export default {
     components: {FormPreview},
     data() {
         return {
-            forms: {}
+            forms: {},
+            loading: true
         }
     },
-    mounted() {
-        this.getForms();
+    async mounted() {
+        await this.getForms();
+        this.loading = false;
     },
     computed: {
         loggedUserName() {
