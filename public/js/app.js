@@ -3046,7 +3046,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
 
 
 
@@ -3147,17 +3146,141 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       switch (this.item.type) {
         case "text":
           {
-            if (this.formValues.min_length && this.formValues.max_length) {
-              if (parseInt(this.formValues.max_length) <= parseInt(this.formValues.min_length)) {
-                this.trivialFormulateErrorHandler('Minimal and maximal values are invalid.');
-                return false;
-              } else {
-                this.trivialFormulateErrorHandler();
-                return true;
+            try {
+              if (this.formValues.min_length !== "" && this.formValues.min_length !== undefined) {
+                if (isNaN(parseInt(this.formValues.min_length))) {
+                  this.trivialFormulateErrorHandler("Invalid minimal length value.");
+                  return false;
+                }
               }
-            }
 
-            return true;
+              if (this.formValues.max_length !== "" && this.formValues.max_length !== undefined) {
+                if (isNaN(parseInt(this.formValues.max_length))) {
+                  this.trivialFormulateErrorHandler("Invalid maximal length value.");
+                  return false;
+                }
+              }
+
+              if (this.formValues.strict_length !== "" && this.formValues.strict_length !== undefined) {
+                if (isNaN(parseInt(this.formValues.strict_length))) {
+                  this.trivialFormulateErrorHandler("Invalid strict length value.");
+                  return false;
+                }
+              }
+
+              if (this.formValues.min_length && this.formValues.max_length) {
+                if (parseInt(this.formValues.max_length) <= parseInt(this.formValues.min_length)) {
+                  this.trivialFormulateErrorHandler('Minimal length value is higher than maximal length value.');
+                  return false;
+                }
+              }
+
+              this.trivialFormulateErrorHandler();
+              return true;
+            } catch (e) {
+              this.trivialFormulateErrorHandler(e);
+              return false;
+            }
+          }
+
+        case "number":
+          {
+            try {
+              if (this.formValues.min !== "" && this.formValues.min !== undefined) {
+                if (isNaN(parseInt(this.formValues.min))) {
+                  this.trivialFormulateErrorHandler("Invalid minimal value.");
+                  return false;
+                }
+              }
+
+              if (this.formValues.max !== "" && this.formValues.max !== undefined) {
+                if (isNaN(parseInt(this.formValues.max))) {
+                  this.trivialFormulateErrorHandler("Invalid maximal value.");
+                  return false;
+                }
+              }
+
+              if (this.formValues.min && this.formValues.max) {
+                if (parseInt(this.formValues.max) <= parseInt(this.formValues.min)) {
+                  this.trivialFormulateErrorHandler('Minimal value is higher than maximal value.');
+                  return false;
+                }
+              }
+
+              this.trivialFormulateErrorHandler();
+              return true;
+            } catch (e) {
+              this.trivialFormulateErrorHandler(e);
+              return false;
+            }
+          }
+
+        case "date":
+          {
+            try {
+              if (this.formValues.min !== "") {
+                var min = new Date(this.formValues.min).getTime();
+                var max = new Date(this.formValues.max).getTime();
+
+                if (min && max) {
+                  if (parseInt(max) <= parseInt(min)) {
+                    this.trivialFormulateErrorHandler('Minimal date value is higher than maximal date value.');
+                    return false;
+                  }
+                }
+              }
+
+              this.trivialFormulateErrorHandler();
+              return true;
+            } catch (e) {
+              this.trivialFormulateErrorHandler(e);
+              return false;
+            }
+          }
+
+        case "select":
+          {
+            try {
+              if (this.formValues.min_amount_of_answers !== "" && this.formValues.min_amount_of_answers !== undefined) {
+                if (isNaN(parseInt(this.formValues.min_amount_of_answers))) {
+                  this.trivialFormulateErrorHandler("Invalid minimal amount of choices value.");
+                  return false;
+                }
+              }
+
+              if (this.formValues.max_amount_of_answers !== "" && this.formValues.max_amount_of_answers !== undefined) {
+                if (isNaN(parseInt(this.formValues.max_amount_of_answers))) {
+                  this.trivialFormulateErrorHandler("Invalid maximal amount of choices value.");
+                  return false;
+                }
+              }
+
+              if (this.formValues.strict_amount_of_answers !== "" && this.formValues.strict_amount_of_answers !== undefined) {
+                if (isNaN(parseInt(this.formValues.strict_amount_of_answers))) {
+                  this.trivialFormulateErrorHandler("Invalid strict amount of choices value.");
+                  return false;
+                }
+              }
+
+              if (this.formValues.min_amount_of_answers && this.formValues.max_amount_of_answers) {
+                if (parseInt(this.formValues.max_amount_of_answers) <= parseInt(this.formValues.min_amount_of_answers)) {
+                  this.trivialFormulateErrorHandler('Minimal amount of choices value is higher than maximal amount of choices value.');
+                  return false;
+                }
+              }
+
+              this.trivialFormulateErrorHandler();
+              return true;
+            } catch (e) {
+              this.trivialFormulateErrorHandler(e);
+              return false;
+            }
+          }
+
+        default:
+          {
+            this.trivialFormulateErrorHandler("Unhandled input error.");
+            return false;
           }
       }
     },
@@ -3166,7 +3289,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       if (error) {
         this.$formulate.handle({
-          formErrors: [error]
+          formErrors: [error.toString()]
         }, 'modalForm');
       } else {
         this.$formulate.handle({
@@ -3205,8 +3328,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  name: "DateItem"
+  name: "DateItem",
+  data: function data() {
+    return {
+      min: "",
+      max: ""
+    };
+  }
 });
 
 /***/ }),
@@ -3243,8 +3374,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  name: "NumberItem"
+  name: "NumberItem",
+  data: function data() {
+    return {
+      min: "",
+      max: "",
+      can_be_decimal: ""
+    };
+  }
 });
 
 /***/ }),
@@ -3291,8 +3432,44 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  name: "SelectItem"
+  name: "SelectItem",
+  data: function data() {
+    return {
+      is_multiselect: false,
+      min_amount_of_answers: "",
+      max_amount_of_answers: "",
+      strict_amount_of_answers: "",
+      strict: true,
+      range: true
+    };
+  },
+  methods: {
+    showWantedInputs: function showWantedInputs() {
+      if (this.max_amount_of_answers || this.min_amount_of_answers) {
+        this.strict = false;
+        this.range = true;
+      } else this.strict = true;
+
+      if (this.strict_amount_of_answers) {
+        this.range = false;
+        this.strict = true;
+      } else this.range = true;
+    }
+  }
 });
 
 /***/ }),
@@ -43938,8 +44115,6 @@ var render = function() {
                 [
                   _c("hr"),
                   _vm._v(" "),
-                  _c("h2", [_vm._v(_vm._s(_vm.item.type))]),
-                  _vm._v(" "),
                   _c("FormulateInput", {
                     attrs: {
                       name: "header",
@@ -44038,11 +44213,25 @@ var render = function() {
     "div",
     [
       _c("FormulateInput", {
-        attrs: { name: "min", label: "Minimal date", type: "date" }
+        attrs: { name: "min", label: "Minimal date", type: "date" },
+        model: {
+          value: _vm.min,
+          callback: function($$v) {
+            _vm.min = $$v
+          },
+          expression: "min"
+        }
       }),
       _vm._v(" "),
       _c("FormulateInput", {
-        attrs: { name: "max", label: "Maximal date", type: "date" }
+        attrs: { name: "max", label: "Maximal date", type: "date" },
+        model: {
+          value: _vm.max,
+          callback: function($$v) {
+            _vm.max = $$v
+          },
+          expression: "max"
+        }
       })
     ],
     1
@@ -44075,11 +44264,25 @@ var render = function() {
     "div",
     [
       _c("FormulateInput", {
-        attrs: { name: "min", label: "Minimal value", type: "number" }
+        attrs: { name: "min", label: "Minimal value", type: "number" },
+        model: {
+          value: _vm.min,
+          callback: function($$v) {
+            _vm.min = $$v
+          },
+          expression: "min"
+        }
       }),
       _vm._v(" "),
       _c("FormulateInput", {
-        attrs: { name: "max", label: "Maximal value", type: "number" }
+        attrs: { name: "max", label: "Maximal value", type: "number" },
+        model: {
+          value: _vm.max,
+          callback: function($$v) {
+            _vm.max = $$v
+          },
+          expression: "max"
+        }
       }),
       _vm._v(" "),
       _c("FormulateInput", {
@@ -44088,6 +44291,13 @@ var render = function() {
           type: "checkbox",
           label: "Can be decimal",
           "label-position": "before"
+        },
+        model: {
+          value: _vm.can_be_decimal,
+          callback: function($$v) {
+            _vm.can_be_decimal = $$v
+          },
+          expression: "can_be_decimal"
         }
       })
     ],
@@ -44126,32 +44336,77 @@ var render = function() {
           type: "checkbox",
           label: "Multiselect",
           "label-position": "before"
+        },
+        model: {
+          value: _vm.is_multiselect,
+          callback: function($$v) {
+            _vm.is_multiselect = $$v
+          },
+          expression: "is_multiselect"
         }
       }),
       _vm._v(" "),
-      _c("FormulateInput", {
-        attrs: {
-          label: "Minimal amount of answers",
-          name: "min_amount_of_answers",
-          type: "number"
-        }
-      }),
-      _vm._v(" "),
-      _c("FormulateInput", {
-        attrs: {
-          label: "Maximal amount of answers",
-          name: "max_amount_of_answers",
-          type: "number"
-        }
-      }),
-      _vm._v(" "),
-      _c("FormulateInput", {
-        attrs: {
-          label: "Strict amount of answers",
-          name: "strict_amount_of_answers",
-          type: "number"
-        }
-      }),
+      _vm.is_multiselect
+        ? _c(
+            "div",
+            [
+              _vm.range
+                ? _c("FormulateInput", {
+                    attrs: {
+                      label: "Minimal amount of answers",
+                      name: "min_amount_of_answers",
+                      type: "number"
+                    },
+                    on: { input: _vm.showWantedInputs },
+                    model: {
+                      value: _vm.min_amount_of_answers,
+                      callback: function($$v) {
+                        _vm.min_amount_of_answers = $$v
+                      },
+                      expression: "min_amount_of_answers"
+                    }
+                  })
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.range
+                ? _c("FormulateInput", {
+                    attrs: {
+                      label: "Maximal amount of answers",
+                      name: "max_amount_of_answers",
+                      type: "number"
+                    },
+                    on: { input: _vm.showWantedInputs },
+                    model: {
+                      value: _vm.max_amount_of_answers,
+                      callback: function($$v) {
+                        _vm.max_amount_of_answers = $$v
+                      },
+                      expression: "max_amount_of_answers"
+                    }
+                  })
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.strict
+                ? _c("FormulateInput", {
+                    attrs: {
+                      label: "Strict amount of answers",
+                      name: "strict_amount_of_answers",
+                      type: "number"
+                    },
+                    on: { input: _vm.showWantedInputs },
+                    model: {
+                      value: _vm.strict_amount_of_answers,
+                      callback: function($$v) {
+                        _vm.strict_amount_of_answers = $$v
+                      },
+                      expression: "strict_amount_of_answers"
+                    }
+                  })
+                : _vm._e()
+            ],
+            1
+          )
+        : _vm._e(),
       _vm._v(" "),
       _c("FormulateInput", {
         attrs: {

@@ -5,7 +5,7 @@
             v-model="formValues"
             name="modalForm"
         >
-            <h2>{{modalHeaderText}}</h2>
+            <h2>{{ modalHeaderText }}</h2>
             <FormulateInput
                 v-model="item.type"
                 name="type"
@@ -17,7 +17,6 @@
             />
             <div v-if="item.type">
                 <hr>
-                <h2>{{ item.type }}</h2>
                 <FormulateInput
                     name="header"
                     label="Question"
@@ -37,7 +36,7 @@
                 <date-item v-if="item.type==='date'"/>
                 <select-item v-if="item.type==='select'" :obj="this.$props['obj']"/>
                 <hr>
-                <FormulateErrors />
+                <FormulateErrors/>
                 <FormulateInput
                     type="submit"
                     :name="submitFormButtonText"
@@ -59,7 +58,7 @@ import TextItem from "./TextItem";
 import NumberItem from "./NumberItem";
 import DateItem from "./DateItem";
 import SelectItem from "./SelectItem";
-import { v4 as uuidv4 } from 'uuid';
+import {v4 as uuidv4} from 'uuid';
 
 export default {
     name: "AddItemModal",
@@ -91,9 +90,9 @@ export default {
         }
     },
     computed: {
-      submitFormButtonText() {
-          return this.$props['purpose'] === "add" ? "Add" : "Update";
-      },
+        submitFormButtonText() {
+            return this.$props['purpose'] === "add" ? "Add" : "Update";
+        },
         modalHeaderText() {
             return this.$props['purpose'] === "add" ? "New question..." : "Change question...";
         }
@@ -106,8 +105,7 @@ export default {
                 if (this.$props['obj'].is_mandatory) this.item.isMandatory = this.$props['obj'].is_mandatory;
                 if (this.$props['obj'].id) this.item.id = this.$props['obj'].id;
                 if (this.$props['obj'].order) this.item.order = this.$props['obj'].order;
-            }
-            catch (e) {
+            } catch (e) {
                 console.log(e);
             }
         }
@@ -132,30 +130,135 @@ export default {
                 this.$modal.hide(this.$parent.name)
             }
         },
-        validateSpecificFormData(){
+        validateSpecificFormData() {
             switch (this.item.type) {
                 case "text": {
-                    if (this.formValues.min_length && this.formValues.max_length) {
-                        if (parseInt(this.formValues.max_length) <= (parseInt(this.formValues.min_length))) {
-                            this.trivialFormulateErrorHandler('Minimal and maximal values are invalid.');
-                            return false;
+                    try {
+                        if (this.formValues.min_length !== "" && this.formValues.min_length !== undefined) {
+                            if (isNaN(parseInt(this.formValues.min_length))) {
+                                this.trivialFormulateErrorHandler("Invalid minimal length value.");
+                                return false;
+                            }
                         }
-                        else {
-                            this.trivialFormulateErrorHandler();
-                            return true;
+                        if (this.formValues.max_length !== "" && this.formValues.max_length !== undefined) {
+                            if (isNaN(parseInt(this.formValues.max_length))) {
+                                this.trivialFormulateErrorHandler("Invalid maximal length value.");
+                                return false;
+                            }
                         }
+                        if (this.formValues.strict_length !== "" && this.formValues.strict_length !== undefined) {
+                            if (isNaN(parseInt(this.formValues.strict_length))) {
+                                this.trivialFormulateErrorHandler("Invalid strict length value.");
+                                return false;
+                            }
+                        }
+                        if (this.formValues.min_length && this.formValues.max_length) {
+                            if (parseInt(this.formValues.max_length) <= (parseInt(this.formValues.min_length))) {
+                                this.trivialFormulateErrorHandler('Minimal length value is higher than maximal length value.');
+                                return false;
+                            }
+                        }
+                        this.trivialFormulateErrorHandler();
+                        return true;
+                    } catch (e) {
+                        this.trivialFormulateErrorHandler(e);
+                        return false;
                     }
-                    return true;
+
+                }
+                case "number": {
+                    try {
+                        if (this.formValues.min !== "" && this.formValues.min !== undefined) {
+                            if (isNaN(parseInt(this.formValues.min))) {
+                                this.trivialFormulateErrorHandler("Invalid minimal value.");
+                                return false;
+                            }
+                        }
+                        if (this.formValues.max !== "" && this.formValues.max !== undefined) {
+                            if (isNaN(parseInt(this.formValues.max))) {
+                                this.trivialFormulateErrorHandler("Invalid maximal value.");
+                                return false;
+                            }
+                        }
+                        if (this.formValues.min && this.formValues.max) {
+                            if (parseInt(this.formValues.max) <= (parseInt(this.formValues.min))) {
+                                this.trivialFormulateErrorHandler('Minimal value is higher than maximal value.');
+                                return false;
+                            }
+                        }
+                        this.trivialFormulateErrorHandler();
+                        return true;
+                    } catch (e) {
+                        this.trivialFormulateErrorHandler(e);
+                        return false;
+                    }
+                }
+                case "date": {
+                    try {
+                        if (this.formValues.min !== "") {
+                            const min = new Date(this.formValues.min).getTime();
+                            const max = new Date(this.formValues.max).getTime();
+
+                            if (min && max) {
+                                if (parseInt(max) <= (parseInt(min))) {
+                                    this.trivialFormulateErrorHandler('Minimal date value is higher than maximal date value.');
+                                    return false;
+                                }
+                            }
+                        }
+
+                        this.trivialFormulateErrorHandler();
+                        return true;
+                    } catch (e) {
+                        this.trivialFormulateErrorHandler(e);
+                        return false;
+                    }
+                }
+                case "select": {
+                    try {
+                        if (this.formValues.min_amount_of_answers !== "" && this.formValues.min_amount_of_answers !== undefined) {
+                            if (isNaN(parseInt(this.formValues.min_amount_of_answers))) {
+                                this.trivialFormulateErrorHandler("Invalid minimal amount of choices value.");
+                                return false;
+                            }
+                        }
+                        if (this.formValues.max_amount_of_answers !== "" && this.formValues.max_amount_of_answers !== undefined) {
+                            if (isNaN(parseInt(this.formValues.max_amount_of_answers))) {
+                                this.trivialFormulateErrorHandler("Invalid maximal amount of choices value.");
+                                return false;
+                            }
+                        }
+                        if (this.formValues.strict_amount_of_answers !== "" && this.formValues.strict_amount_of_answers !== undefined) {
+                            if (isNaN(parseInt(this.formValues.strict_amount_of_answers))) {
+                                this.trivialFormulateErrorHandler("Invalid strict amount of choices value.");
+                                return false;
+                            }
+                        }
+                        if (this.formValues.min_amount_of_answers && this.formValues.max_amount_of_answers) {
+                            if (parseInt(this.formValues.max_amount_of_answers) <= (parseInt(this.formValues.min_amount_of_answers))) {
+                                this.trivialFormulateErrorHandler('Minimal amount of choices value is higher than maximal amount of choices value.');
+                                return false;
+                            }
+                        }
+                        this.trivialFormulateErrorHandler();
+                        return true;
+                    } catch (e) {
+                        this.trivialFormulateErrorHandler(e);
+                        return false;
+                    }
+                }
+                default: {
+                    this.trivialFormulateErrorHandler("Unhandled input error.");
+                    return false;
                 }
             }
         },
-        trivialFormulateErrorHandler(error=null) {
+        trivialFormulateErrorHandler(error = null) {
             if (error) {
                 this.$formulate.handle({
-                    formErrors: [error]
+                    formErrors: [error.toString()]
                 }, 'modalForm');
-            }
-            else {
+            } else {
                 this.$formulate.handle({
                     formErrors: []
                 }, 'modalForm');
