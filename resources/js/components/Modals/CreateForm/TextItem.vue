@@ -33,6 +33,7 @@
 <script>
 export default {
     name: "TextItem",
+    props: ['obj'],
     data() {
         return {
             min_length: "",
@@ -54,6 +55,24 @@ export default {
                 this.strict = true;
             }
             else this.range = true;
+        }
+    },
+    mounted() {
+        if (this.$props['obj']) {
+            let strict = false;
+            if (!isNaN(this.$props['obj'].min_length)) {
+                strict = true;
+                this.min_length = this.$props['obj'].min_length;
+            }
+            if (!isNaN(this.$props['obj'].max_length)) {
+                strict = true;
+                this.max_length = this.$props['obj'].max_length;
+            }
+            if (!strict) {
+                if (!isNaN(this.$props['obj'].strict_length)) {
+                    this.strict_length = this.$props['obj'].strict_length;
+                }
+            }
         }
     }
 }

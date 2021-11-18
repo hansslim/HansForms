@@ -25,11 +25,27 @@
 <script>
 export default {
     name: "NumberItem",
+    props: ['obj'],
     data() {
         return {
             min: "",
             max: "",
-            can_be_decimal: ""
+            can_be_decimal: false
+        }
+    },
+    mounted() {
+        if (this.$props['obj']) {
+            if (!isNaN(this.$props['obj'].min)) {
+                this.min = this.$props['obj'].min;
+            }
+            if (!isNaN(this.$props['obj'].max)) {
+                this.max = this.$props['obj'].max;
+            }
+            if (!isNaN(this.$props['obj'].can_be_decimal)) {
+                if (this.$props['obj'].can_be_decimal) {
+                    this.can_be_decimal = true;
+                }
+            }
         }
     }
 }

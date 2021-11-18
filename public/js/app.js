@@ -3103,16 +3103,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
   },
   mounted: function mounted() {
-    if (this.$props['obj']) {
-      try {
+    try {
+      if (this.$props['obj']) {
         if (this.$props['obj'].type) this.item.type = this.$props['obj'].type;
         if (this.$props['obj'].header) this.item.question = this.$props['obj'].header;
         if (this.$props['obj'].is_mandatory) this.item.isMandatory = this.$props['obj'].is_mandatory;
         if (this.$props['obj'].id) this.item.id = this.$props['obj'].id;
         if (this.$props['obj'].order) this.item.order = this.$props['obj'].order;
-      } catch (e) {
-        console.log(e);
       }
+    } catch (e) {
+      console.log(e);
     }
   },
   methods: {
@@ -3238,6 +3238,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             }
           }
 
+        case "boolean":
+          {
+            return true;
+          }
+
         case "select":
           {
             try {
@@ -3332,11 +3337,31 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "DateItem",
+  props: ['obj'],
   data: function data() {
     return {
       min: "",
       max: ""
     };
+  },
+  mounted: function mounted() {
+    if (this.$props['obj']) {
+      if (this.$props['obj'].min) {
+        var minDate = new Date(this.$props['obj'].min);
+
+        if (minDate instanceof Date && !isNaN(minDate.valueOf())) {
+          this.min = this.$props['obj'].min;
+        }
+      }
+
+      if (this.$props['obj'].max) {
+        var maxDate = new Date(this.$props['obj'].max);
+
+        if (maxDate instanceof Date && !isNaN(maxDate.valueOf())) {
+          this.max = this.$props['obj'].max;
+        }
+      }
+    } else console.log(this.$props['obj']);
   }
 });
 
@@ -3379,12 +3404,30 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "NumberItem",
+  props: ['obj'],
   data: function data() {
     return {
       min: "",
       max: "",
-      can_be_decimal: ""
+      can_be_decimal: false
     };
+  },
+  mounted: function mounted() {
+    if (this.$props['obj']) {
+      if (!isNaN(this.$props['obj'].min)) {
+        this.min = this.$props['obj'].min;
+      }
+
+      if (!isNaN(this.$props['obj'].max)) {
+        this.max = this.$props['obj'].max;
+      }
+
+      if (!isNaN(this.$props['obj'].can_be_decimal)) {
+        if (this.$props['obj'].can_be_decimal) {
+          this.can_be_decimal = true;
+        }
+      }
+    }
   }
 });
 
@@ -3445,14 +3488,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "SelectItem",
+  props: ['obj'],
   data: function data() {
     return {
       is_multiselect: false,
       min_amount_of_answers: "",
       max_amount_of_answers: "",
       strict_amount_of_answers: "",
+      choices: "",
       strict: true,
       range: true
     };
@@ -3469,6 +3515,31 @@ __webpack_require__.r(__webpack_exports__);
         this.strict = true;
       } else this.range = true;
     }
+  },
+  mounted: function mounted() {
+    if (this.$props['obj']) {
+      if (this.$props['obj'].is_multiselect) {
+        this.is_multiselect = true;
+
+        if (!isNaN(this.$props['obj'].strict_amount_of_answers)) {
+          this.strict_amount_of_answers = this.$props['obj'].strict_amount_of_answers;
+        } else {
+          if (!isNaN(this.$props['obj'].min_amount_of_answers)) {
+            this.min_amount_of_answers = this.$props['obj'].min_amount_of_answers;
+          }
+
+          if (!isNaN(this.$props['obj'].max_amount_of_answers)) {
+            this.max_amount_of_answers = this.$props['obj'].max_amount_of_answers;
+          }
+        }
+      }
+
+      if (this.$props['obj'].choices) {
+        this.choices = this.$props['obj'].choices;
+      }
+    }
+
+    this.showWantedInputs();
   }
 });
 
@@ -3519,6 +3590,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "TextItem",
+  props: ['obj'],
   data: function data() {
     return {
       min_length: "",
@@ -3539,6 +3611,27 @@ __webpack_require__.r(__webpack_exports__);
         this.range = false;
         this.strict = true;
       } else this.range = true;
+    }
+  },
+  mounted: function mounted() {
+    if (this.$props['obj']) {
+      var strict = false;
+
+      if (!isNaN(this.$props['obj'].min_length)) {
+        strict = true;
+        this.min_length = this.$props['obj'].min_length;
+      }
+
+      if (!isNaN(this.$props['obj'].max_length)) {
+        strict = true;
+        this.max_length = this.$props['obj'].max_length;
+      }
+
+      if (!strict) {
+        if (!isNaN(this.$props['obj'].strict_length)) {
+          this.strict_length = this.$props['obj'].strict_length;
+        }
+      }
     }
   }
 });
@@ -44155,7 +44248,9 @@ var render = function() {
                     ? _c("number-item", { attrs: { obj: this.$props["obj"] } })
                     : _vm._e(),
                   _vm._v(" "),
-                  _vm.item.type === "date" ? _c("date-item") : _vm._e(),
+                  _vm.item.type === "date"
+                    ? _c("date-item", { attrs: { obj: this.$props["obj"] } })
+                    : _vm._e(),
                   _vm._v(" "),
                   _vm.item.type === "select"
                     ? _c("select-item", { attrs: { obj: this.$props["obj"] } })
@@ -44412,7 +44507,15 @@ var render = function() {
         attrs: {
           type: "textarea",
           label: "Add choices (they are separated by new line)",
-          name: "choices"
+          name: "choices",
+          validation: [["required"]]
+        },
+        model: {
+          value: _vm.choices,
+          callback: function($$v) {
+            _vm.choices = $$v
+          },
+          expression: "choices"
         }
       })
     ],

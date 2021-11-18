@@ -33,7 +33,7 @@
                 />
                 <text-item v-if="item.type==='text'" :obj="this.$props['obj']"/>
                 <number-item v-if="item.type==='number'" :obj="this.$props['obj']"/>
-                <date-item v-if="item.type==='date'"/>
+                <date-item v-if="item.type==='date'" :obj="this.$props['obj']"/>
                 <select-item v-if="item.type==='select'" :obj="this.$props['obj']"/>
                 <hr>
                 <FormulateErrors/>
@@ -98,16 +98,16 @@ export default {
         }
     },
     mounted() {
-        if (this.$props['obj']) {
-            try {
+        try {
+            if (this.$props['obj']) {
                 if (this.$props['obj'].type) this.item.type = this.$props['obj'].type;
                 if (this.$props['obj'].header) this.item.question = this.$props['obj'].header;
                 if (this.$props['obj'].is_mandatory) this.item.isMandatory = this.$props['obj'].is_mandatory;
                 if (this.$props['obj'].id) this.item.id = this.$props['obj'].id;
                 if (this.$props['obj'].order) this.item.order = this.$props['obj'].order;
-            } catch (e) {
-                console.log(e);
             }
+        } catch (e) {
+            console.log(e);
         }
     },
     methods: {
@@ -117,19 +117,23 @@ export default {
                 else if (this.$props['purpose'] === "update") this.updateItem();
                 this.$modal.hide(this.$parent.name)
             }
-        },
+        }
+        ,
         addNewItem() {
             createFormStore.addItem({...this.formValues, id: uuidv4()});
-        },
+        }
+        ,
         updateItem() {
             createFormStore.changeItem({...this.formValues, id: this.item.id, order: this.item.order})
-        },
+        }
+        ,
         deleteItem() {
             if (confirm("Are you sure that you want to delete this item?")) {
                 createFormStore.deleteItem({...this.formValues, id: this.item.id, order: this.item.order});
                 this.$modal.hide(this.$parent.name)
             }
-        },
+        }
+        ,
         validateSpecificFormData() {
             switch (this.item.type) {
                 case "text": {
@@ -214,6 +218,9 @@ export default {
                         return false;
                     }
                 }
+                case "boolean": {
+                    return true;
+                }
                 case "select": {
                     try {
                         if (this.formValues.min_amount_of_answers !== "" && this.formValues.min_amount_of_answers !== undefined) {
@@ -252,7 +259,8 @@ export default {
                     return false;
                 }
             }
-        },
+        }
+        ,
         trivialFormulateErrorHandler(error = null) {
             if (error) {
                 this.$formulate.handle({
