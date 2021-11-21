@@ -3132,8 +3132,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       if (this.item.type === "select") {
         _views_CreateForm__WEBPACK_IMPORTED_MODULE_0__.createFormStore.addItem(_objectSpread(_objectSpread({}, this.formValues), {}, {
           id: (0,uuid__WEBPACK_IMPORTED_MODULE_6__["default"])(),
-          choices: _SelectChoicesComponent__WEBPACK_IMPORTED_MODULE_5__.createFormChoicesStore.choices
+          choices: _SelectChoicesComponent__WEBPACK_IMPORTED_MODULE_5__.createFormChoicesStore.getItems()
         }));
+        _SelectChoicesComponent__WEBPACK_IMPORTED_MODULE_5__.createFormChoicesStore.clearStore();
       } else _views_CreateForm__WEBPACK_IMPORTED_MODULE_0__.createFormStore.addItem(_objectSpread(_objectSpread({}, this.formValues), {}, {
         id: (0,uuid__WEBPACK_IMPORTED_MODULE_6__["default"])()
       }));
@@ -3143,8 +3144,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         _views_CreateForm__WEBPACK_IMPORTED_MODULE_0__.createFormStore.changeItem(_objectSpread(_objectSpread({}, this.formValues), {}, {
           order: this.item.order,
           id: this.item.id,
-          choices: _SelectChoicesComponent__WEBPACK_IMPORTED_MODULE_5__.createFormChoicesStore.choices
+          choices: _SelectChoicesComponent__WEBPACK_IMPORTED_MODULE_5__.createFormChoicesStore.getItems()
         }));
+        _SelectChoicesComponent__WEBPACK_IMPORTED_MODULE_5__.createFormChoicesStore.clearStore();
       } else _views_CreateForm__WEBPACK_IMPORTED_MODULE_0__.createFormStore.changeItem(_objectSpread(_objectSpread({}, this.formValues), {}, {
         id: this.item.id,
         order: this.item.order
@@ -3469,6 +3471,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var _AddItemModal__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AddItemModal */ "./resources/js/components/Modals/CreateForm/AddItemModal.vue");
+/* harmony import */ var _SelectChoiceModal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SelectChoiceModal */ "./resources/js/components/Modals/CreateForm/SelectChoiceModal.vue");
 //
 //
 //
@@ -3477,22 +3481,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "SelectChoiceItem",
   props: ["obj"],
@@ -3503,20 +3493,147 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
-    deleteThis: function deleteThis() {
-      this.$emit('delete', this.$props['obj']);
+    getChoiceTextWithLabel: function getChoiceTextWithLabel() {
+      if (this.$props['obj'].hidden_label) {
+        return "".concat(this.$props['obj'].hidden_label, " | ").concat(this.$props['obj'].text);
+      } else {
+        return "".concat(this.$props['obj'].text);
+      }
     },
-    handleItemChanged: function handleItemChanged() {
-      this.$emit('itemChange', {
-        text: this.choiceText,
-        hidden_label: this.hiddenLabel,
-        id: this.$props['obj'].id
+    updateChoice: function updateChoice() {
+      var _this = this;
+
+      this.$modal.show(_SelectChoiceModal__WEBPACK_IMPORTED_MODULE_1__["default"], {
+        obj: this.$props['obj'],
+        purpose: "update"
+      }, {
+        height: 'auto',
+        width: '60%',
+        adaptive: true
+      }, {
+        'before-close': function beforeClose() {
+          _this.$emit('choiceChanged');
+        }
       });
     }
   },
   mounted: function mounted() {
     this.choiceText = this.$props['obj'].text;
     this.hiddenLabel = this.$props['obj'].hidden_label;
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Modals/CreateForm/SelectChoiceModal.vue?vue&type=script&lang=js&":
+/*!******************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Modals/CreateForm/SelectChoiceModal.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _SelectChoicesComponent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./SelectChoicesComponent */ "./resources/js/components/Modals/CreateForm/SelectChoicesComponent.vue");
+/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! uuid */ "./node_modules/uuid/dist/esm-browser/v4.js");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  name: "SelectChoiceModal",
+  props: ["obj", 'purpose'],
+  data: function data() {
+    return {
+      choiceText: "",
+      hiddenLabel: "",
+      order: 0,
+      id: "",
+      formErrors: []
+    };
+  },
+  methods: {
+    handleAddItem: function handleAddItem() {
+      console.log(this.formErrors);
+
+      if (this.choiceText) {
+        _SelectChoicesComponent__WEBPACK_IMPORTED_MODULE_0__.createFormChoicesStore.addItem({
+          id: (0,uuid__WEBPACK_IMPORTED_MODULE_1__["default"])(),
+          text: this.choiceText,
+          hidden_label: this.hiddenLabel
+        });
+        this.$modal.hide(this.$parent.name);
+      } else this.trivialFormulateErrorHandler("Choice is required.");
+    },
+    handleUpdateItem: function handleUpdateItem() {
+      if (this.choiceText) {
+        _SelectChoicesComponent__WEBPACK_IMPORTED_MODULE_0__.createFormChoicesStore.changeItem({
+          id: this.id,
+          text: this.choiceText,
+          hidden_label: this.hiddenLabel,
+          order: this.order
+        });
+        this.$modal.hide(this.$parent.name);
+      } else this.trivialFormulateErrorHandler("Choice is required.");
+    },
+    handleDeleteItem: function handleDeleteItem() {
+      _SelectChoicesComponent__WEBPACK_IMPORTED_MODULE_0__.createFormChoicesStore.deleteItem({
+        id: this.id,
+        text: this.choiceText,
+        hidden_label: this.hiddenLabel,
+        order: this.order
+      });
+      this.$modal.hide(this.$parent.name);
+    },
+    trivialFormulateErrorHandler: function trivialFormulateErrorHandler() {
+      var error = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+      if (error) {
+        this.$formulate.handle({
+          formErrors: [error.toString()]
+        }, 'selectChoiceModalForm');
+      } else {
+        this.$formulate.handle({
+          formErrors: []
+        }, 'selectChoiceModalForm');
+      }
+    }
+  },
+  mounted: function mounted() {
+    if (this.$props['purpose'] === 'update') {
+      if (this.$props['obj']) {
+        this.choiceText = this.$props['obj'].text;
+        this.hiddenLabel = this.$props['obj'].hidden_label;
+        this.order = this.$props['obj'].order;
+        this.id = this.$props['obj'].id;
+      }
+    }
   }
 });
 
@@ -3535,8 +3652,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "createFormChoicesStore": () => (/* binding */ createFormChoicesStore)
 /* harmony export */ });
 /* harmony import */ var _SelectChoiceItem__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./SelectChoiceItem */ "./resources/js/components/Modals/CreateForm/SelectChoiceItem.vue");
-/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! uuid */ "./node_modules/uuid/dist/esm-browser/v4.js");
-/* harmony import */ var _AddItemModal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AddItemModal */ "./resources/js/components/Modals/CreateForm/AddItemModal.vue");
+/* harmony import */ var _SelectChoiceModal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SelectChoiceModal */ "./resources/js/components/Modals/CreateForm/SelectChoiceModal.vue");
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -3556,9 +3672,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 //
 //
 //
-//
-//
-
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -3573,39 +3686,80 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     };
   },
   methods: {
-    addBlankChoice: function addBlankChoice() {
-      this.choices = [].concat(_toConsumableArray(this.choices), [{
-        id: (0,uuid__WEBPACK_IMPORTED_MODULE_2__["default"])(),
-        text: "",
-        hidden_label: ""
-      }]);
-      this.updateChoicesStore();
-    },
-    handleDeleteChoice: function handleDeleteChoice(value) {
-      this.choices = _toConsumableArray(this.choices.filter(function (x) {
-        return x.id !== value.id;
-      }));
-      this.updateChoicesStore();
-    },
-    updateChoicesStore: function updateChoicesStore() {
-      createFormChoicesStore.choices = _toConsumableArray(this.choices);
-    },
-    handleItemChange: function handleItemChange(value) {
-      var choice = this.choices.findIndex(function (obj) {
-        return obj.id === value.id;
+    addChoice: function addChoice() {
+      var _this = this;
+
+      this.$modal.show(_SelectChoiceModal__WEBPACK_IMPORTED_MODULE_1__["default"], {
+        purpose: "add"
+      }, {
+        height: 'auto',
+        width: '60%',
+        adaptive: true
+      }, {
+        'before-close': function beforeClose(event) {
+          return _this.handleItemsChanged();
+        }
       });
-      this.choices[choice].text = value.text;
-      this.choices[choice].hidden_label = value.hidden_label;
+    },
+    handleItemsChanged: function handleItemsChanged() {
+      this.choices = createFormChoicesStore.getItems();
     }
   },
   mounted: function mounted() {
     if (this.$props['obj']) {
       this.choices = this.$props['obj'].choices;
+      createFormChoicesStore.data.choices = this.$props['obj'].choices;
     }
   }
 });
 var createFormChoicesStore = {
-  choices: []
+  data: {
+    choices: []
+  },
+  getItems: function getItems() {
+    return this.data.choices;
+  },
+  addItem: function addItem(item) {
+    this.data.choices = [].concat(_toConsumableArray(this.data.choices), [item]);
+    this.refreshItemsOrder();
+  },
+  refreshItemsOrder: function refreshItemsOrder() {
+    var i = 0;
+    this.data.choices = this.data.choices.map(function (x) {
+      var obj = x;
+      obj.order = i++;
+      return obj;
+    });
+  },
+  sortItemsByOrder: function sortItemsByOrder() {
+    this.data.choices = this.data.choices.sort(function (a, b) {
+      if (a.order < b.order) {
+        return -1;
+      }
+
+      if (a.order > b.order) {
+        return 1;
+      }
+
+      return 0;
+    });
+  },
+  changeItem: function changeItem(item) {
+    this.data.choices = this.data.choices.filter(function (x) {
+      return x.id !== item.id;
+    });
+    this.data.choices = [].concat(_toConsumableArray(this.data.choices), [item]);
+    this.sortItemsByOrder();
+  },
+  deleteItem: function deleteItem(item) {
+    this.data.choices = this.data.choices.filter(function (x) {
+      return x.id !== item.id;
+    });
+    this.refreshItemsOrder();
+  },
+  clearStore: function clearStore() {
+    this.data.choices = [];
+  }
 };
 
 /***/ }),
@@ -42611,6 +42765,45 @@ component.options.__file = "resources/js/components/Modals/CreateForm/SelectChoi
 
 /***/ }),
 
+/***/ "./resources/js/components/Modals/CreateForm/SelectChoiceModal.vue":
+/*!*************************************************************************!*\
+  !*** ./resources/js/components/Modals/CreateForm/SelectChoiceModal.vue ***!
+  \*************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _SelectChoiceModal_vue_vue_type_template_id_5d06536f_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./SelectChoiceModal.vue?vue&type=template&id=5d06536f&scoped=true& */ "./resources/js/components/Modals/CreateForm/SelectChoiceModal.vue?vue&type=template&id=5d06536f&scoped=true&");
+/* harmony import */ var _SelectChoiceModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SelectChoiceModal.vue?vue&type=script&lang=js& */ "./resources/js/components/Modals/CreateForm/SelectChoiceModal.vue?vue&type=script&lang=js&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _SelectChoiceModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _SelectChoiceModal_vue_vue_type_template_id_5d06536f_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render,
+  _SelectChoiceModal_vue_vue_type_template_id_5d06536f_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  "5d06536f",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/Modals/CreateForm/SelectChoiceModal.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
 /***/ "./resources/js/components/Modals/CreateForm/SelectChoicesComponent.vue":
 /*!******************************************************************************!*\
   !*** ./resources/js/components/Modals/CreateForm/SelectChoicesComponent.vue ***!
@@ -43268,6 +43461,22 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/Modals/CreateForm/SelectChoiceModal.vue?vue&type=script&lang=js&":
+/*!**************************************************************************************************!*\
+  !*** ./resources/js/components/Modals/CreateForm/SelectChoiceModal.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SelectChoiceModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./SelectChoiceModal.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Modals/CreateForm/SelectChoiceModal.vue?vue&type=script&lang=js&");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SelectChoiceModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
 /***/ "./resources/js/components/Modals/CreateForm/SelectChoicesComponent.vue?vue&type=script&lang=js&":
 /*!*******************************************************************************************************!*\
   !*** ./resources/js/components/Modals/CreateForm/SelectChoicesComponent.vue?vue&type=script&lang=js& ***!
@@ -43703,6 +43912,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SelectChoiceItem_vue_vue_type_template_id_65fb6a41_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SelectChoiceItem_vue_vue_type_template_id_65fb6a41_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./SelectChoiceItem.vue?vue&type=template&id=65fb6a41&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Modals/CreateForm/SelectChoiceItem.vue?vue&type=template&id=65fb6a41&scoped=true&");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/Modals/CreateForm/SelectChoiceModal.vue?vue&type=template&id=5d06536f&scoped=true&":
+/*!********************************************************************************************************************!*\
+  !*** ./resources/js/components/Modals/CreateForm/SelectChoiceModal.vue?vue&type=template&id=5d06536f&scoped=true& ***!
+  \********************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SelectChoiceModal_vue_vue_type_template_id_5d06536f_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SelectChoiceModal_vue_vue_type_template_id_5d06536f_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SelectChoiceModal_vue_vue_type_template_id_5d06536f_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./SelectChoiceModal.vue?vue&type=template&id=5d06536f&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Modals/CreateForm/SelectChoiceModal.vue?vue&type=template&id=5d06536f&scoped=true&");
 
 
 /***/ }),
@@ -44745,12 +44971,46 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("ul", [
+      _c("li", { on: { click: _vm.updateChoice } }, [
+        _vm._v(_vm._s(this.getChoiceTextWithLabel()))
+      ])
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Modals/CreateForm/SelectChoiceModal.vue?vue&type=template&id=5d06536f&scoped=true&":
+/*!***********************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Modals/CreateForm/SelectChoiceModal.vue?vue&type=template&id=5d06536f&scoped=true& ***!
+  \***********************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render),
+/* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
   return _c(
     "div",
+    { staticClass: "container" },
     [
+      _c("h1", [_vm._v("Choice")]),
+      _vm._v(" "),
       _c(
-        "FormulateInput",
-        { attrs: { type: "group", name: this.$props["obj"].id } },
+        "FormulateForm",
+        { attrs: { name: "selectChoiceModalForm" } },
         [
           _c(
             "div",
@@ -44762,7 +45022,6 @@ var render = function() {
                   type: "text",
                   placeholder: "Write a choice."
                 },
-                on: { input: _vm.handleItemChanged },
                 model: {
                   value: _vm.choiceText,
                   callback: function($$v) {
@@ -44778,7 +45037,6 @@ var render = function() {
                   type: "number",
                   placeholder: "Write a hidden label."
                 },
-                on: { input: _vm.handleItemChanged },
                 model: {
                   value: _vm.hiddenLabel,
                   callback: function($$v) {
@@ -44788,14 +45046,33 @@ var render = function() {
                 }
               }),
               _vm._v(" "),
-              _c("FormulateInput", {
-                attrs: { type: "button", label: "Delete" },
-                on: { click: _vm.deleteThis }
-              })
+              this.$props["purpose"] === "add"
+                ? _c("FormulateInput", {
+                    attrs: { type: "button", label: "Add" },
+                    on: { click: _vm.handleAddItem }
+                  })
+                : _vm._e(),
+              _vm._v(" "),
+              this.$props["purpose"] === "update"
+                ? _c("FormulateInput", {
+                    attrs: { type: "button", label: "Update" },
+                    on: { click: _vm.handleUpdateItem }
+                  })
+                : _vm._e(),
+              _vm._v(" "),
+              this.$props["purpose"] === "update"
+                ? _c("FormulateInput", {
+                    attrs: { type: "button", label: "Delete" },
+                    on: { click: _vm.handleDeleteItem }
+                  })
+                : _vm._e()
             ],
             1
-          )
-        ]
+          ),
+          _vm._v(" "),
+          _c("FormulateErrors")
+        ],
+        1
       )
     ],
     1
@@ -44829,26 +45106,18 @@ var render = function() {
     [
       _c("FormulateInput", {
         attrs: { type: "button", label: "Add choice..." },
-        on: { click: _vm.addBlankChoice }
+        on: { click: _vm.addChoice }
       }),
       _vm._v(" "),
-      _c(
-        "FormulateInput",
-        { attrs: { type: "group", name: "choices" } },
-        _vm._l(_vm.choices, function(item) {
-          return _c("choice-item", {
-            key: item.id,
-            attrs: { obj: item },
-            on: {
-              delete: _vm.handleDeleteChoice,
-              itemChange: _vm.handleItemChange
-            }
-          })
-        }),
-        1
-      )
+      _vm._l(_vm.choices, function(item) {
+        return _c("choice-item", {
+          key: item.id,
+          attrs: { obj: item },
+          on: { choiceChanged: _vm.handleItemsChanged }
+        })
+      })
     ],
-    1
+    2
   )
 }
 var staticRenderFns = []

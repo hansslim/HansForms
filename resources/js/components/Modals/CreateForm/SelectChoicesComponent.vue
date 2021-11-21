@@ -1,16 +1,14 @@
 <template>
     <div>
-        <FormulateInput type="button" @click="addBlankChoice"  label="Add choice..."/>
-        <FormulateInput type="group" name="choices">
-            <choice-item v-for="item in choices" :key="item.id" :obj="item" @delete="handleDeleteChoice" @itemChange="handleItemChange"/>
-        </FormulateInput>
+        <FormulateInput type="button" @click="addChoice" label="Add choice..."/>
+        <choice-item v-for="item in choices" :key="item.id" :obj="item" @choiceChanged="handleItemsChanged"/>
     </div>
 </template>
 
 <script>
 import SelectChoiceItem from "./SelectChoiceItem";
-import {v4 as uuidv4} from 'uuid';
-import AddItemModal from "./AddItemModal";
+import SelectChoiceModal from "./SelectChoiceModal";
+
 
 export default {
     name: "SelectChoicesComponent",
@@ -24,32 +22,68 @@ export default {
         }
     },
     methods: {
-        addBlankChoice() {
-            this.choices = [...this.choices, {id: uuidv4(), text: "", hidden_label: ""}];
-            this.updateChoicesStore()
+        addChoice() {
+            this.$modal.show(
+                SelectChoiceModal,
+                { purpose: "add"},
+                {height: 'auto', width: '60%', adaptive: true},
+                {'before-close': event => this.handleItemsChanged()}
+            )
         },
-        handleDeleteChoice(value) {
-            this.choices = [...this.choices.filter((x) => x.id !== value.id)];
-            this.updateChoicesStore()
-        },
-        updateChoicesStore() {
-            createFormChoicesStore.choices = [...this.choices]
-        },
-        handleItemChange(value) {
-            const choice = this.choices.findIndex((obj => obj.id === value.id))
-            this.choices[choice].text = value.text;
-            this.choices[choice].hidden_label = value.hidden_label;
+        handleItemsChanged(){
+            this.choices = createFormChoicesStore.getItems();
         }
     },
     mounted() {
         if (this.$props['obj']) {
-            this.choices = this.$props['obj'].choices
+            this.choices = this.$props['obj'].choices;
+            createFormChoicesStore.data.choices = this.$props['obj'].choices
         }
     }
 }
 
 export let createFormChoicesStore = {
-    choices: []
+    data: {
+        choices: [],
+    },
+    getItems() {
+        return this.data.choices;
+    },
+    addItem(item) {
+        this.data.choices = [...this.data.choices, item];
+        this.refreshItemsOrder();
+    },
+    refreshItemsOrder() {
+        let i = 0;
+        this.data.choices = this.data.choices.map((x)=>{
+            let obj = x;
+            obj.order = i++;
+            return obj;
+        });
+    },
+    sortItemsByOrder() {
+        this.data.choices = this.data.choices.sort((a, b) => {
+            if (a.order < b.order) {
+                return -1;
+            }
+            if (a.order > b.order) {
+                return 1;
+            }
+            return 0;
+        });
+    },
+    changeItem(item) {
+        this.data.choices = this.data.choices.filter((x)=>x.id!==item.id);
+        this.data.choices = [...this.data.choices, item];
+        this.sortItemsByOrder();
+    },
+    deleteItem(item) {
+        this.data.choices = this.data.choices.filter((x)=>x.id!==item.id);
+        this.refreshItemsOrder();
+    },
+    clearStore() {
+        this.data.choices = []
+    }
 }
 </script>
 

@@ -1,28 +1,16 @@
 <template>
-    <div>
-        <FormulateInput type="group" :name="this.$props['obj'].id">
-            <div class="d-flex">
-                <FormulateInput
-                    name="text"
-                    type="text"
-                    placeholder="Write a choice."
-                    v-model="choiceText"
-                    @input="handleItemChanged"
-                />
-                <FormulateInput
-                    name="hidden_label"
-                    type="number"
-                    placeholder="Write a hidden label."
-                    v-model="hiddenLabel"
-                    @input="handleItemChanged"
-                />
-                <FormulateInput type="button" @click="deleteThis" label="Delete"/>
-            </div>
-        </FormulateInput>
+    <div >
+        <ul>
+            <li @click="updateChoice">{{this.getChoiceTextWithLabel()}}</li>
+        </ul>
     </div>
 </template>
 
 <script>
+
+import AddItemModal from "./AddItemModal";
+import SelectChoiceModal from "./SelectChoiceModal";
+
 export default {
     name: "SelectChoiceItem",
     props: ["obj"],
@@ -33,16 +21,24 @@ export default {
         }
     },
     methods: {
-        deleteThis() {
-            this.$emit('delete', this.$props['obj']);
+        getChoiceTextWithLabel() {
+            if (this.$props['obj'].hidden_label) {
+                return `${this.$props['obj'].hidden_label} | ${this.$props['obj'].text}`;
+            }
+            else {
+                return `${this.$props['obj'].text}`
+            }
         },
-        handleItemChanged() {
-            this.$emit('itemChange', {
-                text: this.choiceText,
-                hidden_label: this.hiddenLabel,
-                id: this.$props['obj'].id
-            });
-        }
+        updateChoice() {
+            this.$modal.show(
+                SelectChoiceModal,
+                { obj: this.$props['obj'], purpose: "update" },
+                {height: 'auto', width: '60%', adaptive: true},
+                {'before-close': () => {
+                        this.$emit('choiceChanged')
+                    }}
+            )
+        },
     },
     mounted() {
         this.choiceText = this.$props['obj'].text

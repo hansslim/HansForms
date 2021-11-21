@@ -130,8 +130,9 @@ export default {
                 createFormStore.addItem({
                     ...this.formValues,
                     id: uuidv4(),
-                    choices: createFormChoicesStore.choices
+                    choices: createFormChoicesStore.getItems()
                 })
+                createFormChoicesStore.clearStore();
             }
             else createFormStore.addItem({...this.formValues, id: uuidv4()});
         }
@@ -142,8 +143,9 @@ export default {
                     ...this.formValues,
                     order: this.item.order,
                     id: this.item.id,
-                    choices: createFormChoicesStore.choices
+                    choices: createFormChoicesStore.getItems()
                 })
+                createFormChoicesStore.clearStore();
             }
             else createFormStore.changeItem({...this.formValues, id: this.item.id, order: this.item.order})
         }
