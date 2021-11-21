@@ -14,6 +14,7 @@
                 placeholder="Select an option"
                 label="Select type of question"
                 :validation="[['required']]"
+                @change="handleTypeChanged"
             />
             <div v-if="item.type">
                 <hr>
@@ -59,6 +60,7 @@ import NumberItem from "./NumberItem";
 import DateItem from "./DateItem";
 import SelectItem from "./SelectItem";
 import {v4 as uuidv4} from 'uuid';
+import {createFormChoicesStore} from "./SelectChoicesComponent";
 
 export default {
     name: "AddItemModal",
@@ -111,20 +113,39 @@ export default {
         }
     },
     methods: {
-        handleFormSubmit() {
+        handleTypeChanged() {
+            this.trivialFormulateErrorHandler()
+        },
+        handleFormSubmit(data) {
             if (this.validateSpecificFormData()) {
-                if (this.$props['purpose'] === "add") this.addNewItem();
+                if (this.$props['purpose'] === "add") this.addNewItem(data);
                 else if (this.$props['purpose'] === "update") this.updateItem();
                 this.$modal.hide(this.$parent.name)
             }
+            else console.log("error")
         }
         ,
-        addNewItem() {
-            createFormStore.addItem({...this.formValues, id: uuidv4()});
+        addNewItem(data) {
+            if (this.item.type==="select") {
+                createFormStore.addItem({
+                    ...this.formValues,
+                    id: uuidv4(),
+                    choices: createFormChoicesStore.choices
+                })
+            }
+            else createFormStore.addItem({...this.formValues, id: uuidv4()});
         }
         ,
         updateItem() {
-            createFormStore.changeItem({...this.formValues, id: this.item.id, order: this.item.order})
+            if (this.item.type==="select") {
+                createFormStore.changeItem({
+                    ...this.formValues,
+                    order: this.item.order,
+                    id: this.item.id,
+                    choices: createFormChoicesStore.choices
+                })
+            }
+            else createFormStore.changeItem({...this.formValues, id: this.item.id, order: this.item.order})
         }
         ,
         deleteItem() {
@@ -223,6 +244,15 @@ export default {
                 }
                 case "select": {
                     try {
+                        /*if (this.formValues.choices) {
+                            let choicesArray = this.formValues.choices.split("\n");
+
+                            this.formValues.choices = choicesArray;
+                        }
+                        else {
+                            this.trivialFormulateErrorHandler("You have to add at least 2 choices.");
+                            return false;
+                        }*/
                         if (this.formValues.min_amount_of_answers !== "" && this.formValues.min_amount_of_answers !== undefined) {
                             if (isNaN(parseInt(this.formValues.min_amount_of_answers))) {
                                 this.trivialFormulateErrorHandler("Invalid minimal amount of choices value.");

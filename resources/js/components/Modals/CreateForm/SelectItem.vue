@@ -33,19 +33,18 @@
                 v-model="strict_amount_of_answers"
             />
         </div>
-        <FormulateInput
-            type="textarea"
-            label="Add choices (they are separated by new line)"
-            name="choices"
-            v-model="choices"
-            :validation="[['required']]"
-        />
+        <select-choices-component :obj="this.$props['obj']"/>
     </div>
 </template>
 
 <script>
+import SelectChoicesComponent from "./SelectChoicesComponent";
+
 export default {
     name: "SelectItem",
+    components: {
+        "select-choices-component": SelectChoicesComponent
+    },
     props: ['obj'],
     data() {
         return {
@@ -53,7 +52,7 @@ export default {
             min_amount_of_answers: "",
             max_amount_of_answers: "",
             strict_amount_of_answers: "",
-            choices: "",
+            choices: [],
             strict: true,
             range: true
         }
