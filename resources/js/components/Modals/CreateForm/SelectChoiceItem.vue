@@ -7,8 +7,6 @@
 </template>
 
 <script>
-
-import AddItemModal from "./AddItemModal";
 import SelectChoiceModal from "./SelectChoiceModal";
 
 export default {

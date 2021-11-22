@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import AddItemModal from "./Modals/CreateForm/AddItemModal";
+import ItemModal from "./Modals/CreateForm/ItemModal";
 
 export default {
     name: "FormElementControl",
@@ -15,7 +15,7 @@ export default {
     methods: {
         showUpdateModal() {
             this.$modal.show(
-                AddItemModal,
+                ItemModal,
                 { obj: this.$props['obj'], purpose: "update" },
                 {height: 'auto', width: '60%', adaptive: true},
                 {'before-close': () => {

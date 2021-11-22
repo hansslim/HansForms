@@ -62,7 +62,7 @@ import {v4 as uuidv4} from 'uuid';
 import {createFormChoicesStore, createFormStore} from "./stores";
 
 export default {
-    name: "AddItemModal",
+    name: "ItemModal",
     components: {
         "text-item": TextItem,
         "number-item": NumberItem,

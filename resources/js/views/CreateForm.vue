@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import AddItemModal from "../components/Modals/CreateForm/AddItemModal";
+import ItemModal from "../components/Modals/CreateForm/ItemModal";
 import FormElementControl from "../components/FormElementControl";
 import {createFormChoicesStore, createFormStore} from "../components/Modals/CreateForm/stores";
 
@@ -28,7 +28,7 @@ export default {
         showAddItemModal() {
             createFormChoicesStore.clearStore();
             this.$modal.show(
-                AddItemModal,
+                ItemModal,
                 { purpose: "add"},
                 {height: 'auto', width: '60%', adaptive: true},
                 {'before-close': event => this.handleItemsChanged()}
