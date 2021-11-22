@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\TextInput;
+use DateTime;
 use Exception;
 use http\Env\Response;
 use Illuminate\Http\Request;
@@ -38,6 +39,7 @@ class FormController extends Controller
 
         $order = 0;
         $validatedData = [];
+
         foreach ($request->all() as $item) {
             $validatedQuestion = [];
             //main props: header, is_mandatory, order, type
@@ -70,7 +72,6 @@ class FormController extends Controller
             } catch (Exception $exception) {
                 return response("Unhandled input error (in basic values).", 400);
             }
-
             //check type
             switch ($item['type']) {
                 case "text":
@@ -102,53 +103,141 @@ class FormController extends Controller
 
                         if ($strict) {
                             $validatedQuestion['strict_length'] = $strict;
-                        }
-                        else if ($max && $min) {
+                        } else if ($max && $min) {
                             if ($min < $max) {
                                 $validatedQuestion['min_length'] = $min;
                                 $validatedQuestion['max_length'] = $max;
                             }
-                        }
-
-                        else if ($min) $validatedQuestion['min_length'] = $min;
+                        } else if ($min) $validatedQuestion['min_length'] = $min;
                         else if ($max) $validatedQuestion['max_length'] = $max;
 
                     } catch (Exception $exception) {
-                        return response("Unhandled input error (in type-specific values).", 400);
+                        return response("Unhandled input error (in type-specific values). ({$exception->getMessage()})", 400);
                     }
+                    break;
                 }
-                case "number": {
+                case "date":{
                     try {
-                        $min = null;
-                        $max = null;
-                        $strict = null;
-                        if (array_key_exists('min_length', $item)) {
-                            if (intval($item['min_length'])) $min = intval($item['min_length']);
-                        }
-                        if (array_key_exists('max_length', $item)) {
-                            if (intval($item['max_length'])) $max = intval($item['max_length']);
-                        }
-                        if (array_key_exists('strict_length', $item)) {
-                            if (intval($item['strict_length'])) $strict = intval($item['strict_length']);
+                        function validateDate($date, $format = 'Y-m-d H:i:s')
+                        {
+                            $d = DateTime::createFromFormat($format, $date);
+                            return $d && $d->format($format) == $date;
                         }
 
-                        if ($strict) {
-                            $validatedQuestion['strict_length'] = $strict;
+                        //props: min, max
+                        $min = null;
+                        $max = null;
+
+                        if (array_key_exists('min', $item)) {
+                            if (validateDate($item['min'], 'Y-m-d')) $min = $item['min'];
                         }
-                        else if ($max && $min) {
-                            if ($min < $max) {
+
+                        if (array_key_exists('max', $item)) {
+                            if (validateDate($item['max'], 'Y-m-d')) $max = $item['max'];
+                        }
+
+                        if ($max && $min) {
+                            if (new DateTime($min) < new DateTime($max)) {
                                 $validatedQuestion['min_length'] = $min;
                                 $validatedQuestion['max_length'] = $max;
+                            }
+                        } else if ($max) $validatedQuestion['max_length'] = $max;
+                        else if ($min) $validatedQuestion['min_length'] = $min;
+                    } catch (Exception $exception) {
+                        return response("Unhandled input error (in type-specific values). ({$exception->getMessage()})", 400);
+                    }
+                    break;
+                }
+                case "boolean":
+                    break;
+                case "number":
+                    {
+                        //props: min, max, can_be_decimal
+                        try {
+                            $min = null;
+                            $max = null;
+                            $can_be_decimal = false;
+                            if (array_key_exists('min', $item)) {
+                                if (intval($item['min'])) $min = intval($item['min']);
+                            }
+                            if (array_key_exists('max', $item)) {
+                                if (intval($item['max'])) $max = intval($item['max']);
+                            }
+                            if (array_key_exists('can_be_decimal', $item)) {
+                                if (is_bool($item['can_be_decimal'])) $can_be_decimal = $item['can_be_decimal'];
+                            }
+
+                            if ($max && $min) {
+                                if ($min < $max) {
+                                    $validatedQuestion['min_length'] = $min;
+                                    $validatedQuestion['max_length'] = $max;
+                                }
+                            } else if ($min) $validatedQuestion['min_length'] = $min;
+                            else if ($max) $validatedQuestion['max_length'] = $max;
+                            $validatedQuestion['can_be_decimal'] = $can_be_decimal;
+
+                        } catch (Exception $exception) {
+                            return response("Unhandled input error (in type-specific values). ({$exception->getMessage()})", 400);
+                        }
+                        break;
+                    }
+                case "select":
+                {
+                    try {
+                        $is_multiselect = false;
+                        $min_amount_of_answers = null;
+                        $max_amount_of_answers = null;
+                        $strict_amount_of_answers = null;
+                        $choices = [];
+
+                        if (array_key_exists('choices', $item)) {
+                            if (!is_array($item['choices']))
+                                return response("Invalid data for select question (expected array of choices).", 400);
+                            if (count($item['choices']) >= 2)
+                                $choices = $item['choices'];
+                            else return response("Invalid amount of choices for select question (there should be at least two).", 400);
+                        }
+                        else return response("Invalid data for select question (choices are missing).", 400);
+
+                        if (array_key_exists('is_multiselect', $item)) {
+                            if (is_bool($item['is_multiselect'])) $is_multiselect = $item['is_multiselect'];
+                        }
+                        if (array_key_exists('min_amount_of_answers', $item)) {
+                            if (intval($item['min_amount_of_answers'])) $min_amount_of_answers = intval($item['min_amount_of_answers']);
+                        }
+                        if (array_key_exists('max_amount_of_answers', $item)) {
+                            if (intval($item['max_amount_of_answers'])) $max_amount_of_answers = intval($item['max_amount_of_answers']);
+                        }
+                        if (array_key_exists('strict_amount_of_answers', $item)) {
+                            if (intval($item['strict_amount_of_answers'])) $strict_amount_of_answers = intval($item['strict_amount_of_answers']);
+                        }
+
+                        //todo: choice format and logic validation
+
+                        if ($is_multiselect) {
+                            if ($strict_amount_of_answers) {
+                                $validatedQuestion['strict_amount_of_answers'] = $strict_amount_of_answers;
+                            }
+                            else {
+                                if ($max_amount_of_answers && $min_amount_of_answers) {
+                                    if ($min_amount_of_answers < $max_amount_of_answers) {
+                                        $validatedQuestion['min_amount_of_answers'] = $min_amount_of_answers;
+                                        $validatedQuestion['max_amount_of_answers'] = $max_amount_of_answers;
+                                    }
+                                } else if ($min_amount_of_answers) $validatedQuestion['min_amount_of_answers'] = $min_amount_of_answers;
+                                else if ($max_amount_of_answers) $validatedQuestion['max_amount_of_answers'] = $max_amount_of_answers;
                             }
                         }
 
                     } catch (Exception $exception) {
-                        return response("Unhandled input error (in type-specific values).", 400);
+                        return response("Unhandled input error (in type-specific values). ({$exception->getMessage()})", 400);
                     }
+                    dd($item);
+                    break;
                 }
                 //default: return response("Invalid question type.", 400);
             }
-
+            $validatedData[] = $validatedQuestion;
         }
 
         //todo: create uuid

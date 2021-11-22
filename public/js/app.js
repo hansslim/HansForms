@@ -3869,16 +3869,15 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     showWantedInputs: function showWantedInputs() {
-      /*if(this.max_length||this.min_length) {
-          this.strict = false;
-          this.range = true;
-      }
-      else this.strict = true;
+      if (this.max_length || this.min_length) {
+        this.strict = false;
+        this.range = true;
+      } else this.strict = true;
+
       if (this.strict_length) {
-          this.range = false;
-          this.strict = true;
-      }
-      else this.range = true;*/
+        this.range = false;
+        this.strict = true;
+      } else this.range = true;
     }
   },
   mounted: function mounted() {
