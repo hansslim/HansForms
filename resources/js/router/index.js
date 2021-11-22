@@ -51,6 +51,7 @@ const routes = [
         path: "/create_form",
         name: "CreateForm",
         component: CreateForm,
+        meta: { requiresAuth: true }
     },
 ];
 

@@ -8,7 +8,7 @@ import VueFormulate from '@braid/vue-formulate'
 import VModal from 'vue-js-modal'
 
 Vue.use(VueFormulate);
-Vue.use(VModal)
+Vue.use(VModal, { dynamicDefault: { height: 'auto', width: '60%', adaptive: true, scrollable: true } })
 
 Vue.config.productionTip = false;
 

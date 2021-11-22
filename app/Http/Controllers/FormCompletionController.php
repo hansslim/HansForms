@@ -46,6 +46,7 @@ class FormCompletionController extends Controller
      */
     public function store(Request $request, $slug)
     {
+        //todo: rewrite error_log and abort to return response("error", 400);
         //data validation
         $answeredForm = Form::where('slug', $slug)->first();
         //todo: on time validation

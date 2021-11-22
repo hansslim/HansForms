@@ -9,5 +9,8 @@ export default {
     },
     async postFormCompletion(formCompletion, slug) {
         return Api.post('/form/complete/' + slug, formCompletion);
-    }
+    },
+    async postCreateForm(newForm) {
+        return Api.post('/forms/', newForm);
+    },
 };

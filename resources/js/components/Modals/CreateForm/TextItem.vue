@@ -45,7 +45,7 @@ export default {
     },
     methods: {
         showWantedInputs() {
-            if(this.max_length||this.min_length) {
+            /*if(this.max_length||this.min_length) {
                 this.strict = false;
                 this.range = true;
             }
@@ -54,7 +54,7 @@ export default {
                 this.range = false;
                 this.strict = true;
             }
-            else this.range = true;
+            else this.range = true;*/
         }
     },
     mounted() {
