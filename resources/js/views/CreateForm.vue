@@ -12,6 +12,7 @@
 <script>
 import AddItemModal from "../components/Modals/CreateForm/AddItemModal";
 import FormElementControl from "../components/FormElementControl";
+import {createFormChoicesStore, createFormStore} from "../components/Modals/CreateForm/stores";
 
 export default {
     name: "CreateForm",
@@ -25,6 +26,7 @@ export default {
     },
     methods: {
         showAddItemModal() {
+            createFormChoicesStore.clearStore();
             this.$modal.show(
                 AddItemModal,
                 { purpose: "add"},
@@ -39,46 +41,7 @@ export default {
     }
 }
 
-export let createFormStore = {
-    data: {
-        items: [],
-    },
-    getItems() {
-        return this.data.items;
-    },
-    addItem(item) {
-        this.data.items = [...this.data.items, item];
-        this.refreshItemsOrder();
-    },
-    refreshItemsOrder() {
-        let i = 0;
-        this.data.items = this.data.items.map((x)=>{
-            let obj = x;
-            obj.order = i++;
-            return obj;
-        });
-    },
-    sortItemsByOrder() {
-        this.data.items = this.data.items.sort((a, b) => {
-            if (a.order < b.order) {
-                return -1;
-            }
-            if (a.order > b.order) {
-                return 1;
-            }
-            return 0;
-        });
-    },
-    changeItem(item) {
-        this.data.items = this.data.items.filter((x)=>x.id!==item.id);
-        this.data.items = [...this.data.items, item];
-        this.sortItemsByOrder();
-    },
-    deleteItem(item) {
-        this.data.items = this.data.items.filter((x)=>x.id!==item.id);
-        this.refreshItemsOrder();
-    }
-}
+
 </script>
 
 <style scoped>

@@ -25,8 +25,8 @@
 </template>
 
 <script>
-import {createFormChoicesStore} from "./SelectChoicesComponent";
 import {v4 as uuidv4} from 'uuid';
+import {createFormChoicesStore} from "./stores";
 
 export default {
     name: "SelectChoiceModal",

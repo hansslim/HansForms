@@ -54,13 +54,12 @@
 </template>
 
 <script>
-import {createFormStore} from "../../../views/CreateForm"
 import TextItem from "./TextItem";
 import NumberItem from "./NumberItem";
 import DateItem from "./DateItem";
 import SelectItem from "./SelectItem";
 import {v4 as uuidv4} from 'uuid';
-import {createFormChoicesStore} from "./SelectChoicesComponent";
+import {createFormChoicesStore, createFormStore} from "./stores";
 
 export default {
     name: "AddItemModal",
@@ -155,6 +154,8 @@ export default {
                 createFormStore.deleteItem({...this.formValues, id: this.item.id, order: this.item.order});
                 this.$modal.hide(this.$parent.name)
             }
+
+            //createFormChoicesStore.clearStore();
         }
         ,
         validateSpecificFormData() {
