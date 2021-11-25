@@ -13,7 +13,7 @@ import {createFormChoicesStore} from "./stores";
 
 export default {
     name: "SelectChoicesComponent",
-    props: ["obj"],
+    props: ["obj", "hasHiddenLabel"],
     components: {
         'choice-item': SelectChoiceItem
     },
@@ -22,16 +22,41 @@ export default {
             choices: [],
         }
     },
+    watch: {
+        hasHiddenLabel: function () {
+            if (this.$props['hasHiddenLabel']) {
+                //rewrite hidden labels to 0,1,2,...
+                let i = 1;
+                this.choices = this.choices.map((x) => {
+                    let object = x;
+                    if (!object.hidden_label) object.hidden_label = i++;
+                    return object;
+                    /*if (!x.hidden_label) return x.hidden_label = i++;*/
+                })
+                //this.choices = createFormChoicesStore.getItems();
+
+            } else {
+                //remove hidden labels
+                this.choices = this.choices.map((x) => {
+                    let object = x;
+                    x.hidden_label = "";
+                    return object;
+                })
+                //this.choices = createFormChoicesStore.getItems();
+
+            }
+        }
+    },
     methods: {
         addChoice() {
             this.$modal.show(
                 SelectChoiceModal,
-                { purpose: "add"},
+                {purpose: "add", hasHiddenLabel: this.$props['hasHiddenLabel']},
                 {height: 'auto', width: '60%', adaptive: true},
                 {'before-close': event => this.handleItemsChanged()}
             )
         },
-        handleItemsChanged(){
+        handleItemsChanged() {
             this.choices = createFormChoicesStore.getItems();
         }
     },

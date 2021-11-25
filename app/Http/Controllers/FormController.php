@@ -232,7 +232,7 @@ class FormController extends Controller
                     } catch (Exception $exception) {
                         return response("Unhandled input error (in type-specific values). ({$exception->getMessage()})", 400);
                     }
-                    dd($item);
+                    //dd($item);
                     break;
                 }
                 //default: return response("Invalid question type.", 400);
@@ -244,6 +244,7 @@ class FormController extends Controller
 
         //todo: save data
 
+        dd($validatedData);
         return response("Form has been created.", 499);
     }
 

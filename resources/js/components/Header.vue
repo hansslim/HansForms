@@ -1,7 +1,7 @@
 <template>
     <div class="mb-2">
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-            <router-link class="navbar-brand" to="/">Surveys</router-link>
+            <router-link class="navbar-brand" to="/">HansForms</router-link>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown">
                 <span class="navbar-toggler-icon"></span>
             </button>

@@ -10,6 +10,7 @@
                   v-model="choiceText"
               />
               <FormulateInput
+                  v-if="showHiddenLabel"
                   name="hidden_label"
                   type="number"
                   placeholder="Write a hidden label."
@@ -30,9 +31,10 @@ import {createFormChoicesStore} from "./stores";
 
 export default {
     name: "SelectChoiceModal",
-    props: ["obj", 'purpose'],
+    props: ['obj', 'purpose', 'hasHiddenLabel'],
     data() {
         return {
+            showHiddenLabel: false,
             choiceText: "",
             hiddenLabel: "",
             order: 0,
@@ -88,12 +90,16 @@ export default {
     },
     mounted() {
         if (this.$props['purpose'] === 'update') {
+            console.log(this.$props['obj'])
             if (this.$props['obj']) {
                 this.choiceText = this.$props['obj'].text;
                 this.hiddenLabel = this.$props['obj'].hidden_label;
                 this.order = this.$props['obj'].order;
                 this.id = this.$props['obj'].id;
             }
+        }
+        if (this.$props['hasHiddenLabel']) {
+            this.showHiddenLabel = true;
         }
     }
 }

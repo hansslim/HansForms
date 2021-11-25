@@ -3483,12 +3483,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "SelectChoiceItem",
   props: ["obj"],
-  data: function data() {
-    return {
-      choiceText: "",
-      hiddenLabel: ""
-    };
-  },
   methods: {
     getChoiceTextWithLabel: function getChoiceTextWithLabel() {
       if (this.$props['obj'].hidden_label) {
@@ -3502,7 +3496,8 @@ __webpack_require__.r(__webpack_exports__);
 
       this.$modal.show(_SelectChoiceModal__WEBPACK_IMPORTED_MODULE_0__["default"], {
         obj: this.$props['obj'],
-        purpose: "update"
+        purpose: "update",
+        hasHiddenLabel: this.$props['obj'].hidden_label
       }, {
         height: 'auto',
         width: '60%',
@@ -3513,10 +3508,6 @@ __webpack_require__.r(__webpack_exports__);
         }
       });
     }
-  },
-  mounted: function mounted() {
-    this.choiceText = this.$props['obj'].text;
-    this.hiddenLabel = this.$props['obj'].hidden_label;
   }
 });
 
@@ -3561,13 +3552,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "SelectChoiceModal",
-  props: ["obj", 'purpose'],
+  props: ['obj', 'purpose', 'hasHiddenLabel'],
   data: function data() {
     return {
+      showHiddenLabel: false,
       choiceText: "",
       hiddenLabel: "",
       order: 0,
@@ -3624,12 +3617,18 @@ __webpack_require__.r(__webpack_exports__);
   },
   mounted: function mounted() {
     if (this.$props['purpose'] === 'update') {
+      console.log(this.$props['obj']);
+
       if (this.$props['obj']) {
         this.choiceText = this.$props['obj'].text;
         this.hiddenLabel = this.$props['obj'].hidden_label;
         this.order = this.$props['obj'].order;
         this.id = this.$props['obj'].id;
       }
+    }
+
+    if (this.$props['hasHiddenLabel']) {
+      this.showHiddenLabel = true;
     }
   }
 });
@@ -3662,7 +3661,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "SelectChoicesComponent",
-  props: ["obj"],
+  props: ["obj", "hasHiddenLabel"],
   components: {
     'choice-item': _SelectChoiceItem__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
@@ -3671,12 +3670,34 @@ __webpack_require__.r(__webpack_exports__);
       choices: []
     };
   },
+  watch: {
+    hasHiddenLabel: function hasHiddenLabel() {
+      if (this.$props['hasHiddenLabel']) {
+        //rewrite hidden labels to 0,1,2,...
+        var i = 1;
+        this.choices = this.choices.map(function (x) {
+          var object = x;
+          if (!object.hidden_label) object.hidden_label = i++;
+          return object;
+          /*if (!x.hidden_label) return x.hidden_label = i++;*/
+        }); //this.choices = createFormChoicesStore.getItems();
+      } else {
+        //remove hidden labels
+        this.choices = this.choices.map(function (x) {
+          var object = x;
+          x.hidden_label = "";
+          return object;
+        }); //this.choices = createFormChoicesStore.getItems();
+      }
+    }
+  },
   methods: {
     addChoice: function addChoice() {
       var _this = this;
 
       this.$modal.show(_SelectChoiceModal__WEBPACK_IMPORTED_MODULE_1__["default"], {
-        purpose: "add"
+        purpose: "add",
+        hasHiddenLabel: this.$props['hasHiddenLabel']
       }, {
         height: 'auto',
         width: '60%',
@@ -3752,6 +3773,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "SelectItem",
@@ -3762,6 +3790,7 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       is_multiselect: false,
+      has_hidden_label: false,
       min_amount_of_answers: "",
       max_amount_of_answers: "",
       strict_amount_of_answers: "",
@@ -3803,6 +3832,10 @@ __webpack_require__.r(__webpack_exports__);
 
       if (this.$props['obj'].choices) {
         this.choices = this.$props['obj'].choices;
+      }
+
+      if (this.$props['obj'].has_hidden_label) {
+        this.has_hidden_label = this.$props['obj'].has_hidden_label;
       }
     }
 
@@ -44624,7 +44657,7 @@ var render = function() {
       { staticClass: "navbar navbar-expand-lg navbar-dark bg-primary" },
       [
         _c("router-link", { staticClass: "navbar-brand", attrs: { to: "/" } }, [
-          _vm._v("Surveys")
+          _vm._v("HansForms")
         ]),
         _vm._v(" "),
         _vm._m(0),
@@ -45087,20 +45120,22 @@ var render = function() {
                 }
               }),
               _vm._v(" "),
-              _c("FormulateInput", {
-                attrs: {
-                  name: "hidden_label",
-                  type: "number",
-                  placeholder: "Write a hidden label."
-                },
-                model: {
-                  value: _vm.hiddenLabel,
-                  callback: function($$v) {
-                    _vm.hiddenLabel = $$v
-                  },
-                  expression: "hiddenLabel"
-                }
-              }),
+              _vm.showHiddenLabel
+                ? _c("FormulateInput", {
+                    attrs: {
+                      name: "hidden_label",
+                      type: "number",
+                      placeholder: "Write a hidden label."
+                    },
+                    model: {
+                      value: _vm.hiddenLabel,
+                      callback: function($$v) {
+                        _vm.hiddenLabel = $$v
+                      },
+                      expression: "hiddenLabel"
+                    }
+                  })
+                : _vm._e(),
               _vm._v(" "),
               this.$props["purpose"] === "add"
                 ? _c("FormulateInput", {
@@ -45218,6 +45253,22 @@ var render = function() {
         }
       }),
       _vm._v(" "),
+      _c("FormulateInput", {
+        attrs: {
+          name: "has_hidden_label",
+          type: "checkbox",
+          label: "Scale (has hidden label to fill)",
+          "label-position": "before"
+        },
+        model: {
+          value: _vm.has_hidden_label,
+          callback: function($$v) {
+            _vm.has_hidden_label = $$v
+          },
+          expression: "has_hidden_label"
+        }
+      }),
+      _vm._v(" "),
       _vm.is_multiselect
         ? _c(
             "div",
@@ -45280,7 +45331,9 @@ var render = function() {
           )
         : _vm._e(),
       _vm._v(" "),
-      _c("select-choices-component", { attrs: { obj: this.$props["obj"] } })
+      _c("select-choices-component", {
+        attrs: { obj: this.$props["obj"], hasHiddenLabel: _vm.has_hidden_label }
+      })
     ],
     1
   )

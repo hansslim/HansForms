@@ -16,6 +16,7 @@ class CreateSelectInputsTable extends Migration
         Schema::create('select_inputs', function (Blueprint $table) {
             $table->id();
             $table->boolean("is_multiselect");
+            $table->boolean("has_hidden_labels");
             $table->integer("min_amount_of_answers")->nullable();
             $table->integer("max_amount_of_answers")->nullable();
             $table->integer("strict_amount_of_answers")->nullable();

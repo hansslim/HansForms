@@ -49,7 +49,7 @@ export let createFormChoicesStore = {
     data: {
         items: [],
     },
-    getItems() {
+    getItems(){
         return this.data.items;
     },
     addItem(item) {

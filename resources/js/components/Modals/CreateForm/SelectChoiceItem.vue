@@ -12,12 +12,6 @@ import SelectChoiceModal from "./SelectChoiceModal";
 export default {
     name: "SelectChoiceItem",
     props: ["obj"],
-    data() {
-        return {
-            choiceText: "",
-            hiddenLabel: "",
-        }
-    },
     methods: {
         getChoiceTextWithLabel() {
             if (this.$props['obj'].hidden_label) {
@@ -30,7 +24,7 @@ export default {
         updateChoice() {
             this.$modal.show(
                 SelectChoiceModal,
-                { obj: this.$props['obj'], purpose: "update" },
+                { obj: this.$props['obj'], purpose: "update", hasHiddenLabel: this.$props['obj'].hidden_label },
                 {height: 'auto', width: '60%', adaptive: true},
                 {'before-close': () => {
                         this.$emit('choiceChanged')
@@ -38,10 +32,6 @@ export default {
             )
         },
     },
-    mounted() {
-        this.choiceText = this.$props['obj'].text
-        this.hiddenLabel = this.$props['obj'].hidden_label
-    }
 }
 </script>
 

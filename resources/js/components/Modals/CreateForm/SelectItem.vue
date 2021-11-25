@@ -7,6 +7,13 @@
             label-position="before"
             v-model="is_multiselect"
         />
+        <FormulateInput
+            name="has_hidden_label"
+            type="checkbox"
+            label="Scale (has hidden label to fill)"
+            label-position="before"
+            v-model="has_hidden_label"
+        />
         <div v-if="is_multiselect">
             <FormulateInput
                 v-if="range"
@@ -33,12 +40,13 @@
                 v-model="strict_amount_of_answers"
             />
         </div>
-        <select-choices-component :obj="this.$props['obj']"/>
+        <select-choices-component :obj="this.$props['obj']" :hasHiddenLabel="has_hidden_label"/>
     </div>
 </template>
 
 <script>
 import SelectChoicesComponent from "./SelectChoicesComponent";
+
 
 export default {
     name: "SelectItem",
@@ -49,6 +57,7 @@ export default {
     data() {
         return {
             is_multiselect: false,
+            has_hidden_label: false,
             min_amount_of_answers: "",
             max_amount_of_answers: "",
             strict_amount_of_answers: "",
@@ -86,6 +95,9 @@ export default {
             }
             if (this.$props['obj'].choices) {
                 this.choices = this.$props['obj'].choices;
+            }
+            if (this.$props['obj'].has_hidden_label) {
+                this.has_hidden_label = this.$props['obj'].has_hidden_label;
             }
         }
         this.showWantedInputs()
