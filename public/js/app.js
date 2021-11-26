@@ -3649,6 +3649,24 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _SelectChoiceItem__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./SelectChoiceItem */ "./resources/js/components/Modals/CreateForm/SelectChoiceItem.vue");
 /* harmony import */ var _SelectChoiceModal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SelectChoiceModal */ "./resources/js/components/Modals/CreateForm/SelectChoiceModal.vue");
 /* harmony import */ var _stores__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./stores */ "./resources/js/components/Modals/CreateForm/stores.js");
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -3675,19 +3693,33 @@ __webpack_require__.r(__webpack_exports__);
       if (this.$props['hasHiddenLabel']) {
         //rewrite hidden labels to 0,1,2,...
         var i = 1;
-        this.choices = this.choices.map(function (x) {
-          var object = x;
-          if (!object.hidden_label) object.hidden_label = i++;
-          return object;
-          /*if (!x.hidden_label) return x.hidden_label = i++;*/
-        }); //this.choices = createFormChoicesStore.getItems();
+        this.choices.forEach(function (item) {
+          _stores__WEBPACK_IMPORTED_MODULE_2__.createFormChoicesStore.changeItem(_objectSpread(_objectSpread({}, item), {}, {
+            hidden_label: i++
+          }));
+        });
+        this.choices = _stores__WEBPACK_IMPORTED_MODULE_2__.createFormChoicesStore.getItems();
+        /*createFormChoicesStore.setItems( [...createFormChoicesStore.data.items].map((x) => {
+            let object = x;
+            if (!object.hidden_label) object.hidden_label = i++;
+            return object;
+            /!*if (!x.hidden_label) return x.hidden_label = i++;*!/
+        }))*/
+        //this.choices = createFormChoicesStore.getItems();
       } else {
-        //remove hidden labels
-        this.choices = this.choices.map(function (x) {
-          var object = x;
-          x.hidden_label = "";
-          return object;
-        }); //this.choices = createFormChoicesStore.getItems();
+        this.choices.forEach(function (item) {
+          _stores__WEBPACK_IMPORTED_MODULE_2__.createFormChoicesStore.changeItem(_objectSpread(_objectSpread({}, item), {}, {
+            hidden_label: ""
+          }));
+        });
+        this.choices = _stores__WEBPACK_IMPORTED_MODULE_2__.createFormChoicesStore.getItems(); //remove hidden labels
+
+        /*createFormChoicesStore.setItems( [...createFormChoicesStore.data.items].map((x) => {
+            let object = x;
+            x.hidden_label = "";
+            return object;
+        }))*/
+        //this.choices = createFormChoicesStore.getItems();
       }
     }
   },
@@ -3714,8 +3746,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   mounted: function mounted() {
     if (this.$props['obj']) {
-      this.choices = this.$props['obj'].choices;
-      _stores__WEBPACK_IMPORTED_MODULE_2__.createFormChoicesStore.setItems(this.$props['obj'].choices);
+      this.choices = _toConsumableArray(this.$props['obj'].choices);
+      _stores__WEBPACK_IMPORTED_MODULE_2__.createFormChoicesStore.setItems(_toConsumableArray(this.$props['obj'].choices));
     }
   }
 });
