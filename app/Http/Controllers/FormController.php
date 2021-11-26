@@ -188,13 +188,68 @@ class FormController extends Controller
                         $min_amount_of_answers = null;
                         $max_amount_of_answers = null;
                         $strict_amount_of_answers = null;
+                        $has_hidden_label = false;
                         $choices = [];
 
                         if (array_key_exists('choices', $item)) {
-                            if (!is_array($item['choices']))
+                            if (!is_array($item['choices'])) {
                                 return response("Invalid data for select question (expected array of choices).", 400);
-                            if (count($item['choices']) >= 2)
-                                $choices = $item['choices'];
+                            }
+                            if (count($item['choices']) >= 2) {
+                                if (array_key_exists('has_hidden_label', $item)) {
+                                    if (is_bool($item["has_hidden_label"])) $has_hidden_label = $item["has_hidden_label"];
+                                }
+                                else return response("Invalid data (missing has_hidden_label value).", 400);
+
+                                $choiceOrder = 0;
+                                $uniqueHiddenLabels = [];
+                                foreach ($item['choices'] as $choice) {
+                                    $hidden_label = null;
+                                    $text = null;
+                                    $order = null;
+                                    //order check
+                                    if (array_key_exists('order', $choice)) {
+                                        if (intval($choice['order']) !== $choiceOrder) {
+                                            return response("Invalid data (order is not valid).", 400);
+                                        }
+                                        else {
+                                            $order = $choiceOrder;
+                                            $choiceOrder++;
+                                        }
+                                    }
+                                    else return response("Invalid data (order is missing).", 400);
+                                    //hidden label check
+                                    if ($has_hidden_label) {
+                                        if (array_key_exists('hidden_label', $choice)) {
+                                            if ($choice['hidden_label'] === "0") {
+                                                $hidden_label = 0;
+                                                if (in_array($hidden_label, $uniqueHiddenLabels)) {
+                                                    return response("Invalid data (hidden_label is not unique).", 400);
+                                                }
+                                                else array_push($uniqueHiddenLabels, $hidden_label);
+                                            }
+                                            else if (intval($choice['hidden_label'])) {
+                                                $hidden_label = intval($choice['hidden_label']);
+                                                if (in_array($hidden_label, $uniqueHiddenLabels)) {
+                                                    return response("Invalid data (hidden_label is not unique).", 400);
+                                                }
+                                                else array_push($uniqueHiddenLabels, $hidden_label);
+                                            }
+                                            else return response("Invalid data (invalid hidden_label type in choice).", 400);
+                                        }
+                                        else return response("Invalid data (missing hidden_label in choice).", 400);
+                                    }
+                                    //text check
+                                    if (array_key_exists('text', $choice)) {
+                                        if ($choice['text'] === "0") $text = $choice['text'];
+                                        else if (mb_strlen($choice['text']) && !is_null($choice['text'])) $text = strval($choice['text']);
+                                        else return response("Invalid data (empty text in choice).", 400);
+                                    }
+                                    else return response("Invalid data (text is missing).", 400);
+
+                                    $choices[] = ['text' => $text, "hidden_label" => $hidden_label, "order" => $order];
+                                }
+                            }
                             else return response("Invalid amount of choices for select question (there should be at least two).", 400);
                         }
                         else return response("Invalid data for select question (choices are missing).", 400);
@@ -203,16 +258,14 @@ class FormController extends Controller
                             if (is_bool($item['is_multiselect'])) $is_multiselect = $item['is_multiselect'];
                         }
                         if (array_key_exists('min_amount_of_answers', $item)) {
-                            if (intval($item['min_amount_of_answers'])) $min_amount_of_answers = intval($item['min_amount_of_answers']);
+                            if (intval($item['min_amount_of_answers']) && intval($item['min_amount_of_answers']) >= 0) $min_amount_of_answers = intval($item['min_amount_of_answers']);
                         }
                         if (array_key_exists('max_amount_of_answers', $item)) {
-                            if (intval($item['max_amount_of_answers'])) $max_amount_of_answers = intval($item['max_amount_of_answers']);
+                            if (intval($item['max_amount_of_answers']) && intval($item['max_amount_of_answers']) > 0) $max_amount_of_answers = intval($item['max_amount_of_answers']);
                         }
                         if (array_key_exists('strict_amount_of_answers', $item)) {
-                            if (intval($item['strict_amount_of_answers'])) $strict_amount_of_answers = intval($item['strict_amount_of_answers']);
+                            if (intval($item['strict_amount_of_answers']) && intval($item['strict_amount_of_answers']) > 0) $strict_amount_of_answers = intval($item['strict_amount_of_answers']);
                         }
-
-                        //todo: choice format and logic validation
 
                         if ($is_multiselect) {
                             if ($strict_amount_of_answers) {
@@ -229,19 +282,22 @@ class FormController extends Controller
                             }
                         }
 
+                        $validatedQuestion['has_hidden_label'] = $has_hidden_label;
+                        $validatedQuestion['choices'] = $choices;
+
                     } catch (Exception $exception) {
                         return response("Unhandled input error (in type-specific values). ({$exception->getMessage()})", 400);
                     }
-                    //dd($item);
+
                     break;
                 }
-                //default: return response("Invalid question type.", 400);
+                default: return response("Invalid question type.", 400);
             }
             $validatedData[] = $validatedQuestion;
         }
 
         //todo: create uuid
-
+        
         //todo: save data
 
         dd($validatedData);
