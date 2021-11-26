@@ -20,45 +20,35 @@ export default {
     data() {
         return {
             choices: [],
+            tryDataLoad: false
         }
     },
     watch: {
-        hasHiddenLabel: function () {
-            if (this.$props['hasHiddenLabel']) {
-                //rewrite hidden labels to 0,1,2,...
-                let i = 1;
-                this.choices.forEach((item)=> {
-                    createFormChoicesStore.changeItem({
-                        ...item,
-                        hidden_label: i++
-                    })
-                })
-                this.choices = createFormChoicesStore.getItems();
-
-                /*createFormChoicesStore.setItems( [...createFormChoicesStore.data.items].map((x) => {
-                    let object = x;
-                    if (!object.hidden_label) object.hidden_label = i++;
-                    return object;
-                    /!*if (!x.hidden_label) return x.hidden_label = i++;*!/
-                }))*/
-                //this.choices = createFormChoicesStore.getItems();
-
-            } else {
-                this.choices.forEach((item)=> {
-                    createFormChoicesStore.changeItem({
-                        ...item,
-                        hidden_label: "",
-                    })
-                })
-                this.choices = createFormChoicesStore.getItems();
-                //remove hidden labels
-                /*createFormChoicesStore.setItems( [...createFormChoicesStore.data.items].map((x) => {
-                    let object = x;
-                    x.hidden_label = "";
-                    return object;
-                }))*/
-                //this.choices = createFormChoicesStore.getItems();
-
+        hasHiddenLabel: {
+            immediate: false,
+            handler() {
+                if (this.tryDataLoad) {
+                    if (this.$props['hasHiddenLabel']) {
+                        //rewrite hidden labels to 0,1,2,...
+                        let i = 1;
+                        this.choices.forEach((item) => {
+                            createFormChoicesStore.changeItem({
+                                ...item,
+                                hidden_label: i++
+                            })
+                        })
+                        this.choices = createFormChoicesStore.getItems();
+                    } else {
+                        //remove hidden labels
+                        this.choices.forEach((item) => {
+                            createFormChoicesStore.changeItem({
+                                ...item,
+                                hidden_label: "",
+                            })
+                        })
+                        this.choices = createFormChoicesStore.getItems();
+                    }
+                }
             }
         }
     },
@@ -73,13 +63,17 @@ export default {
         },
         handleItemsChanged() {
             this.choices = createFormChoicesStore.getItems();
-        }
+        },
     },
     mounted() {
         if (this.$props['obj']) {
             this.choices = [...this.$props['obj'].choices];
             createFormChoicesStore.setItems([...this.$props['obj'].choices]);
-        }
+            this.$nextTick(() => {
+                this.tryDataLoad = true;
+            })
+        } else this.tryDataLoad = true;
+
     }
 }
 

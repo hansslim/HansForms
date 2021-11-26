@@ -3685,41 +3685,34 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   },
   data: function data() {
     return {
-      choices: []
+      choices: [],
+      tryDataLoad: false
     };
   },
   watch: {
-    hasHiddenLabel: function hasHiddenLabel() {
-      if (this.$props['hasHiddenLabel']) {
-        //rewrite hidden labels to 0,1,2,...
-        var i = 1;
-        this.choices.forEach(function (item) {
-          _stores__WEBPACK_IMPORTED_MODULE_2__.createFormChoicesStore.changeItem(_objectSpread(_objectSpread({}, item), {}, {
-            hidden_label: i++
-          }));
-        });
-        this.choices = _stores__WEBPACK_IMPORTED_MODULE_2__.createFormChoicesStore.getItems();
-        /*createFormChoicesStore.setItems( [...createFormChoicesStore.data.items].map((x) => {
-            let object = x;
-            if (!object.hidden_label) object.hidden_label = i++;
-            return object;
-            /!*if (!x.hidden_label) return x.hidden_label = i++;*!/
-        }))*/
-        //this.choices = createFormChoicesStore.getItems();
-      } else {
-        this.choices.forEach(function (item) {
-          _stores__WEBPACK_IMPORTED_MODULE_2__.createFormChoicesStore.changeItem(_objectSpread(_objectSpread({}, item), {}, {
-            hidden_label: ""
-          }));
-        });
-        this.choices = _stores__WEBPACK_IMPORTED_MODULE_2__.createFormChoicesStore.getItems(); //remove hidden labels
-
-        /*createFormChoicesStore.setItems( [...createFormChoicesStore.data.items].map((x) => {
-            let object = x;
-            x.hidden_label = "";
-            return object;
-        }))*/
-        //this.choices = createFormChoicesStore.getItems();
+    hasHiddenLabel: {
+      immediate: false,
+      handler: function handler() {
+        if (this.tryDataLoad) {
+          if (this.$props['hasHiddenLabel']) {
+            //rewrite hidden labels to 0,1,2,...
+            var i = 1;
+            this.choices.forEach(function (item) {
+              _stores__WEBPACK_IMPORTED_MODULE_2__.createFormChoicesStore.changeItem(_objectSpread(_objectSpread({}, item), {}, {
+                hidden_label: i++
+              }));
+            });
+            this.choices = _stores__WEBPACK_IMPORTED_MODULE_2__.createFormChoicesStore.getItems();
+          } else {
+            //remove hidden labels
+            this.choices.forEach(function (item) {
+              _stores__WEBPACK_IMPORTED_MODULE_2__.createFormChoicesStore.changeItem(_objectSpread(_objectSpread({}, item), {}, {
+                hidden_label: ""
+              }));
+            });
+            this.choices = _stores__WEBPACK_IMPORTED_MODULE_2__.createFormChoicesStore.getItems();
+          }
+        }
       }
     }
   },
@@ -3745,10 +3738,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
   },
   mounted: function mounted() {
+    var _this2 = this;
+
     if (this.$props['obj']) {
       this.choices = _toConsumableArray(this.$props['obj'].choices);
       _stores__WEBPACK_IMPORTED_MODULE_2__.createFormChoicesStore.setItems(_toConsumableArray(this.$props['obj'].choices));
-    }
+      this.$nextTick(function () {
+        _this2.tryDataLoad = true;
+      });
+    } else this.tryDataLoad = true;
   }
 });
 
