@@ -48,15 +48,20 @@ export default {
         handleItemsChanged() {
             this.items = createFormStore.getItems()
         },
-        submitCreateForm() {
-            Form.postCreateForm(this.items)
-            /*
-            if (this.items.length) {
-
+        async submitCreateForm() {
+            try {
+                await Form.postCreateForm(this.items).then(() => {
+                    alert("Form creation was successful.")
+                    this.$router.push("/");
+                    createFormStore.clearStore();
+                    this.choices = [];
+                })
             }
-            else {
-                console.log("There are no items in form! Add some, please...")
-            }*/
+            catch (error) {
+                console.log(error);
+                alert(`Form creation wasn't successful.`)
+            }
+
         }
     }
 }

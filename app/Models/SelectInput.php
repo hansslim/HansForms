@@ -12,8 +12,10 @@ class SelectInput extends Model
     protected $fillable = [
         'input_element_id',
         'is_multiselect',
-        'is_dropdown',
         'strict_amount_of_answers',
+        'min_amount_of_answers',
+        'max_amount_of_answers',
+        'has_hidden_label'
     ];
 
     protected $with = [

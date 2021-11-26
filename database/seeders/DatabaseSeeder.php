@@ -78,7 +78,8 @@ class DatabaseSeeder extends Seeder
                     {
                         $selectInput = SelectInput::create([
                             'is_multiselect' => true,
-                            'input_element_id' => $inputElement->id
+                            'input_element_id' => $inputElement->id,
+                            'has_hidden_label' => false
                         ]);
                         for ($j = 0; $j < 3; $j++) {
                             SelectInputChoice::factory()->create([

@@ -2,6 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BooleanInput;
+use App\Models\DateInput;
+use App\Models\FormElement;
+use App\Models\InputElement;
+use App\Models\NumberInput;
+use App\Models\SelectInput;
+use App\Models\SelectInputChoice;
 use App\Models\TextInput;
 use DateTime;
 use Exception;
@@ -10,6 +17,7 @@ use Illuminate\Http\Request;
 use App\Models\Form;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Ramsey\Uuid\Uuid;
 use function MongoDB\BSON\toJSON;
 
 class FormController extends Controller
@@ -34,7 +42,10 @@ class FormController extends Controller
      */
     public function store(Request $request)
     {
-        //todo: validate data
+        $userId = -1;
+        if (!Auth::user()) return response("Unauthorized - log in to create forms...", 401);
+        else $userId = Auth::user()->id;
+
         if (!$request->all()) return response("Invalid data (expected array of questions).", 400);
 
         $order = 0;
@@ -82,6 +93,10 @@ class FormController extends Controller
                         $max = null;
                         $strict = null;
 
+                        $validatedQuestion['min_length'] = $min;
+                        $validatedQuestion['max_length'] = $max;
+                        $validatedQuestion['strict_length'] = $strict;
+
                         if (array_key_exists('min_length', $item)) {
                             if (
                                 intval($item['min_length']) &&
@@ -128,6 +143,9 @@ class FormController extends Controller
                         $min = null;
                         $max = null;
 
+                        $validatedQuestion['min'] = $min;
+                        $validatedQuestion['max'] = $max;
+
                         if (array_key_exists('min', $item)) {
                             if (validateDate($item['min'], 'Y-m-d')) $min = $item['min'];
                         }
@@ -138,11 +156,11 @@ class FormController extends Controller
 
                         if ($max && $min) {
                             if (new DateTime($min) < new DateTime($max)) {
-                                $validatedQuestion['min_length'] = $min;
-                                $validatedQuestion['max_length'] = $max;
+                                $validatedQuestion['min'] = $min;
+                                $validatedQuestion['max'] = $max;
                             }
-                        } else if ($max) $validatedQuestion['max_length'] = $max;
-                        else if ($min) $validatedQuestion['min_length'] = $min;
+                        } else if ($max) $validatedQuestion['max'] = $max;
+                        else if ($min) $validatedQuestion['min'] = $min;
                     } catch (Exception $exception) {
                         return response("Unhandled input error (in type-specific values). ({$exception->getMessage()})", 400);
                     }
@@ -157,6 +175,11 @@ class FormController extends Controller
                             $min = null;
                             $max = null;
                             $can_be_decimal = false;
+
+                            $validatedQuestion['min'] = $min;
+                            $validatedQuestion['max'] = $max;
+                            $validatedQuestion['can_be_decimal'] = $can_be_decimal;
+
                             if (array_key_exists('min', $item)) {
                                 if (intval($item['min'])) $min = intval($item['min']);
                             }
@@ -169,11 +192,11 @@ class FormController extends Controller
 
                             if ($max && $min) {
                                 if ($min < $max) {
-                                    $validatedQuestion['min_length'] = $min;
-                                    $validatedQuestion['max_length'] = $max;
+                                    $validatedQuestion['min'] = $min;
+                                    $validatedQuestion['max'] = $max;
                                 }
-                            } else if ($min) $validatedQuestion['min_length'] = $min;
-                            else if ($max) $validatedQuestion['max_length'] = $max;
+                            } else if ($min) $validatedQuestion['min'] = $min;
+                            else if ($max) $validatedQuestion['max'] = $max;
                             $validatedQuestion['can_be_decimal'] = $can_be_decimal;
 
                         } catch (Exception $exception) {
@@ -190,6 +213,13 @@ class FormController extends Controller
                         $strict_amount_of_answers = null;
                         $has_hidden_label = false;
                         $choices = [];
+
+                        $validatedQuestion['is_multiselect'] = $is_multiselect;
+                        $validatedQuestion['min_amount_of_answers'] = $min_amount_of_answers;
+                        $validatedQuestion['max_amount_of_answers'] = $max_amount_of_answers;
+                        $validatedQuestion['strict_amount_of_answers'] = $strict_amount_of_answers;
+                        $validatedQuestion['has_hidden_label'] = $has_hidden_label;
+
 
                         if (array_key_exists('choices', $item)) {
                             if (!is_array($item['choices'])) {
@@ -296,12 +326,83 @@ class FormController extends Controller
             $validatedData[] = $validatedQuestion;
         }
 
-        //todo: create uuid
-        
-        //todo: save data
+        try {
+            DB::transaction(function () use ( $validatedData, $userId) {
+                $formSlug = Uuid::uuid4()->toString();
+                $newForm = Form::create(['slug' => $formSlug, 'name' => 'testing', 'user_id' => $userId]);
 
-        dd($validatedData);
-        return response("Form has been created.", 499);
+                foreach ($validatedData as $item) {
+                    $newFormElement = FormElement::create(['order' => $item['order'], 'form_id' => $newForm->id]);
+                    if ($item !== "new_page") {
+                        $newInputElement = InputElement::create([
+                            'header' => $item['header'],
+                            'is_mandatory' => $item['is_mandatory'],
+                            'form_element_id' => $newFormElement->id
+                        ]);
+                        switch ($item['type']) {
+                            case 'text': {
+                                TextInput::create([
+                                    'min_length' => $item['min_length'],
+                                    'max_length' => $item['max_length'],
+                                    'strict_length' => $item['strict_length'],
+                                    'input_element_id' => $newInputElement->id
+                                ]);
+                                break;
+                            }
+                            case 'number': {
+                                NumberInput::create([
+                                    'min' => $item['min'],
+                                    'max' => $item['max'],
+                                    'can_be_decimal' => $item['can_be_decimal'],
+                                    'input_element_id' => $newInputElement->id
+                                ]);
+                                break;
+                            }
+                            case 'date': {
+                                DateInput::create([
+                                    'min' => $item['min'],
+                                    'max' => $item['max'],
+                                    'input_element_id' => $newInputElement->id
+                                ]);
+                                break;
+                            }
+                            case 'boolean': {
+                                BooleanInput::create([
+                                    'input_element_id' => $newInputElement->id
+                                ]);
+                                break;
+                            }
+                            case 'select': {
+                                $newSelectInput = SelectInput::create([
+                                    'is_multiselect' => $item['is_multiselect'],
+                                    'min_amount_of_answers' => $item['min_amount_of_answers'],
+                                    'max_amount_of_answers' => $item['max_amount_of_answers'],
+                                    'strict_amount_of_answers' => $item['strict_amount_of_answers'],
+                                    'has_hidden_label' => $item['has_hidden_label'],
+                                    'input_element_id' => $newInputElement->id
+                                ]);
+
+                                foreach ($item['choices'] as $choice){
+                                    SelectInputChoice::create([
+                                        'text'=> $choice['text'],
+                                        'hidden_label'=> $choice['hidden_label'],
+                                        'order'=> $choice['order'],
+                                        'select_input_id' => $newSelectInput->id
+                                    ]);
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        catch (Exception $exception) {
+            dd($exception);
+            //return response("{$exception->getMessage()}", 500);
+        }
+
+        return response("Form has been created.", 200);
     }
 
     /**

@@ -17,7 +17,7 @@ class CreateSelectInputChoicesTable extends Migration
             $table->id();
             $table->string("text");
             $table->string("description")->nullable();
-            $table->integer("hidden_label")->default(0);
+            $table->integer("hidden_label")->nullable();
             $table->integer("order");
             $table->timestamps();
 
