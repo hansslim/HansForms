@@ -247,15 +247,27 @@ export default {
                 }
                 case "select": {
                     try {
-                        /*if (this.formValues.choices) {
-                            let choicesArray = this.formValues.choices.split("\n");
-
-                            this.formValues.choices = choicesArray;
+                        const actualChoices = createFormChoicesStore.getItems()
+                        if (actualChoices && actualChoices.length >= 2) {
+                            if (this.formValues.has_hidden_label) {
+                                let labels = [];
+                                let uniqueLabelsValidation = true;
+                                actualChoices.forEach((x)=>{
+                                    if (!labels.includes(x.hidden_label)) {
+                                        labels.push(x.hidden_label)
+                                    }
+                                    else uniqueLabelsValidation = false;
+                                })
+                                if (!uniqueLabelsValidation) {
+                                    this.trivialFormulateErrorHandler("Hidden labels should be unique.");
+                                    return false;
+                                }
+                            }
                         }
                         else {
                             this.trivialFormulateErrorHandler("You have to add at least 2 choices.");
                             return false;
-                        }*/
+                        }
                         if (this.formValues.min_amount_of_answers !== "" && this.formValues.min_amount_of_answers !== undefined) {
                             if (isNaN(parseInt(this.formValues.min_amount_of_answers))) {
                                 this.trivialFormulateErrorHandler("Invalid minimal amount of choices value.");

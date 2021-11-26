@@ -44,8 +44,18 @@ export default {
     },
     methods: {
         handleAddItem() {
-            console.log(this.formErrors)
-            if (this.choiceText) {
+            let isValid = true;
+            if (this.$props['hasHiddenLabel']) {
+                if (this.hiddenLabel === "") {
+                    isValid = false;
+                    this.trivialFormulateErrorHandler("Hidden label is required.")
+                }
+            }
+            if (this.choiceText === "") {
+                isValid = false;
+                this.trivialFormulateErrorHandler("Choice is required.")
+            }
+            if (isValid) {
                 createFormChoicesStore.addItem({
                     id: uuidv4(),
                     text: this.choiceText,
@@ -53,7 +63,6 @@ export default {
                 })
                 this.$modal.hide(this.$parent.name)
             }
-            else this.trivialFormulateErrorHandler("Choice is required.")
         },
         handleUpdateItem() {
             if (this.choiceText) {

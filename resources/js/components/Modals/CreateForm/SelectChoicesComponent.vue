@@ -34,7 +34,7 @@ export default {
                         this.choices.forEach((item) => {
                             createFormChoicesStore.changeItem({
                                 ...item,
-                                hidden_label: i++
+                                hidden_label: `${i++}`
                             })
                         })
                         this.choices = createFormChoicesStore.getItems();

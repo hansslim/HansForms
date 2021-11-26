@@ -3324,14 +3324,28 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         case "select":
           {
             try {
-              /*if (this.formValues.choices) {
-                  let choicesArray = this.formValues.choices.split("\n");
-                   this.formValues.choices = choicesArray;
+              var actualChoices = _stores__WEBPACK_IMPORTED_MODULE_4__.createFormChoicesStore.getItems();
+
+              if (actualChoices && actualChoices.length >= 2) {
+                if (this.formValues.has_hidden_label) {
+                  var labels = [];
+                  var uniqueLabelsValidation = true;
+                  actualChoices.forEach(function (x) {
+                    if (!labels.includes(x.hidden_label)) {
+                      labels.push(x.hidden_label);
+                    } else uniqueLabelsValidation = false;
+                  });
+
+                  if (!uniqueLabelsValidation) {
+                    this.trivialFormulateErrorHandler("Hidden labels should be unique.");
+                    return false;
+                  }
+                }
+              } else {
+                this.trivialFormulateErrorHandler("You have to add at least 2 choices.");
+                return false;
               }
-              else {
-                  this.trivialFormulateErrorHandler("You have to add at least 2 choices.");
-                  return false;
-              }*/
+
               if (this.formValues.min_amount_of_answers !== "" && this.formValues.min_amount_of_answers !== undefined) {
                 if (isNaN(parseInt(this.formValues.min_amount_of_answers))) {
                   this.trivialFormulateErrorHandler("Invalid minimal amount of choices value.");
@@ -3570,16 +3584,28 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     handleAddItem: function handleAddItem() {
-      console.log(this.formErrors);
+      var isValid = true;
 
-      if (this.choiceText) {
+      if (this.$props['hasHiddenLabel']) {
+        if (this.hiddenLabel === "") {
+          isValid = false;
+          this.trivialFormulateErrorHandler("Hidden label is required.");
+        }
+      }
+
+      if (this.choiceText === "") {
+        isValid = false;
+        this.trivialFormulateErrorHandler("Choice is required.");
+      }
+
+      if (isValid) {
         _stores__WEBPACK_IMPORTED_MODULE_0__.createFormChoicesStore.addItem({
           id: (0,uuid__WEBPACK_IMPORTED_MODULE_1__["default"])(),
           text: this.choiceText,
           hidden_label: this.hiddenLabel
         });
         this.$modal.hide(this.$parent.name);
-      } else this.trivialFormulateErrorHandler("Choice is required.");
+      }
     },
     handleUpdateItem: function handleUpdateItem() {
       if (this.choiceText) {
@@ -3699,7 +3725,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             var i = 1;
             this.choices.forEach(function (item) {
               _stores__WEBPACK_IMPORTED_MODULE_2__.createFormChoicesStore.changeItem(_objectSpread(_objectSpread({}, item), {}, {
-                hidden_label: i++
+                hidden_label: "".concat(i++)
               }));
             });
             this.choices = _stores__WEBPACK_IMPORTED_MODULE_2__.createFormChoicesStore.getItems();
