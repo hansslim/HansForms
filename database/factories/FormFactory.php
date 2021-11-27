@@ -25,6 +25,7 @@ class FormFactory extends Factory
             'slug' => $this->faker->unique()->uuid(),
             'name' => $this->faker->sentence(3),
             'description' => $this->faker->paragraph(),
+            'has_private_token' => false,
             'user_id' => 1
         ];
     }

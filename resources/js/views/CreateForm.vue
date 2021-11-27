@@ -1,19 +1,51 @@
 <template>
     <div>
-        <div class="d-flex justify-content-center fixed-bottom bg-info">
-            <div class="m-2">
-                <FormulateInput
-                    type="button"
-                    @click="showAddItemModal"
-                    label="Add new question..."
-                />
+        <div v-if="!loading">
+            <div class="d-flex justify-content-center fixed-bottom bg-info">
+                <div class="m-2">
+                    <FormulateInput
+                        type="button"
+                        @click="showAddItemModal"
+                        label="Add new question..."
+                    />
+                </div>
+                <div class="m-2">
+                    <button @click="submitCreateForm">Create this form</button>
+                </div>
             </div>
-            <div class="m-2">
-                <button @click="submitCreateForm">Create this form</button>
+            <div>
+                <FormulateInput
+                    type="text"
+                    v-model="form.header"
+                    label="Form header"
+                    :validation="[['required']]"
+                />
+                <FormulateInput
+                    v-model="form.description"
+                    label="Form description"
+                    type="textarea"
+                />
+                <FormulateInput
+                    v-model="form.start_time"
+                    label="Form start time (WIP)"
+                    type="date"
+                />
+                <FormulateInput
+                    v-model="form.end_time"
+                    label="Form end time (WIP)"
+                    type="date"
+                />
+                <FormulateInput
+                    v-model="form.has_private_token"
+                    label="Form with private access (WIP)"
+                    type="checkbox"
+                />
+                <hr>
+                <form-element v-for="item in this.form.items" :key="item.id" :obj="item" @itemChanged="handleItemsChanged"/>
             </div>
         </div>
-        <div>
-            <form-element  v-for="item in this.items" :key="item.id" :obj="item" @itemChanged="handleItemsChanged"/>
+        <div v-else>
+            <p>loading</p>
         </div>
 
     </div>
@@ -32,7 +64,16 @@ export default {
     },
     data() {
         return {
-            items: []
+            form: {
+                header: "",
+                description: "",
+                start_time: "",
+                end_time: "",
+                has_private_token: false,
+                items: []
+            },
+            loading: true
+
         }
     },
     methods: {
@@ -40,29 +81,34 @@ export default {
             createFormChoicesStore.clearStore();
             this.$modal.show(
                 ItemModal,
-                { purpose: "add"},
+                {purpose: "add"},
                 {height: 'auto', width: '60%', adaptive: true, scrollable: true},
                 {'before-close': event => this.handleItemsChanged()}
             )
         },
         handleItemsChanged() {
-            this.items = createFormStore.getItems()
+            this.form.items = createFormStore.getItems()
         },
         async submitCreateForm() {
             try {
-                await Form.postCreateForm(this.items).then(() => {
+                this.loading = true;
+                await Form.postCreateForm(this.form).then(() => {
                     alert("Form creation was successful.")
                     this.$router.push("/");
                     createFormStore.clearStore();
                     this.choices = [];
+                    this.loading = false;
                 })
-            }
-            catch (error) {
+            } catch (error) {
                 console.log(error);
                 alert(`Form creation wasn't successful.`)
+                this.loading = false;
             }
 
         }
+    },
+    mounted() {
+        this.loading = false;
     }
 }
 

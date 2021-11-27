@@ -31,6 +31,7 @@ class FormController extends Controller
     {
         return Form::where('user_id', Auth::user()->id)
             ->without('formElements', 'user')
+            ->orderBy('created_at', 'desc')
             ->get();
     }
 
@@ -43,15 +44,48 @@ class FormController extends Controller
     public function store(Request $request)
     {
         $userId = -1;
+
+        $formProps = [];
+        $formProps['header'] = null;
+        $formProps['description'] = null;
+
+        //todo: validate and process these values
+        $formProps['start_time'] = null; //wip
+        $formProps['end_time'] = null; //wip
+        $formProps['has_private_token'] = false; //wip
+
         if (!Auth::user()) return response("Unauthorized - log in to create forms...", 401);
         else $userId = Auth::user()->id;
 
-        if (!$request->all()) return response("Invalid data (expected array of questions).", 400);
+        if (!$request->all()) return response("Invalid data (expected data).", 400);
+
+        if (!array_key_exists('items', $request->all()))
+            return response("Invalid data (missing array of questions).", 400);
+
+        if (!is_array($request->all()['items']))
+            return response("Invalid data (expected array of questions).", 400);
+
+        if (count($request->all()['items'])<1)
+            return response("Invalid data (expected non-empty array of questions).", 400);
+
+        if (array_key_exists('header', $request->all())) {
+            if (strval($request->all()['header']) !== "") {
+                $formProps['header'] = strval($request->all()['header']);
+            }
+            else return response("Invalid data (expected non-empty header of form).", 400);
+        }
+        else return response("Invalid data (missing header of form).", 400);
+
+        if (array_key_exists('description', $request->all())) {
+            if (strval($request->all()['description']) !== ""){
+             $formProps['description'] = strval($request->all()['description']);
+            }
+        }
 
         $order = 0;
-        $validatedData = [];
+        $validatedQuestions = [];
 
-        foreach ($request->all() as $item) {
+        foreach ($request->all()['items'] as $item) {
             $validatedQuestion = [];
             //main props: header, is_mandatory, order, type
             try {
@@ -72,7 +106,11 @@ class FormController extends Controller
 
                 if (!is_int($item['order'])) return response("Invalid order value type.", 400);
 
-                if ($item['order'] !== $order) return response("Invalid order value.", 400);
+
+                if ($item['order'] !== $order) {
+                    dd("order error", $item['order'], $order); //debugging only
+                    return response("Invalid order value.", 400);
+                }
                 else $order++;
 
                 //validated
@@ -297,6 +335,7 @@ class FormController extends Controller
                             if (intval($item['strict_amount_of_answers']) && intval($item['strict_amount_of_answers']) > 0) $strict_amount_of_answers = intval($item['strict_amount_of_answers']);
                         }
 
+                        $validatedQuestion['is_multiselect'] = $is_multiselect;
                         if ($is_multiselect) {
                             if ($strict_amount_of_answers) {
                                 $validatedQuestion['strict_amount_of_answers'] = $strict_amount_of_answers;
@@ -323,15 +362,23 @@ class FormController extends Controller
                 }
                 default: return response("Invalid question type.", 400);
             }
-            $validatedData[] = $validatedQuestion;
+            $validatedQuestions[] = $validatedQuestion;
         }
 
         try {
-            DB::transaction(function () use ( $validatedData, $userId) {
+            DB::transaction(function () use ($validatedQuestions, $userId, $formProps) {
                 $formSlug = Uuid::uuid4()->toString();
-                $newForm = Form::create(['slug' => $formSlug, 'name' => 'testing', 'user_id' => $userId]);
+                $newForm = Form::create([
+                    'user_id' => $userId,
+                    'slug' => $formSlug,
+                    'name' => $formProps['header'],
+                    'description' => $formProps['description'],
+                    'start_time' => $formProps['start_time'],
+                    'end_time' => $formProps['end_time'],
+                    'has_private_token' => $formProps['has_private_token'],
+                ]);
 
-                foreach ($validatedData as $item) {
+                foreach ($validatedQuestions as $item) {
                     $newFormElement = FormElement::create(['order' => $item['order'], 'form_id' => $newForm->id]);
                     if ($item !== "new_page") {
                         $newInputElement = InputElement::create([

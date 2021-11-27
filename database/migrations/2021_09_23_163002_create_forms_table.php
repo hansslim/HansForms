@@ -18,8 +18,9 @@ class CreateFormsTable extends Migration
             $table->uuid("slug")->unique();
             $table->string("name");
             $table->string("description")->nullable();
+            $table->dateTimeTz("start_time")->nullable();
             $table->dateTimeTz("end_time")->nullable();
-            $table->string("private_token")->nullable();
+            $table->boolean("has_private_token");
             $table->timestamps();
 
             //foreign key: user_id

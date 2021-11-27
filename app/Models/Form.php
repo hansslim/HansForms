@@ -10,12 +10,13 @@ class Form extends Model
     use HasFactory;
 
     protected $fillable = [
-      'slug',
-      'name',
-      'description',
-      'end_time',
-      'private_token',
-      'user_id'
+        'slug',
+        'name',
+        'description',
+        'end_time',
+        'start_time',
+        'has_private_token',
+        'user_id'
     ];
 
     protected $visible = [
@@ -29,15 +30,18 @@ class Form extends Model
 
     protected $with = ['formElements'];
 
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function formElements() {
+    public function formElements()
+    {
         return $this->hasMany(FormElement::class);
     }
 
-    public function formCompletions() {
+    public function formCompletions()
+    {
         return $this->hasMany(FormCompletion::class);
     }
 }
