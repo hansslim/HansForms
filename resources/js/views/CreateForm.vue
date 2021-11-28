@@ -1,48 +1,51 @@
 <template>
     <div>
         <div v-if="!loading">
-            <div class="d-flex justify-content-center fixed-bottom bg-info">
-                <div class="m-2">
+                <FormulateForm @submit="submitCreateForm">
                     <FormulateInput
-                        type="button"
-                        @click="showAddItemModal"
-                        label="Add new question..."
+                        type="text"
+                        v-model="form.header"
+                        label="Form header"
+                        :validation="[['required']]"
                     />
-                </div>
-                <div class="m-2">
-                    <button @click="submitCreateForm">Create this form</button>
-                </div>
-            </div>
-            <div>
-                <FormulateInput
-                    type="text"
-                    v-model="form.header"
-                    label="Form header"
-                    :validation="[['required']]"
-                />
-                <FormulateInput
-                    v-model="form.description"
-                    label="Form description"
-                    type="textarea"
-                />
-                <FormulateInput
-                    v-model="form.start_time"
-                    label="Form start time (WIP)"
-                    type="date"
-                />
-                <FormulateInput
-                    v-model="form.end_time"
-                    label="Form end time (WIP)"
-                    type="date"
-                />
-                <FormulateInput
-                    v-model="form.has_private_token"
-                    label="Form with private access (WIP)"
-                    type="checkbox"
-                />
-                <hr>
-                <form-element v-for="item in this.form.items" :key="item.id" :obj="item" @itemChanged="handleItemsChanged"/>
-            </div>
+                    <FormulateInput
+                        v-model="form.description"
+                        label="Form description"
+                        type="textarea"
+                    />
+                    <FormulateInput
+                        v-model="form.start_time"
+                        label="Form start time (WIP)"
+                        type="date"
+                    />
+                    <FormulateInput
+                        v-model="form.end_time"
+                        label="Form end time (WIP)"
+                        type="date"
+                    />
+                    <FormulateInput
+                        v-model="form.has_private_token"
+                        label="Form with private access (WIP)"
+                        type="checkbox"
+                    />
+                    <hr>
+                    <form-element v-for="item in this.form.items" :key="item.id" :obj="item" @itemChanged="handleItemsChanged"/>
+                    <div class="d-flex justify-content-center fixed-bottom bg-info">
+                        <div class="m-2">
+                            <FormulateInput
+                                type="button"
+                                @click="showAddItemModal"
+                                label="Add new question..."
+                            />
+                        </div>
+                        <div class="m-2">
+                            <FormulateInput
+                                type="submit"
+                                label="Create this form"
+                            />
+                        </div>
+                    </div>
+                </FormulateForm>
         </div>
         <div v-else>
             <p>loading</p>
@@ -78,6 +81,7 @@ export default {
     },
     methods: {
         showAddItemModal() {
+            this.$modal.hideAll();
             createFormChoicesStore.clearStore();
             this.$modal.show(
                 ItemModal,
@@ -95,7 +99,7 @@ export default {
                 await Form.postCreateForm(this.form).then(() => {
                     alert("Form creation was successful.")
                     this.$router.push("/");
-                    createFormStore.clearStore();
+                    //createFormStore.clearStore();
                     this.choices = [];
                     this.loading = false;
                 })

@@ -82,7 +82,7 @@ class FormController extends Controller
             }
         }
 
-        $order = 0;
+        $questionOrder = 0;
         $validatedQuestions = [];
 
         foreach ($request->all()['items'] as $item) {
@@ -107,11 +107,11 @@ class FormController extends Controller
                 if (!is_int($item['order'])) return response("Invalid order value type.", 400);
 
 
-                if ($item['order'] !== $order) {
-                    dd("order error", $item['order'], $order); //debugging only
+                if ($item['order'] !== $questionOrder) {
+                    //dd("order error", $item['order'], $questionOrder, $request->all()['items'], $request->all()); //debugging only
                     return response("Invalid order value.", 400);
                 }
-                else $order++;
+                else $questionOrder++;
 
                 //validated
                 $validatedQuestion['type'] = $item['type'];
@@ -274,14 +274,14 @@ class FormController extends Controller
                                 foreach ($item['choices'] as $choice) {
                                     $hidden_label = null;
                                     $text = null;
-                                    $order = null;
+                                    $thisChoiceOrder = null;
                                     //order check
                                     if (array_key_exists('order', $choice)) {
                                         if (intval($choice['order']) !== $choiceOrder) {
                                             return response("Invalid data (order is not valid).", 400);
                                         }
                                         else {
-                                            $order = $choiceOrder;
+                                            $thisChoiceOrder = $choiceOrder;
                                             $choiceOrder++;
                                         }
                                     }
@@ -315,7 +315,7 @@ class FormController extends Controller
                                     }
                                     else return response("Invalid data (text is missing).", 400);
 
-                                    $choices[] = ['text' => $text, "hidden_label" => $hidden_label, "order" => $order];
+                                    $choices[] = ['text' => $text, "hidden_label" => $hidden_label, "order" => $thisChoiceOrder];
                                 }
                             }
                             else return response("Invalid amount of choices for select question (there should be at least two).", 400);

@@ -4070,6 +4070,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
 
 
 
@@ -4096,6 +4099,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     showAddItemModal: function showAddItemModal() {
       var _this = this;
 
+      this.$modal.hideAll();
       _components_Modals_CreateForm_stores__WEBPACK_IMPORTED_MODULE_3__.createFormChoicesStore.clearStore();
       this.$modal.show(_components_Modals_CreateForm_ItemModal__WEBPACK_IMPORTED_MODULE_1__["default"], {
         purpose: "add"
@@ -4127,9 +4131,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 return _apis_Form__WEBPACK_IMPORTED_MODULE_4__["default"].postCreateForm(_this2.form).then(function () {
                   alert("Form creation was successful.");
 
-                  _this2.$router.push("/");
+                  _this2.$router.push("/"); //createFormStore.clearStore();
 
-                  _components_Modals_CreateForm_stores__WEBPACK_IMPORTED_MODULE_3__.createFormStore.clearStore();
+
+                  //createFormStore.clearStore();
                   _this2.choices = [];
                   _this2.loading = false;
                 });
@@ -45626,111 +45631,125 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", [
     !_vm.loading
-      ? _c("div", [
-          _c(
-            "div",
-            {
-              staticClass: "d-flex justify-content-center fixed-bottom bg-info"
-            },
-            [
-              _c(
-                "div",
-                { staticClass: "m-2" },
-                [
-                  _c("FormulateInput", {
-                    attrs: { type: "button", label: "Add new question..." },
-                    on: { click: _vm.showAddItemModal }
+      ? _c(
+          "div",
+          [
+            _c(
+              "FormulateForm",
+              { on: { submit: _vm.submitCreateForm } },
+              [
+                _c("FormulateInput", {
+                  attrs: {
+                    type: "text",
+                    label: "Form header",
+                    validation: [["required"]]
+                  },
+                  model: {
+                    value: _vm.form.header,
+                    callback: function($$v) {
+                      _vm.$set(_vm.form, "header", $$v)
+                    },
+                    expression: "form.header"
+                  }
+                }),
+                _vm._v(" "),
+                _c("FormulateInput", {
+                  attrs: { label: "Form description", type: "textarea" },
+                  model: {
+                    value: _vm.form.description,
+                    callback: function($$v) {
+                      _vm.$set(_vm.form, "description", $$v)
+                    },
+                    expression: "form.description"
+                  }
+                }),
+                _vm._v(" "),
+                _c("FormulateInput", {
+                  attrs: { label: "Form start time (WIP)", type: "date" },
+                  model: {
+                    value: _vm.form.start_time,
+                    callback: function($$v) {
+                      _vm.$set(_vm.form, "start_time", $$v)
+                    },
+                    expression: "form.start_time"
+                  }
+                }),
+                _vm._v(" "),
+                _c("FormulateInput", {
+                  attrs: { label: "Form end time (WIP)", type: "date" },
+                  model: {
+                    value: _vm.form.end_time,
+                    callback: function($$v) {
+                      _vm.$set(_vm.form, "end_time", $$v)
+                    },
+                    expression: "form.end_time"
+                  }
+                }),
+                _vm._v(" "),
+                _c("FormulateInput", {
+                  attrs: {
+                    label: "Form with private access (WIP)",
+                    type: "checkbox"
+                  },
+                  model: {
+                    value: _vm.form.has_private_token,
+                    callback: function($$v) {
+                      _vm.$set(_vm.form, "has_private_token", $$v)
+                    },
+                    expression: "form.has_private_token"
+                  }
+                }),
+                _vm._v(" "),
+                _c("hr"),
+                _vm._v(" "),
+                _vm._l(this.form.items, function(item) {
+                  return _c("form-element", {
+                    key: item.id,
+                    attrs: { obj: item },
+                    on: { itemChanged: _vm.handleItemsChanged }
                   })
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "m-2" }, [
-                _c("button", { on: { click: _vm.submitCreateForm } }, [
-                  _vm._v("Create this form")
-                ])
-              ])
-            ]
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            [
-              _c("FormulateInput", {
-                attrs: {
-                  type: "text",
-                  label: "Form header",
-                  validation: [["required"]]
-                },
-                model: {
-                  value: _vm.form.header,
-                  callback: function($$v) {
-                    _vm.$set(_vm.form, "header", $$v)
+                }),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass:
+                      "d-flex justify-content-center fixed-bottom bg-info"
                   },
-                  expression: "form.header"
-                }
-              }),
-              _vm._v(" "),
-              _c("FormulateInput", {
-                attrs: { label: "Form description", type: "textarea" },
-                model: {
-                  value: _vm.form.description,
-                  callback: function($$v) {
-                    _vm.$set(_vm.form, "description", $$v)
-                  },
-                  expression: "form.description"
-                }
-              }),
-              _vm._v(" "),
-              _c("FormulateInput", {
-                attrs: { label: "Form start time (WIP)", type: "date" },
-                model: {
-                  value: _vm.form.start_time,
-                  callback: function($$v) {
-                    _vm.$set(_vm.form, "start_time", $$v)
-                  },
-                  expression: "form.start_time"
-                }
-              }),
-              _vm._v(" "),
-              _c("FormulateInput", {
-                attrs: { label: "Form end time (WIP)", type: "date" },
-                model: {
-                  value: _vm.form.end_time,
-                  callback: function($$v) {
-                    _vm.$set(_vm.form, "end_time", $$v)
-                  },
-                  expression: "form.end_time"
-                }
-              }),
-              _vm._v(" "),
-              _c("FormulateInput", {
-                attrs: {
-                  label: "Form with private access (WIP)",
-                  type: "checkbox"
-                },
-                model: {
-                  value: _vm.form.has_private_token,
-                  callback: function($$v) {
-                    _vm.$set(_vm.form, "has_private_token", $$v)
-                  },
-                  expression: "form.has_private_token"
-                }
-              }),
-              _vm._v(" "),
-              _c("hr"),
-              _vm._v(" "),
-              _vm._l(this.form.items, function(item) {
-                return _c("form-element", {
-                  key: item.id,
-                  attrs: { obj: item },
-                  on: { itemChanged: _vm.handleItemsChanged }
-                })
-              })
-            ],
-            2
-          )
-        ])
+                  [
+                    _c(
+                      "div",
+                      { staticClass: "m-2" },
+                      [
+                        _c("FormulateInput", {
+                          attrs: {
+                            type: "button",
+                            label: "Add new question..."
+                          },
+                          on: { click: _vm.showAddItemModal }
+                        })
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "m-2" },
+                      [
+                        _c("FormulateInput", {
+                          attrs: { type: "submit", label: "Create this form" }
+                        })
+                      ],
+                      1
+                    )
+                  ]
+                )
+              ],
+              2
+            )
+          ],
+          1
+        )
       : _c("div", [_c("p", [_vm._v("loading")])])
   ])
 }
