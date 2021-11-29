@@ -245,6 +245,7 @@ class FormController extends Controller
                 case "select":
                 {
                     try {
+                        //todo: validate max amount concerning the choices amount
                         $is_multiselect = false;
                         $min_amount_of_answers = null;
                         $max_amount_of_answers = null;

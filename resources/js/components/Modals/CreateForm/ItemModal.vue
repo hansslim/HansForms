@@ -103,7 +103,9 @@ export default {
             if (this.$props['obj']) {
                 if (this.$props['obj'].type) this.item.type = this.$props['obj'].type;
                 if (this.$props['obj'].header) this.item.question = this.$props['obj'].header;
-                if (this.$props['obj'].is_mandatory) this.item.isMandatory = this.$props['obj'].is_mandatory;
+                if (this.$props['obj'].is_mandatory === true || this.$props['obj'].is_mandatory === false) {
+                  this.item.isMandatory = this.$props['obj'].is_mandatory;
+                }
                 if (this.$props['obj'].id) this.item.id = this.$props['obj'].id;
                 if (this.$props['obj'].order) this.item.order = this.$props['obj'].order;
             }
