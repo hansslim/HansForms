@@ -16,6 +16,7 @@
                 <div v-else>
                     <h1>Welcome, {{ loggedUserName }}.</h1>
                     <hr>
+                    <p v-if="notEmpty">Create new forms <router-link to="/create_form">here...</router-link></p>
                     <form-card
                         v-for="form in forms"
                         :key="form.id"
@@ -44,12 +45,15 @@ export default {
     data() {
         return {
             forms: {},
-            loading: true
+            loading: true,
+            notEmpty: false,
         }
     },
     async mounted() {
-        await this.getForms();
-        this.loading = false;
+        await this.getForms().then(() => {
+            this.isFormsObjectEmpty();
+            this.loading = false;
+        });
     },
     computed: {
         loggedUserName() {
@@ -59,6 +63,13 @@ export default {
         }
     },
     methods: {
+        isFormsObjectEmpty() {
+            console.log(this.forms)
+            if (Object.keys(this.forms).length === 0) {
+                this.notEmpty = true;
+            }
+            else this.notEmpty = false;
+        },
         async getForms() {
             if (this.$store.getters['authenticated']) {
                 try {
@@ -89,6 +100,7 @@ export default {
                     //console.log("itemsUpdated")
                     await this.getForms().then(() => {
                         this.loading = false;
+                        this.isFormsObjectEmpty();
                     })
                     break;
                 }
@@ -100,7 +112,6 @@ export default {
 
 
         },
-
     }
 };
 </script>

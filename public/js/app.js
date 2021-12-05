@@ -4467,6 +4467,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -4477,7 +4478,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   data: function data() {
     return {
       forms: {},
-      loading: true
+      loading: true,
+      notEmpty: false
     };
   },
   mounted: function mounted() {
@@ -4489,12 +4491,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           switch (_context.prev = _context.next) {
             case 0:
               _context.next = 2;
-              return _this.getForms();
+              return _this.getForms().then(function () {
+                _this.isFormsObjectEmpty();
+
+                _this.loading = false;
+              });
 
             case 2:
-              _this.loading = false;
-
-            case 3:
             case "end":
               return _context.stop();
           }
@@ -4510,6 +4513,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     }
   },
   methods: {
+    isFormsObjectEmpty: function isFormsObjectEmpty() {
+      console.log(this.forms);
+
+      if (Object.keys(this.forms).length === 0) {
+        this.notEmpty = true;
+      } else this.notEmpty = false;
+    },
     getForms: function getForms() {
       var _this2 = this;
 
@@ -4577,6 +4587,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 _context3.next = 9;
                 return _this3.getForms().then(function () {
                   _this3.loading = false;
+
+                  _this3.isFormsObjectEmpty();
                 });
 
               case 9:
@@ -46153,6 +46165,21 @@ var render = function() {
                     ]),
                     _vm._v(" "),
                     _c("hr"),
+                    _vm._v(" "),
+                    _vm.notEmpty
+                      ? _c(
+                          "p",
+                          [
+                            _vm._v("Create new forms "),
+                            _c(
+                              "router-link",
+                              { attrs: { to: "/create_form" } },
+                              [_vm._v("here...")]
+                            )
+                          ],
+                          1
+                        )
+                      : _vm._e(),
                     _vm._v(" "),
                     _vm._l(_vm.forms, function(form) {
                       return _c("form-card", {
