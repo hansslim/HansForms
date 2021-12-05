@@ -52,17 +52,19 @@ class FormController extends Controller
         $formProps['start_time'] = null;
         $formProps['end_time'] = null;
 
+        function validateDate($date, $format = 'Y-m-d H:i:s')
+        {
+            $d = DateTime::createFromFormat($format, $date);
+            return $d && $d->format($format) == $date;
+        }
+
         if (array_key_exists('start_time', $request->all()) && array_key_exists('end_time', $request->all())) {
             $startDate = str_replace("T", " ", $request->all()['start_time']);
             $endDate = str_replace("T", " ", $request->all()['end_time']);
 
-            function validateDate($date, $format = 'Y-m-d H:i')
-            {
-                $d = DateTime::createFromFormat($format, $date);
-                return $d && $d->format($format) == $date;
-            }
 
-            if (validateDate($startDate) && validateDate($endDate)) {
+
+            if (validateDate($startDate, 'Y-m-d H:i') && validateDate($endDate, 'Y-m-d H:i')) {
                 if (new DateTime($request->all()['start_time']) < new DateTime($request->all()['end_time'])) {
                     $formProps['start_time'] = new DateTime($request->all()['start_time']);
                     $formProps['end_time'] = new DateTime($request->all()['end_time']);
@@ -190,12 +192,6 @@ class FormController extends Controller
                 case "date":
                 {
                     try {
-                        function validateDate($date, $format = 'Y-m-d H:i:s')
-                        {
-                            $d = DateTime::createFromFormat($format, $date);
-                            return $d && $d->format($format) == $date;
-                        }
-
                         //props: min, max
                         $min = null;
                         $max = null;
