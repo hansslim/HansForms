@@ -28,10 +28,12 @@ export default {
     },
     methods: {
         handleDelete() {
+            this.$emit('itemsChanged', 'loadingOn')
             if (confirm("Are you sure that you want to delete this form?")) {
-                Form.deleteForm(this.$props['obj'].slug).then(()=>{this.$emit('itemsChanged')
-                });
+                Form.deleteForm(this.$props['obj'].slug).then(()=>{});
+                this.$emit('itemsChanged', 'itemsUpdated')
             }
+            else this.$emit('itemsChanged', 'loadingOff')
         },
         handleUpdate() {
 

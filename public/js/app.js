@@ -2725,13 +2725,12 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     handleDelete: function handleDelete() {
-      var _this = this;
+      this.$emit('itemsChanged', 'loadingOn');
 
       if (confirm("Are you sure that you want to delete this form?")) {
-        _apis_Form__WEBPACK_IMPORTED_MODULE_0__["default"].deleteForm(this.$props['obj'].slug).then(function () {
-          _this.$emit('itemsChanged');
-        });
-      }
+        _apis_Form__WEBPACK_IMPORTED_MODULE_0__["default"].deleteForm(this.$props['obj'].slug).then(function () {});
+        this.$emit('itemsChanged', 'itemsUpdated');
+      } else this.$emit('itemsChanged', 'loadingOff');
     },
     handleUpdate: function handleUpdate() {}
   }
@@ -4552,7 +4551,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee2, null, [[1, 8]]);
       }))();
     },
-    handleItemsChanged: function handleItemsChanged() {
+    handleItemsChanged: function handleItemsChanged(arg) {
       var _this3 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
@@ -4560,13 +4559,34 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
+                _context3.t0 = arg;
+                _context3.next = _context3.t0 === "loadingOn" ? 3 : _context3.t0 === "loadingOff" ? 5 : _context3.t0 === "itemsUpdated" ? 7 : 10;
+                break;
+
+              case 3:
+                //console.log("loadingOn")
                 _this3.loading = true;
-                _context3.next = 3;
+                return _context3.abrupt("break", 12);
+
+              case 5:
+                //console.log("loadingOff")
+                _this3.loading = false;
+                return _context3.abrupt("break", 12);
+
+              case 7:
+                _context3.next = 9;
                 return _this3.getForms().then(function () {
                   _this3.loading = false;
                 });
 
-              case 3:
+              case 9:
+                return _context3.abrupt("break", 12);
+
+              case 10:
+                console.log("unhandled purpose");
+                return _context3.abrupt("break", 12);
+
+              case 12:
               case "end":
                 return _context3.stop();
             }

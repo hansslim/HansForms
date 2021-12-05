@@ -72,11 +72,33 @@ export default {
             }
 
         },
-        async handleItemsChanged() {
-            this.loading = true;
-            await this.getForms().then(() => {
-                this.loading = false;
-            })
+        async handleItemsChanged(arg) {
+            switch (arg)
+            {
+                case "loadingOn": {
+                    //console.log("loadingOn")
+                    this.loading = true;
+                    break;
+                }
+                case "loadingOff": {
+                    //console.log("loadingOff")
+                    this.loading = false;
+                    break;
+                }
+                case "itemsUpdated": {
+                    //console.log("itemsUpdated")
+                    await this.getForms().then(() => {
+                        this.loading = false;
+                    })
+                    break;
+                }
+                default: {
+                    console.log("unhandled purpose");
+                    break;
+                }
+            }
+
+
         },
 
     }
