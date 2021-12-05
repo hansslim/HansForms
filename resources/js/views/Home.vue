@@ -11,7 +11,6 @@
                         Don't you have any account?
                         <router-link to="/register">Register here.</router-link>
                     </p>
-
                 </div>
                 <div v-else>
                     <h1>Welcome, {{ loggedUserName }}.</h1>
@@ -24,8 +23,6 @@
                         @itemsChanged="handleItemsChanged"
                     />
                 </div>
-
-
             </div>
         </div>
         <div v-else>
@@ -64,10 +61,7 @@ export default {
     },
     methods: {
         isFormsObjectEmpty() {
-            console.log(this.forms)
-            if (Object.keys(this.forms).length === 0) {
-                this.notEmpty = true;
-            }
+            if (Object.keys(this.forms).length === 0) this.notEmpty = true;
             else this.notEmpty = false;
         },
         async getForms() {
@@ -99,8 +93,8 @@ export default {
                 case "itemsUpdated": {
                     //console.log("itemsUpdated")
                     await this.getForms().then(() => {
-                        this.loading = false;
                         this.isFormsObjectEmpty();
+                        this.loading = false;
                     })
                     break;
                 }

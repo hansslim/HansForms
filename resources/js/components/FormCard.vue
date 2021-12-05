@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="border: solid black 1px; border-radius: 20px ;padding: 10px">
         <router-link :to="formLink">
             <h2>{{this.$props['obj'].name}}</h2>
             <h4>{{this.$props['obj'].description}}</h4>
@@ -10,7 +10,6 @@
             label="Delete"
             type="button"
         />
-        <hr>
     </div>
 </template>
 
@@ -30,7 +29,7 @@ export default {
         handleDelete() {
             this.$emit('itemsChanged', 'loadingOn')
             if (confirm("Are you sure that you want to delete this form?")) {
-                Form.deleteForm(this.$props['obj'].slug).then(()=>{});
+                Form.deleteForm(this.$props['obj'].slug);
                 this.$emit('itemsChanged', 'itemsUpdated')
             }
             else this.$emit('itemsChanged', 'loadingOff')

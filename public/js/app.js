@@ -2713,7 +2713,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "FormPreview",
@@ -2728,7 +2727,7 @@ __webpack_require__.r(__webpack_exports__);
       this.$emit('itemsChanged', 'loadingOn');
 
       if (confirm("Are you sure that you want to delete this form?")) {
-        _apis_Form__WEBPACK_IMPORTED_MODULE_0__["default"].deleteForm(this.$props['obj'].slug).then(function () {});
+        _apis_Form__WEBPACK_IMPORTED_MODULE_0__["default"].deleteForm(this.$props['obj'].slug);
         this.$emit('itemsChanged', 'itemsUpdated');
       } else this.$emit('itemsChanged', 'loadingOff');
     },
@@ -4465,9 +4464,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
-//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -4514,11 +4510,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   methods: {
     isFormsObjectEmpty: function isFormsObjectEmpty() {
-      console.log(this.forms);
-
-      if (Object.keys(this.forms).length === 0) {
-        this.notEmpty = true;
-      } else this.notEmpty = false;
+      if (Object.keys(this.forms).length === 0) this.notEmpty = true;else this.notEmpty = false;
     },
     getForms: function getForms() {
       var _this2 = this;
@@ -4586,9 +4578,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 7:
                 _context3.next = 9;
                 return _this3.getForms().then(function () {
-                  _this3.loading = false;
-
                   _this3.isFormsObjectEmpty();
+
+                  _this3.loading = false;
                 });
 
               case 9:
@@ -44767,6 +44759,13 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
+    {
+      staticStyle: {
+        border: "solid black 1px",
+        "border-radius": "20px",
+        padding: "10px"
+      }
+    },
     [
       _c("router-link", { attrs: { to: _vm.formLink } }, [
         _c("h2", [_vm._v(_vm._s(this.$props["obj"].name))]),
@@ -44778,9 +44777,7 @@ var render = function() {
       _c("FormulateInput", {
         attrs: { label: "Delete", type: "button" },
         on: { click: _vm.handleDelete }
-      }),
-      _vm._v(" "),
-      _c("hr")
+      })
     ],
     1
   )
