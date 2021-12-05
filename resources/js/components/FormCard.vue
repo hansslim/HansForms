@@ -3,6 +3,7 @@
         <router-link :to="formLink">
             <h2>{{this.$props['obj'].name}}</h2>
             <h4>{{this.$props['obj'].description}}</h4>
+            Visible from {{this.$props['obj'].start_time}} to {{this.$props['obj'].end_time}}<br>
             {{"Show more..."}}
         </router-link>
         <FormulateInput
@@ -37,6 +38,9 @@ export default {
         handleUpdate() {
 
         }
+    },
+    mounted() {
+        console.log(this.$props['obj'])
     }
 }
 </script>

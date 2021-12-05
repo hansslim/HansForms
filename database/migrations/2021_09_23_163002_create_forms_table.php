@@ -18,8 +18,8 @@ class CreateFormsTable extends Migration
             $table->uuid("slug")->unique();
             $table->string("name");
             $table->string("description")->nullable();
-            $table->dateTimeTz("start_time")->nullable();
-            $table->dateTimeTz("end_time")->nullable();
+            $table->dateTime("start_time")->nullable();
+            $table->dateTime("end_time")->nullable();
             $table->boolean("has_private_token");
             $table->timestamps();
 

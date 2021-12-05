@@ -23,6 +23,7 @@ class Form extends Model
         'slug',
         'name',
         'description',
+        'start_time',
         'end_time',
         'formElements',
         'user'

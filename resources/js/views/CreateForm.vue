@@ -14,16 +14,20 @@
                         label="Form description"
                         type="textarea"
                     />
+                    <hr>
                     <FormulateInput
                         v-model="form.start_time"
-                        label="Form start time (WIP)"
-                        type="date"
+                        label="Form publication start time"
+                        type="datetime-local"
+                        :validation="[['required']]"
                     />
                     <FormulateInput
                         v-model="form.end_time"
-                        label="Form end time (WIP)"
-                        type="date"
+                        label="Form publication end time"
+                        type="datetime-local"
+                        :validation="[['required']]"
                     />
+                    <hr>
                     <FormulateInput
                         v-model="form.has_private_token"
                         label="Form with private access (WIP)"
@@ -99,6 +103,19 @@ export default {
         async submitCreateForm() {
             try {
                 this.loading = true;
+
+                //date type and interval validation
+                const min = new Date(this.form.start_time);
+                const max = new Date(this.form.end_time);
+
+                if (!(min instanceof Date && !isNaN(min.valueOf()))) throw new Error("Invalid date data (min)");
+                if (!(max instanceof Date && !isNaN(max.valueOf()))) throw new Error("Invalid date data (max)");
+
+                if (min.getTime() && max.getTime()) {
+                    if (parseInt(max.getTime()) <= (parseInt(min.getTime()))) throw new Error("Invalid date data");
+                }
+
+                //question amount check
                 if (this.form && this.form.items.length >= 1) {
                     await Form.postCreateForm(this.form).then(() => {
                         alert("Form creation was successful.")
@@ -108,6 +125,7 @@ export default {
                         this.loading = false;
                     })
                 } else throw new Error("Invalid data");
+
             } catch (error) {
                 console.log(error);
                 alert(`Form creation wasn't successful.`)
@@ -117,6 +135,7 @@ export default {
         }
     },
     mounted() {
+
         this.loading = false;
     }
 }

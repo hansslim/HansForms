@@ -16,12 +16,14 @@
                     <h1>Welcome, {{ loggedUserName }}.</h1>
                     <hr>
                     <p v-if="notEmpty">Create new forms <router-link to="/create_form">here...</router-link></p>
+
                     <form-card
                         v-for="form in forms"
                         :key="form.id"
                         :obj="form"
                         @itemsChanged="handleItemsChanged"
                     />
+
                 </div>
             </div>
         </div>

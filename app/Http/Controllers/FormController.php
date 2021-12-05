@@ -49,9 +49,30 @@ class FormController extends Controller
         $formProps['header'] = null;
         $formProps['description'] = null;
 
+        $formProps['start_time'] = null;
+        $formProps['end_time'] = null;
+
+        if (array_key_exists('start_time', $request->all()) && array_key_exists('end_time', $request->all())) {
+            $startDate = str_replace("T", " ", $request->all()['start_time']);
+            $endDate = str_replace("T", " ", $request->all()['end_time']);
+
+            function validateDate($date, $format = 'Y-m-d H:i')
+            {
+                $d = DateTime::createFromFormat($format, $date);
+                return $d && $d->format($format) == $date;
+            }
+
+            if (validateDate($startDate) && validateDate($endDate)) {
+                if (new DateTime($request->all()['start_time']) < new DateTime($request->all()['end_time'])) {
+                    $formProps['start_time'] = new DateTime($request->all()['start_time']);
+                    $formProps['end_time'] = new DateTime($request->all()['end_time']);
+                } else return response("Invalid data (start is higher than end).", 400);
+            } else {
+                return response("Invalid data (invalid start/end date).", 400);
+            }
+        } else return response("Invalid data (missing start/end date).", 400);
+
         //todo: validate and process these values
-        $formProps['start_time'] = null; //wip
-        $formProps['end_time'] = null; //wip
         $formProps['has_private_token'] = false; //wip
 
         if (!Auth::user()) return response("Unauthorized - log in to create forms...", 401);
@@ -492,12 +513,10 @@ class FormController extends Controller
                     if ($form->user_id == Auth::user()->id) {
                         if ($form->delete()) {
                             return response("Form was deleted.", 200);
-                        }
-                        else return response("Form deletion failed.", 500);
+                        } else return response("Form deletion failed.", 500);
                     }
                     return response("Form was not deleted - you are not the owner of this form.", 500);
-                }
-                else return response("Requested form (delete) was not found", 404);
+                } else return response("Requested form (delete) was not found", 404);
             });
         }
     }
