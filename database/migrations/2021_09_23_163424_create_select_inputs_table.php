@@ -23,7 +23,7 @@ class CreateSelectInputsTable extends Migration
             $table->timestamps();
 
             //fk: input_element_id
-            $table->foreignId('input_element_id')->unique()->constrained('input_elements');
+            $table->foreignId('input_element_id')->unique()->constrained('input_elements')->onDelete('cascade');
 
         });
     }

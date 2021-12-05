@@ -19,8 +19,8 @@ class CreateDateInputsAnswersTable extends Migration
             $table->timestamps();
 
             //fk: form_completion_id, date_input_id
-            $table->foreignId('form_completion_id')->constrained('form_completions');
-            $table->foreignId('date_input_id')->constrained('date_inputs');
+            $table->foreignId('form_completion_id')->constrained('form_completions')->onDelete('cascade');
+            $table->foreignId('date_input_id')->constrained('date_inputs')->onDelete('cascade');
 
         });
     }

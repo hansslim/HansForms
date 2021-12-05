@@ -13,4 +13,7 @@ export default {
     async postCreateForm(newForm) {
         return Api.post('/forms/', newForm);
     },
+    async deleteForm(slug) {
+        return Api.delete('/forms/' + slug);
+    },
 };

@@ -24,8 +24,7 @@ class CreateFormsTable extends Migration
             $table->timestamps();
 
             //foreign key: user_id
-            $table->foreignId('user_id')->constrained('users');
-            //todo: onDelete cascade?
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
         });
     }
 

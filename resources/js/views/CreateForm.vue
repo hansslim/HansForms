@@ -3,51 +3,52 @@
         <div v-if="!loading">
             <FormulateForm @submit="submitCreateForm">
                 <div style="padding-bottom: 5vh">
-                        <FormulateInput
-                            type="text"
-                            v-model="form.header"
-                            label="Form header"
-                            :validation="[['required']]"
-                        />
-                        <FormulateInput
-                            v-model="form.description"
-                            label="Form description"
-                            type="textarea"
-                        />
-                        <FormulateInput
-                            v-model="form.start_time"
-                            label="Form start time (WIP)"
-                            type="date"
-                        />
-                        <FormulateInput
-                            v-model="form.end_time"
-                            label="Form end time (WIP)"
-                            type="date"
-                        />
-                        <FormulateInput
-                            v-model="form.has_private_token"
-                            label="Form with private access (WIP)"
-                            type="checkbox"
-                        />
-                        <hr>
-                        <form-element v-for="item in this.form.items" :key="item.id" :obj="item" @itemChanged="handleItemsChanged"/>
+                    <FormulateInput
+                        type="text"
+                        v-model="form.header"
+                        label="Form header"
+                        :validation="[['required']]"
+                    />
+                    <FormulateInput
+                        v-model="form.description"
+                        label="Form description"
+                        type="textarea"
+                    />
+                    <FormulateInput
+                        v-model="form.start_time"
+                        label="Form start time (WIP)"
+                        type="date"
+                    />
+                    <FormulateInput
+                        v-model="form.end_time"
+                        label="Form end time (WIP)"
+                        type="date"
+                    />
+                    <FormulateInput
+                        v-model="form.has_private_token"
+                        label="Form with private access (WIP)"
+                        type="checkbox"
+                    />
+                    <hr>
+                    <form-element v-for="item in this.form.items" :key="item.id" :obj="item"
+                                  @itemChanged="handleItemsChanged"/>
                 </div>
-                    <div class="d-flex justify-content-center fixed-bottom bg-info" style="z-index: 0">
-                        <div class="m-2">
-                            <FormulateInput
-                                type="button"
-                                @click="showAddItemModal"
-                                label="Add new question..."
-                            />
-                        </div>
-                        <div class="m-2">
-                            <FormulateInput
-                                type="submit"
-                                label="Create this form"
-                            />
-                        </div>
+                <div class="d-flex justify-content-center fixed-bottom bg-info" style="z-index: 0">
+                    <div class="m-2">
+                        <FormulateInput
+                            type="button"
+                            @click="showAddItemModal"
+                            label="Add new question..."
+                        />
                     </div>
-                </FormulateForm>
+                    <div class="m-2">
+                        <FormulateInput
+                            type="submit"
+                            label="Create this form"
+                        />
+                    </div>
+                </div>
+            </FormulateForm>
         </div>
         <div v-else>
             <p>loading</p>
@@ -98,13 +99,15 @@ export default {
         async submitCreateForm() {
             try {
                 this.loading = true;
-                await Form.postCreateForm(this.form).then(() => {
-                    alert("Form creation was successful.")
-                    this.$router.push("/");
-                    createFormStore.clearStore();
-                    this.choices = [];
-                    this.loading = false;
-                })
+                if (this.form && this.form.items.length >= 1) {
+                    await Form.postCreateForm(this.form).then(() => {
+                        alert("Form creation was successful.")
+                        this.$router.push("/");
+                        createFormStore.clearStore();
+                        this.choices = [];
+                        this.loading = false;
+                    })
+                } else throw new Error("Invalid data");
             } catch (error) {
                 console.log(error);
                 alert(`Form creation wasn't successful.`)

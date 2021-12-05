@@ -65,20 +65,18 @@ class FormController extends Controller
         if (!is_array($request->all()['items']))
             return response("Invalid data (expected array of questions).", 400);
 
-        if (count($request->all()['items'])<1)
+        if (count($request->all()['items']) < 1)
             return response("Invalid data (expected non-empty array of questions).", 400);
 
         if (array_key_exists('header', $request->all())) {
             if (strval($request->all()['header']) !== "") {
                 $formProps['header'] = strval($request->all()['header']);
-            }
-            else return response("Invalid data (expected non-empty header of form).", 400);
-        }
-        else return response("Invalid data (missing header of form).", 400);
+            } else return response("Invalid data (expected non-empty header of form).", 400);
+        } else return response("Invalid data (missing header of form).", 400);
 
         if (array_key_exists('description', $request->all())) {
-            if (strval($request->all()['description']) !== ""){
-             $formProps['description'] = strval($request->all()['description']);
+            if (strval($request->all()['description']) !== "") {
+                $formProps['description'] = strval($request->all()['description']);
             }
         }
 
@@ -110,8 +108,7 @@ class FormController extends Controller
                 if ($item['order'] !== $questionOrder) {
                     //dd("order error", $item['order'], $questionOrder, $request->all()['items'], $request->all()); //debugging only
                     return response("Invalid order value.", 400);
-                }
-                else $questionOrder++;
+                } else $questionOrder++;
 
                 //validated
                 $validatedQuestion['type'] = $item['type'];
@@ -169,7 +166,8 @@ class FormController extends Controller
                     }
                     break;
                 }
-                case "date":{
+                case "date":
+                {
                     try {
                         function validateDate($date, $format = 'Y-m-d H:i:s')
                         {
@@ -207,41 +205,41 @@ class FormController extends Controller
                 case "boolean":
                     break;
                 case "number":
-                    {
-                        //props: min, max, can_be_decimal
-                        try {
-                            $min = null;
-                            $max = null;
-                            $can_be_decimal = false;
+                {
+                    //props: min, max, can_be_decimal
+                    try {
+                        $min = null;
+                        $max = null;
+                        $can_be_decimal = false;
 
-                            $validatedQuestion['min'] = $min;
-                            $validatedQuestion['max'] = $max;
-                            $validatedQuestion['can_be_decimal'] = $can_be_decimal;
+                        $validatedQuestion['min'] = $min;
+                        $validatedQuestion['max'] = $max;
+                        $validatedQuestion['can_be_decimal'] = $can_be_decimal;
 
-                            if (array_key_exists('min', $item)) {
-                                if (intval($item['min'])) $min = intval($item['min']);
-                            }
-                            if (array_key_exists('max', $item)) {
-                                if (intval($item['max'])) $max = intval($item['max']);
-                            }
-                            if (array_key_exists('can_be_decimal', $item)) {
-                                if (is_bool($item['can_be_decimal'])) $can_be_decimal = $item['can_be_decimal'];
-                            }
-
-                            if ($max && $min) {
-                                if ($min < $max) {
-                                    $validatedQuestion['min'] = $min;
-                                    $validatedQuestion['max'] = $max;
-                                }
-                            } else if ($min) $validatedQuestion['min'] = $min;
-                            else if ($max) $validatedQuestion['max'] = $max;
-                            $validatedQuestion['can_be_decimal'] = $can_be_decimal;
-
-                        } catch (Exception $exception) {
-                            return response("Unhandled input error (in type-specific values). ({$exception->getMessage()})", 400);
+                        if (array_key_exists('min', $item)) {
+                            if (intval($item['min'])) $min = intval($item['min']);
                         }
-                        break;
+                        if (array_key_exists('max', $item)) {
+                            if (intval($item['max'])) $max = intval($item['max']);
+                        }
+                        if (array_key_exists('can_be_decimal', $item)) {
+                            if (is_bool($item['can_be_decimal'])) $can_be_decimal = $item['can_be_decimal'];
+                        }
+
+                        if ($max && $min) {
+                            if ($min < $max) {
+                                $validatedQuestion['min'] = $min;
+                                $validatedQuestion['max'] = $max;
+                            }
+                        } else if ($min) $validatedQuestion['min'] = $min;
+                        else if ($max) $validatedQuestion['max'] = $max;
+                        $validatedQuestion['can_be_decimal'] = $can_be_decimal;
+
+                    } catch (Exception $exception) {
+                        return response("Unhandled input error (in type-specific values). ({$exception->getMessage()})", 400);
                     }
+                    break;
+                }
                 case "select":
                 {
                     try {
@@ -267,8 +265,7 @@ class FormController extends Controller
                             if (count($item['choices']) >= 2) {
                                 if (array_key_exists('has_hidden_label', $item)) {
                                     if (is_bool($item["has_hidden_label"])) $has_hidden_label = $item["has_hidden_label"];
-                                }
-                                else return response("Invalid data (missing has_hidden_label value).", 400);
+                                } else return response("Invalid data (missing has_hidden_label value).", 400);
 
                                 $choiceOrder = 0;
                                 $uniqueHiddenLabels = [];
@@ -280,13 +277,11 @@ class FormController extends Controller
                                     if (array_key_exists('order', $choice)) {
                                         if (intval($choice['order']) !== $choiceOrder) {
                                             return response("Invalid data (order is not valid).", 400);
-                                        }
-                                        else {
+                                        } else {
                                             $thisChoiceOrder = $choiceOrder;
                                             $choiceOrder++;
                                         }
-                                    }
-                                    else return response("Invalid data (order is missing).", 400);
+                                    } else return response("Invalid data (order is missing).", 400);
                                     //hidden label check
                                     if ($has_hidden_label) {
                                         if (array_key_exists('hidden_label', $choice)) {
@@ -294,34 +289,26 @@ class FormController extends Controller
                                                 $hidden_label = 0;
                                                 if (in_array($hidden_label, $uniqueHiddenLabels)) {
                                                     return response("Invalid data (hidden_label is not unique).", 400);
-                                                }
-                                                else array_push($uniqueHiddenLabels, $hidden_label);
-                                            }
-                                            else if (intval($choice['hidden_label'])) {
+                                                } else array_push($uniqueHiddenLabels, $hidden_label);
+                                            } else if (intval($choice['hidden_label'])) {
                                                 $hidden_label = intval($choice['hidden_label']);
                                                 if (in_array($hidden_label, $uniqueHiddenLabels)) {
                                                     return response("Invalid data (hidden_label is not unique).", 400);
-                                                }
-                                                else array_push($uniqueHiddenLabels, $hidden_label);
-                                            }
-                                            else return response("Invalid data (invalid hidden_label type in choice).", 400);
-                                        }
-                                        else return response("Invalid data (missing hidden_label in choice).", 400);
+                                                } else array_push($uniqueHiddenLabels, $hidden_label);
+                                            } else return response("Invalid data (invalid hidden_label type in choice).", 400);
+                                        } else return response("Invalid data (missing hidden_label in choice).", 400);
                                     }
                                     //text check
                                     if (array_key_exists('text', $choice)) {
                                         if ($choice['text'] === "0") $text = $choice['text'];
                                         else if (mb_strlen($choice['text']) && !is_null($choice['text'])) $text = strval($choice['text']);
                                         else return response("Invalid data (empty text in choice).", 400);
-                                    }
-                                    else return response("Invalid data (text is missing).", 400);
+                                    } else return response("Invalid data (text is missing).", 400);
 
                                     $choices[] = ['text' => $text, "hidden_label" => $hidden_label, "order" => $thisChoiceOrder];
                                 }
-                            }
-                            else return response("Invalid amount of choices for select question (there should be at least two).", 400);
-                        }
-                        else return response("Invalid data for select question (choices are missing).", 400);
+                            } else return response("Invalid amount of choices for select question (there should be at least two).", 400);
+                        } else return response("Invalid data for select question (choices are missing).", 400);
 
                         if (array_key_exists('is_multiselect', $item)) {
                             if (is_bool($item['is_multiselect'])) $is_multiselect = $item['is_multiselect'];
@@ -340,8 +327,7 @@ class FormController extends Controller
                         if ($is_multiselect) {
                             if ($strict_amount_of_answers) {
                                 $validatedQuestion['strict_amount_of_answers'] = $strict_amount_of_answers;
-                            }
-                            else {
+                            } else {
                                 if ($max_amount_of_answers && $min_amount_of_answers) {
                                     if ($min_amount_of_answers < $max_amount_of_answers) {
                                         $validatedQuestion['min_amount_of_answers'] = $min_amount_of_answers;
@@ -361,7 +347,8 @@ class FormController extends Controller
 
                     break;
                 }
-                default: return response("Invalid question type.", 400);
+                default:
+                    return response("Invalid question type.", 400);
             }
             $validatedQuestions[] = $validatedQuestion;
         }
@@ -380,7 +367,10 @@ class FormController extends Controller
                 ]);
 
                 foreach ($validatedQuestions as $item) {
-                    $newFormElement = FormElement::create(['order' => $item['order'], 'form_id' => $newForm->id]);
+                    $newFormElement = FormElement::create([
+                        'order' => $item['order'],
+                        'form_id' => $newForm->id
+                    ]);
                     if ($item !== "new_page") {
                         $newInputElement = InputElement::create([
                             'header' => $item['header'],
@@ -388,7 +378,8 @@ class FormController extends Controller
                             'form_element_id' => $newFormElement->id
                         ]);
                         switch ($item['type']) {
-                            case 'text': {
+                            case 'text':
+                            {
                                 TextInput::create([
                                     'min_length' => $item['min_length'],
                                     'max_length' => $item['max_length'],
@@ -397,7 +388,8 @@ class FormController extends Controller
                                 ]);
                                 break;
                             }
-                            case 'number': {
+                            case 'number':
+                            {
                                 NumberInput::create([
                                     'min' => $item['min'],
                                     'max' => $item['max'],
@@ -406,7 +398,8 @@ class FormController extends Controller
                                 ]);
                                 break;
                             }
-                            case 'date': {
+                            case 'date':
+                            {
                                 DateInput::create([
                                     'min' => $item['min'],
                                     'max' => $item['max'],
@@ -414,13 +407,15 @@ class FormController extends Controller
                                 ]);
                                 break;
                             }
-                            case 'boolean': {
+                            case 'boolean':
+                            {
                                 BooleanInput::create([
                                     'input_element_id' => $newInputElement->id
                                 ]);
                                 break;
                             }
-                            case 'select': {
+                            case 'select':
+                            {
                                 $newSelectInput = SelectInput::create([
                                     'is_multiselect' => $item['is_multiselect'],
                                     'min_amount_of_answers' => $item['min_amount_of_answers'],
@@ -430,11 +425,11 @@ class FormController extends Controller
                                     'input_element_id' => $newInputElement->id
                                 ]);
 
-                                foreach ($item['choices'] as $choice){
+                                foreach ($item['choices'] as $choice) {
                                     SelectInputChoice::create([
-                                        'text'=> $choice['text'],
-                                        'hidden_label'=> $choice['hidden_label'],
-                                        'order'=> $choice['order'],
+                                        'text' => $choice['text'],
+                                        'hidden_label' => $choice['hidden_label'],
+                                        'order' => $choice['order'],
                                         'select_input_id' => $newSelectInput->id
                                     ]);
                                 }
@@ -444,8 +439,7 @@ class FormController extends Controller
                     }
                 }
             });
-        }
-        catch (Exception $exception) {
+        } catch (Exception $exception) {
             dd($exception);
             //return response("{$exception->getMessage()}", 500);
         }
@@ -479,7 +473,7 @@ class FormController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        //todo: refuse update when is start_time > server time
     }
 
     /**
@@ -488,8 +482,23 @@ class FormController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($slug)
     {
-        //
+        if (!Auth::user()) return response("Unauthorized - log in to delete forms...", 401);
+        else {
+            DB::transaction(function () use ($slug) {
+                $form = Form::where('slug', $slug)->first();
+                if ($form) {
+                    if ($form->user_id == Auth::user()->id) {
+                        if ($form->delete()) {
+                            return response("Form was deleted.", 200);
+                        }
+                        else return response("Form deletion failed.", 500);
+                    }
+                    return response("Form was not deleted - you are not the owner of this form.", 500);
+                }
+                else return response("Requested form (delete) was not found", 404);
+            });
+        }
     }
 }

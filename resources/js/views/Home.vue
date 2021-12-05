@@ -16,8 +16,12 @@
                 <div v-else>
                     <h1>Welcome, {{ loggedUserName }}.</h1>
                     <hr>
-                    <FormPreview v-for="form in forms" :key="form.id" :created_at="form.created_at"
-                                 :description="form.description" :name="form.name" :slug="getSlugPath(form)"></FormPreview>
+                    <form-card
+                        v-for="form in forms"
+                        :key="form.id"
+                        :obj="form"
+                        @itemsChanged="handleItemsChanged"
+                    />
                 </div>
 
 
@@ -31,12 +35,12 @@
 
 <script>
 import Form from "../apis/Form";
-import FormPreview from "../components/FormCard";
+import FormCard from "../components/FormCard";
 
 
 export default {
     name: "Home",
-    components: {FormPreview},
+    components: {"form-card": FormCard},
     data() {
         return {
             forms: {},
@@ -68,11 +72,12 @@ export default {
             }
 
         },
-        getSlugPath(form) {
-            if (this.forms !== {} && form !== null) {
-                return "/form/" + form.slug;
-            }
-        }
+        async handleItemsChanged() {
+            this.loading = true;
+            await this.getForms().then(() => {
+                this.loading = false;
+            })
+        },
 
     }
 };

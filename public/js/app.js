@@ -2697,6 +2697,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var _apis_Form__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../apis/Form */ "./resources/js/apis/Form.js");
 //
 //
 //
@@ -2708,9 +2709,32 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "FormPreview",
-  props: ['name', 'description', 'created_at', 'slug']
+  props: ['obj'],
+  computed: {
+    formLink: function formLink() {
+      return "/form/" + this.$props['obj'].slug;
+    }
+  },
+  methods: {
+    handleDelete: function handleDelete() {
+      var _this = this;
+
+      if (confirm("Are you sure that you want to delete this form?")) {
+        _apis_Form__WEBPACK_IMPORTED_MODULE_0__["default"].deleteForm(this.$props['obj'].slug).then(function () {
+          _this.$emit('itemsChanged');
+        });
+      }
+    },
+    handleUpdate: function handleUpdate() {}
+  }
 });
 
 /***/ }),
@@ -4116,6 +4140,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
 
 
 
@@ -4169,7 +4194,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 0:
                 _context.prev = 0;
                 _this2.loading = true;
-                _context.next = 4;
+
+                if (!(_this2.form && _this2.form.items.length >= 1)) {
+                  _context.next = 7;
+                  break;
+                }
+
+                _context.next = 5;
                 return _apis_Form__WEBPACK_IMPORTED_MODULE_4__["default"].postCreateForm(_this2.form).then(function () {
                   alert("Form creation was successful.");
 
@@ -4180,23 +4211,30 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   _this2.loading = false;
                 });
 
-              case 4:
-                _context.next = 11;
+              case 5:
+                _context.next = 8;
                 break;
 
-              case 6:
-                _context.prev = 6;
+              case 7:
+                throw new Error("Invalid data");
+
+              case 8:
+                _context.next = 15;
+                break;
+
+              case 10:
+                _context.prev = 10;
                 _context.t0 = _context["catch"](0);
                 console.log(_context.t0);
                 alert("Form creation wasn't successful.");
                 _this2.loading = false;
 
-              case 11:
+              case 15:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[0, 6]]);
+        }, _callee, null, [[0, 10]]);
       }))();
     }
   },
@@ -4426,12 +4464,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Home",
   components: {
-    FormPreview: _components_FormCard__WEBPACK_IMPORTED_MODULE_2__["default"]
+    "form-card": _components_FormCard__WEBPACK_IMPORTED_MODULE_2__["default"]
   },
   data: function data() {
     return {
@@ -4510,10 +4552,27 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee2, null, [[1, 8]]);
       }))();
     },
-    getSlugPath: function getSlugPath(form) {
-      if (this.forms !== {} && form !== null) {
-        return "/form/" + form.slug;
-      }
+    handleItemsChanged: function handleItemsChanged() {
+      var _this3 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _this3.loading = true;
+                _context3.next = 3;
+                return _this3.getForms().then(function () {
+                  _this3.loading = false;
+                });
+
+              case 3:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3);
+      }))();
     }
   }
 });
@@ -4968,6 +5027,22 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           }
         }
       }, _callee4);
+    }))();
+  },
+  deleteForm: function deleteForm(slug) {
+    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee5() {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee5$(_context5) {
+        while (1) {
+          switch (_context5.prev = _context5.next) {
+            case 0:
+              return _context5.abrupt("return", _Api__WEBPACK_IMPORTED_MODULE_1__["default"]["delete"]('/forms/' + slug));
+
+            case 1:
+            case "end":
+              return _context5.stop();
+          }
+        }
+      }, _callee5);
     }))();
   }
 });
@@ -44661,15 +44736,19 @@ var render = function() {
   return _c(
     "div",
     [
-      _c("router-link", { attrs: { to: _vm.slug } }, [
-        _c("h2", [_vm._v(_vm._s(_vm.name))]),
+      _c("router-link", { attrs: { to: _vm.formLink } }, [
+        _c("h2", [_vm._v(_vm._s(this.$props["obj"].name))]),
         _vm._v(" "),
-        _c("h4", [_vm._v(_vm._s(_vm.description))]),
-        _c("br"),
-        _vm._v("\n        " + _vm._s(_vm.created_at)),
-        _c("br"),
+        _c("h4", [_vm._v(_vm._s(this.$props["obj"].description))]),
         _vm._v("\n        " + _vm._s("Show more...") + "\n    ")
-      ])
+      ]),
+      _vm._v(" "),
+      _c("FormulateInput", {
+        attrs: { label: "Delete", type: "button" },
+        on: { click: _vm.handleDelete }
+      }),
+      _vm._v(" "),
+      _c("hr")
     ],
     1
   )
@@ -46056,14 +46135,10 @@ var render = function() {
                     _c("hr"),
                     _vm._v(" "),
                     _vm._l(_vm.forms, function(form) {
-                      return _c("FormPreview", {
+                      return _c("form-card", {
                         key: form.id,
-                        attrs: {
-                          created_at: form.created_at,
-                          description: form.description,
-                          name: form.name,
-                          slug: _vm.getSlugPath(form)
-                        }
+                        attrs: { obj: form },
+                        on: { itemsChanged: _vm.handleItemsChanged }
                       })
                     })
                   ],

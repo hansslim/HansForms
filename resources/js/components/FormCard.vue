@@ -1,19 +1,42 @@
 <template>
     <div>
-        <router-link :to="slug">
-            <h2>{{name}}</h2>
-            <h4>{{description}}</h4><br>
-            {{created_at}}<br>
+        <router-link :to="formLink">
+            <h2>{{this.$props['obj'].name}}</h2>
+            <h4>{{this.$props['obj'].description}}</h4>
             {{"Show more..."}}
         </router-link>
+        <FormulateInput
+            @click="handleDelete"
+            label="Delete"
+            type="button"
+        />
+        <hr>
     </div>
 </template>
 
 <script>
 
+import Form from "../apis/Form";
+
 export default {
     name: "FormPreview",
-    props: ['name', 'description', 'created_at', 'slug'],
+    props: ['obj'],
+    computed: {
+        formLink() {
+            return "/form/" + this.$props['obj'].slug;
+        }
+    },
+    methods: {
+        handleDelete() {
+            if (confirm("Are you sure that you want to delete this form?")) {
+                Form.deleteForm(this.$props['obj'].slug).then(()=>{this.$emit('itemsChanged')
+                });
+            }
+        },
+        handleUpdate() {
+
+        }
+    }
 }
 </script>
 

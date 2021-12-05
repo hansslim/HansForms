@@ -19,8 +19,8 @@ class CreateNumberInputsAnswersTable extends Migration
             $table->timestamps();
 
             //fk: form_completion_id, number_input_id
-            $table->foreignId('form_completion_id')->constrained('form_completions');
-            $table->foreignId('number_input_id')->constrained('number_inputs');
+            $table->foreignId('form_completion_id')->constrained('form_completions')->onDelete('cascade');
+            $table->foreignId('number_input_id')->constrained('number_inputs')->onDelete('cascade');
         });
     }
 

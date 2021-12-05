@@ -22,7 +22,7 @@ class CreateInputElementsTable extends Migration
             $table->timestamps();
 
             //fk: form_element_id
-            $table->foreignId('form_element_id')->unique()->constrained('form_elements');
+            $table->foreignId('form_element_id')->unique()->constrained('form_elements')->onDelete('cascade');
 
         });
     }
