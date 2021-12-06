@@ -10,6 +10,7 @@ import Profile from "../views/Profile";
 import Form from "../views/Form";
 import NotFound from "../views/NotFound";
 import CreateForm from "../views/CreateForm";
+import FormPreview from "../views/FormPreview";
 
 Vue.use(VueRouter);
 
@@ -28,19 +29,19 @@ const routes = [
         path: "/login",
         name: "Login",
         component: Login,
-        meta: { requiresGuest: true }
+        meta: {requiresGuest: true}
     },
     {
         path: "/register",
         name: "Register",
         component: Register,
-        meta: { requiresGuest: true }
+        meta: {requiresGuest: true}
     },
     {
         path: "/profile",
         name: "Profile",
         component: Profile,
-        meta: { requiresAuth: true }
+        meta: {requiresAuth: true}
     },
     {
         path: "/form/:slug",
@@ -48,11 +49,22 @@ const routes = [
         component: Form,
     },
     {
+        path: "/form/preview/:slug",
+        name: "FormPreview",
+        component: FormPreview,
+        meta: {requiresAuth: true}
+    },
+    {
         path: "/create_form",
         name: "CreateForm",
         component: CreateForm,
-        meta: { requiresAuth: true }
+        meta: {requiresAuth: true}
     },
+    {
+        path: "*",
+        name: "NotFound",
+        component: NotFound,
+    }
 ];
 
 const router = new VueRouter({
@@ -68,14 +80,11 @@ router.beforeEach((to, from, next) => {
         } else {
             next();
         }
-    }
-    else if (to.matched.some(record => record.meta.requiresAuth)) {
+    } else if (to.matched.some(record => record.meta.requiresAuth)) {
         if (store.getters['authenticated']) {
             next();
-        }
-        else next('/login');
-    }
-    else {
+        } else next('/login');
+    } else {
         next();
     }
 })

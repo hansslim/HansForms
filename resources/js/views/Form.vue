@@ -1,8 +1,9 @@
 <template>
     <div>
-        <div v-if="!this.loading">
+        <div v-if="!this.loading && !this.errored">
             <h1>{{ this.form.name }}</h1>
             <h3>{{ this.form.description }}</h3>
+            <h4>Opened to {{this.form.end_time}}</h4>
             <FormulateForm v-model="formValues" @submit="submitForm">
                 <form-element v-for="item in this.form.form_elements" :obj="item" :key="item.order"></form-element>
                 <FormulateInput
@@ -11,8 +12,12 @@
                 />
             </FormulateForm>
         </div>
-        <div v-else>
+        <div v-if="this.loading">
             {{ "loading" }}
+        </div>
+        <div v-if="this.errored">
+            <h1>{{this.errorText}}</h1>
+            <router-link to="/"><h3>Go home</h3></router-link>
         </div>
     </div>
 </template>
@@ -31,22 +36,46 @@ export default {
             slug: '',
             form: {},
             formValues: {},
-            loading: true
+            loading: true,
+            errored: false,
+            errorText: "Bad Request (400)"
         }
     },
     async mounted() {
         this.slug = this.getSlug();
-        await this.getThisForm().then(() => {
-            this.sortElements();
-            this.loading = false;
-            console.log(this.form);
+        await this.getThisForm().then((res) => {
+            if (res) {
+                this.sortElements();
+                this.loading = false;
+                console.log(this.form);
+            }
         });
 
     },
     methods: {
         async getThisForm() {
-            const specificForm = await Form.getSpecificForm(this.slug);
-            this.form = specificForm.data;
+            await Form.getSpecificForm(this.slug)
+                .then((response)=>{
+                    if (response && response.data) {
+                        if (response.data.error) throw new Error(response.data.error);
+                        else {
+                            this.form = response.data;
+                            return true;
+                        }
+                    }
+                    else throw new Error();
+                })
+                .catch(error => {
+                    console.log(error.message)
+                    this.errored = true;
+                    switch (error.message) {
+                        case '410': this.errorText = "Requested form is expired. You cannot answer this form anymore!"; break;
+                        case '404': this.errorText = "Requested form was not found."; break;
+                        default: this.errorText = `Unhandled error - ${error}`; break; //dev only
+                    }
+                    return false;
+                })
+                .finally(() => this.loading = false);
         },
         getSlug() {
             return this.$route.params['slug'] ?? '';

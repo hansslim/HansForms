@@ -1,5 +1,5 @@
 <template>
-    <div>{{"not found"}}</div>
+    <div>{{"not found (full view)"}}</div>
 </template>
 
 <script>

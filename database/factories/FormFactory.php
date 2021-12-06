@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Form;
+use DateTime;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class FormFactory extends Factory
@@ -26,7 +27,9 @@ class FormFactory extends Factory
             'name' => $this->faker->sentence(3),
             'description' => $this->faker->paragraph(),
             'has_private_token' => false,
-            'user_id' => 1
+            'user_id' => 1,
+            'start_time' => new DateTime('2020-01-01 00:00:00'),
+            'end_time' => new DateTime('2025-01-01 00:00:00')
         ];
     }
 }

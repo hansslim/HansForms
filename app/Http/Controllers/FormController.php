@@ -62,8 +62,6 @@ class FormController extends Controller
             $startDate = str_replace("T", " ", $request->all()['start_time']);
             $endDate = str_replace("T", " ", $request->all()['end_time']);
 
-
-
             if (validateDate($startDate, 'Y-m-d H:i') && validateDate($endDate, 'Y-m-d H:i')) {
                 if (new DateTime($request->all()['start_time']) < new DateTime($request->all()['end_time'])) {
                     $formProps['start_time'] = new DateTime($request->all()['start_time']);
@@ -472,13 +470,35 @@ class FormController extends Controller
      */
     public function show($slug)
     {
-        $form = Form::where('slug', $slug)
-            ->with("user")
-            ->first();
+        $form = Form::where('slug', $slug)->first();
+
         if ($form) {
-            unset($form->user->email);
+            $currentTime = time();
+            $formEndTime = strtotime($form->end_time);
+
+            if ($currentTime >= $formEndTime) {
+                return response('Expired - no longer available', 410);
+            }
+
             return $form;
         } else return response('Not Found', 404);
+    }
+
+    public function showWithAuth($slug) {
+        if (Auth::user()) {
+            $userId = Auth::user()->id;
+            $form = Form::where('slug', $slug)->first();
+            if ($form) {
+                if ($form->user_id != $userId) {
+                    return response("Unauthorized - you don't own this form!", 401);
+                }
+                return $form;
+            }
+            else return response('Not Found', 404);
+        }
+        else {
+            return response("Unauthorized - log in to show your forms...", 401);
+        }
     }
 
     /**

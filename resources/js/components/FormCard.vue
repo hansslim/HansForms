@@ -23,7 +23,7 @@ export default {
     props: ['obj'],
     computed: {
         formLink() {
-            return "/form/" + this.$props['obj'].slug;
+            return "/form/preview/" + this.$props['obj'].slug;
         }
     },
     methods: {

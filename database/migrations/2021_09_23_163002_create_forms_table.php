@@ -15,11 +15,11 @@ class CreateFormsTable extends Migration
     {
         Schema::create('forms', function (Blueprint $table) {
             $table->id();
-            $table->uuid("slug")->unique();
+            $table->string("slug")->unique(); //type uuid
             $table->string("name");
             $table->string("description")->nullable();
-            $table->dateTime("start_time")->nullable();
-            $table->dateTime("end_time")->nullable();
+            $table->dateTime("start_time");
+            $table->dateTime("end_time");
             $table->boolean("has_private_token");
             $table->timestamps();
 

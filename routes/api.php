@@ -26,6 +26,7 @@ Route::post('/form/complete/{slug}', [FormCompletionController::class, 'store'])
 
 //require user privileges
 Route::group(['middleware' => ['auth:sanctum']], function() {
+    Route::get('/form/authenticated/{slug}', [FormController::class, 'showWithAuth']);
     Route::get('/forms', [FormController::class, 'index']);
     Route::put('/forms/{id}', [FormController::class, 'update']);
     Route::post('/forms', [FormController::class, 'store']);
