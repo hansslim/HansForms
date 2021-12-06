@@ -11,6 +11,12 @@
             <div class="d-flex justify-content-center">
                 <FormulateInput
                     class="btn"
+                    @click="handleDuplicate"
+                    label="Duplicate"
+                    type="button"
+                />
+                <FormulateInput
+                    class="btn"
                     @click="handleDelete"
                     label="Delete"
                     type="button"
@@ -138,6 +144,7 @@ export default {
                 });
             }
         },
+        handleDuplicate() {},
         handleUpdateButtonVisibility() {
             if (this.form.start_time) {
                 const startTime = new Date(this.form.start_time);

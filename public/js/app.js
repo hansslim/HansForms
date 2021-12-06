@@ -2714,6 +2714,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "FormPreview",
@@ -2724,15 +2734,16 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
-    handleDelete: function handleDelete() {
-      this.$emit('itemsChanged', 'loadingOn');
-
-      if (confirm("Are you sure that you want to delete this form?")) {
-        _apis_Form__WEBPACK_IMPORTED_MODULE_0__["default"].deleteForm(this.$props['obj'].slug);
-        this.$emit('itemsChanged', 'itemsUpdated');
-      } else this.$emit('itemsChanged', 'loadingOff');
+    /*handleDelete() {
+        this.$emit('itemsChanged', 'loadingOn')
+        if (confirm("Are you sure that you want to delete this form?")) {
+            Form.deleteForm(this.$props['obj'].slug);
+            this.$emit('itemsChanged', 'itemsUpdated')
+        }
+        else this.$emit('itemsChanged', 'loadingOff')
     },
-    handleUpdate: function handleUpdate() {}
+    handleUpdate() {
+     }*/
   },
   mounted: function mounted() {
     console.log(this.$props['obj']);
@@ -4395,6 +4406,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   _this2.errored = true;
 
                   switch (error.message) {
+                    case '423':
+                      _this2.errorText = "Requested form is not available at this moment. Try it later.";
+                      break;
+
                     case '410':
                       _this2.errorText = "Requested form is expired. You cannot answer this form anymore!";
                       break;
@@ -4505,6 +4520,12 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -4687,6 +4708,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         });
       }
     },
+    handleDuplicate: function handleDuplicate() {},
     handleUpdateButtonVisibility: function handleUpdateButtonVisibility() {
       if (this.form.start_time) {
         var startTime = new Date(this.form.start_time);
@@ -4729,6 +4751,9 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+//
+//
+//
 //
 //
 //
@@ -4852,52 +4877,35 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           }
         }, _callee2, null, [[1, 8]]);
       }))();
-    },
-    handleItemsChanged: function handleItemsChanged(arg) {
-      var _this3 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
-          while (1) {
-            switch (_context3.prev = _context3.next) {
-              case 0:
-                _context3.t0 = arg;
-                _context3.next = _context3.t0 === "loadingOn" ? 3 : _context3.t0 === "loadingOff" ? 5 : _context3.t0 === "itemsUpdated" ? 7 : 10;
-                break;
-
-              case 3:
-                //console.log("loadingOn")
-                _this3.loading = true;
-                return _context3.abrupt("break", 12);
-
-              case 5:
-                //console.log("loadingOff")
-                _this3.loading = false;
-                return _context3.abrupt("break", 12);
-
-              case 7:
-                _context3.next = 9;
-                return _this3.getForms().then(function () {
-                  _this3.isFormsObjectEmpty();
-
-                  _this3.loading = false;
-                });
-
-              case 9:
-                return _context3.abrupt("break", 12);
-
-              case 10:
-                console.log("unhandled purpose");
-                return _context3.abrupt("break", 12);
-
-              case 12:
-              case "end":
-                return _context3.stop();
-            }
-          }
-        }, _callee3);
-      }))();
     }
+    /*async handleItemsChanged(arg) {
+        switch (arg)
+        {
+            case "loadingOn": {
+                //console.log("loadingOn")
+                this.loading = true;
+                break;
+            }
+            case "loadingOff": {
+                //console.log("loadingOff")
+                this.loading = false;
+                break;
+            }
+            case "itemsUpdated": {
+                //console.log("itemsUpdated")
+                await this.getForms().then(() => {
+                    this.isFormsObjectEmpty();
+                    this.loading = false;
+                })
+                break;
+            }
+            default: {
+                console.log("unhandled purpose");
+                break;
+            }
+        }
+      },*/
+
   }
 });
 
@@ -5286,6 +5294,16 @@ Api.interceptors.response.use(function (response) {
           error: '419'
         }
       };
+
+    case 423:
+      {
+        console.log("API locked");
+        return {
+          data: {
+            error: '423'
+          }
+        };
+      }
 
     case 503:
     case 500:
@@ -45206,19 +45224,14 @@ var render = function() {
         _vm._v(" "),
         _c("h4", [_vm._v(_vm._s(this.$props["obj"].description))]),
         _vm._v(
-          "\n        Visible from " +
+          "\n            Visible from " +
             _vm._s(this.$props["obj"].start_time) +
             " to " +
             _vm._s(this.$props["obj"].end_time)
         ),
         _c("br"),
-        _vm._v("\n        " + _vm._s("Show more...") + "\n    ")
-      ]),
-      _vm._v(" "),
-      _c("FormulateInput", {
-        attrs: { label: "Delete", type: "button" },
-        on: { click: _vm.handleDelete }
-      })
+        _vm._v("\n            " + _vm._s("Show more...") + "\n        ")
+      ])
     ],
     1
   )
@@ -46624,6 +46637,12 @@ var render = function() {
             [
               _c("FormulateInput", {
                 staticClass: "btn",
+                attrs: { label: "Duplicate", type: "button" },
+                on: { click: _vm.handleDuplicate }
+              }),
+              _vm._v(" "),
+              _c("FormulateInput", {
+                staticClass: "btn",
                 attrs: { label: "Delete", type: "button" },
                 on: { click: _vm.handleDelete }
               }),
@@ -46760,7 +46779,7 @@ var render = function() {
                       ? _c(
                           "p",
                           [
-                            _vm._v("Create new forms "),
+                            _vm._v("Create new forms\n                    "),
                             _c(
                               "router-link",
                               { attrs: { to: "/create_form" } },
@@ -46774,8 +46793,7 @@ var render = function() {
                     _vm._l(_vm.forms, function(form) {
                       return _c("form-card", {
                         key: form.id,
-                        attrs: { obj: form },
-                        on: { itemsChanged: _vm.handleItemsChanged }
+                        attrs: { obj: form }
                       })
                     })
                   ],

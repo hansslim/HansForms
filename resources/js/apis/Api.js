@@ -35,6 +35,10 @@ Api.interceptors.response.use(
                     console.log(e)
                 }
                 return {data: {error: '419'}};
+            case 423: {
+                console.log("API locked");
+                return {data: {error: '423'}};
+            }
             case 503:
             case 500:
                 alert('Internal Server Error');

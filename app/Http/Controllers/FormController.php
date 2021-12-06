@@ -475,9 +475,13 @@ class FormController extends Controller
         if ($form) {
             $currentTime = time();
             $formEndTime = strtotime($form->end_time);
+            $formStartTime = strtotime($form->start_time);
 
             if ($currentTime >= $formEndTime) {
                 return response('Expired - no longer available', 410);
+            }
+            if ($currentTime <= $formStartTime) {
+                return response('Not available at this moment', 423);
             }
 
             return $form;

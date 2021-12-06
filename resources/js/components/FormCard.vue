@@ -6,11 +6,21 @@
             Visible from {{this.$props['obj'].start_time}} to {{this.$props['obj'].end_time}}<br>
             {{"Show more..."}}
         </router-link>
+<!--        <FormulateInput
+            @click="handleDelete"
+            label="Delete"
+            type="button"
+        />
         <FormulateInput
             @click="handleDelete"
             label="Delete"
             type="button"
         />
+        <FormulateInput
+            @click="handleDelete"
+            label="Delete"
+            type="button"
+        />-->
     </div>
 </template>
 
@@ -27,7 +37,7 @@ export default {
         }
     },
     methods: {
-        handleDelete() {
+        /*handleDelete() {
             this.$emit('itemsChanged', 'loadingOn')
             if (confirm("Are you sure that you want to delete this form?")) {
                 Form.deleteForm(this.$props['obj'].slug);
@@ -37,7 +47,7 @@ export default {
         },
         handleUpdate() {
 
-        }
+        }*/
     },
     mounted() {
         console.log(this.$props['obj'])

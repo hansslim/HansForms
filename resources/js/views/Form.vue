@@ -69,6 +69,7 @@ export default {
                     console.log(error.message)
                     this.errored = true;
                     switch (error.message) {
+                        case '423': this.errorText = "Requested form is not available at this moment. Try it later."; break;
                         case '410': this.errorText = "Requested form is expired. You cannot answer this form anymore!"; break;
                         case '404': this.errorText = "Requested form was not found."; break;
                         default: this.errorText = `Unhandled error - ${error}`; break; //dev only
