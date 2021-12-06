@@ -4572,6 +4572,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -4696,6 +4702,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         return 0;
       });
     },
+    handleUpdateButtonVisibility: function handleUpdateButtonVisibility() {
+      if (this.form.start_time) {
+        var startTime = new Date(this.form.start_time);
+        var timeNow = Date.now();
+
+        if (timeNow < startTime) {
+          this.updateButtonVisibility = true;
+        }
+      }
+    },
     handleDelete: function handleDelete() {
       var _this3 = this;
 
@@ -4709,17 +4725,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
     },
     handleDuplicate: function handleDuplicate() {},
-    handleUpdateButtonVisibility: function handleUpdateButtonVisibility() {
-      if (this.form.start_time) {
-        var startTime = new Date(this.form.start_time);
-        var timeNow = Date.now();
-
-        if (timeNow < startTime) {
-          this.updateButtonVisibility = true;
-        }
-      }
-    },
-    handleUpdate: function handleUpdate() {}
+    handleUpdate: function handleUpdate() {},
+    handleResults: function handleResults() {}
   },
   computed: {
     publicLink: function publicLink() {
@@ -46653,7 +46660,13 @@ var render = function() {
                     attrs: { label: "Change", type: "button" },
                     on: { click: _vm.handleUpdate }
                   })
-                : _vm._e()
+                : _vm._e(),
+              _vm._v(" "),
+              _c("FormulateInput", {
+                staticClass: "btn",
+                attrs: { label: "Results", type: "button" },
+                on: { click: _vm.handleResults }
+              })
             ],
             1
           ),

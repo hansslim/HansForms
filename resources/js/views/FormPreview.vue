@@ -28,6 +28,12 @@
                     label="Change"
                     type="button"
                 />
+                <FormulateInput
+                    class="btn"
+                    @click="handleResults"
+                    label="Results"
+                    type="button"
+                />
             </div>
             <br>
             <h2>Interactive preview</h2>
@@ -135,6 +141,15 @@ export default {
                 return 0;
             });
         },
+        handleUpdateButtonVisibility() {
+            if (this.form.start_time) {
+                const startTime = new Date(this.form.start_time);
+                const timeNow = Date.now();
+                if (timeNow < startTime) {
+                    this.updateButtonVisibility = true;
+                }
+            }
+        },
         handleDelete() {
             if (confirm("Are you sure that you want to delete this form?")) {
                 this.loading = true;
@@ -145,18 +160,8 @@ export default {
             }
         },
         handleDuplicate() {},
-        handleUpdateButtonVisibility() {
-            if (this.form.start_time) {
-                const startTime = new Date(this.form.start_time);
-                const timeNow = Date.now();
-                if (timeNow < startTime) {
-                    this.updateButtonVisibility = true;
-                }
-            }
-        },
-        handleUpdate() {
-
-        }
+        handleUpdate() {},
+        handleResults() {}
     },
     computed: {
         publicLink() {
