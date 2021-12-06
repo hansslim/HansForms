@@ -471,7 +471,6 @@ class FormController extends Controller
     public function show($slug)
     {
         $form = Form::where('slug', $slug)->first();
-
         if ($form) {
             $currentTime = time();
             $formEndTime = strtotime($form->end_time);

@@ -38,16 +38,24 @@ export default {
             formValues: {},
             loading: true,
             errored: false,
-            errorText: "Bad Request (400)"
+            errorText: "Bad Request (400)",
+            dataFetched: false
         }
     },
     async mounted() {
         this.slug = this.getSlug();
-        await this.getThisForm().then((res) => {
-            if (res) {
-                this.sortElements();
+        await this.getThisForm().then(() => {
+            try {
+                if (this.dataFetched) {
+                    this.sortElements();
+                    this.loading = false;
+                }
+            } catch (error) {
+                console.log(error.message)
+                this.errored = true;
+                this.errorText = `Unhandled error - ${error}`;
+            } finally {
                 this.loading = false;
-                console.log(this.form);
             }
         });
 
@@ -60,7 +68,7 @@ export default {
                         if (response.data.error) throw new Error(response.data.error);
                         else {
                             this.form = response.data;
-                            return true;
+                            this.dataFetched = true;
                         }
                     }
                     else throw new Error();
@@ -74,9 +82,8 @@ export default {
                         case '404': this.errorText = "Requested form was not found."; break;
                         default: this.errorText = `Unhandled error - ${error}`; break; //dev only
                     }
-                    return false;
+                    this.dataFetched = false;
                 })
-                .finally(() => this.loading = false);
         },
         getSlug() {
             return this.$route.params['slug'] ?? '';
@@ -95,7 +102,7 @@ export default {
         async submitForm() {
             try {
                 await Form.postFormCompletion(this.formValues, this.slug).then(()=> {
-                    alert("Answer has been proceeded successfully.");
+                    alert("Answer has been proceeded successfully."); //todo: handle errors
                     this.$router.push("/");
                 });
 

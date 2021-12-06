@@ -1,5 +1,5 @@
 <template>
-    <div style="border: solid black 1px; border-radius: 20px ;padding: 10px">
+    <div style="border: solid black 1px; border-radius: 5px ;padding: 10px; margin: 5px">
         <router-link :to="formLink">
             <h2>{{this.$props['obj'].name}}</h2>
             <h4>{{this.$props['obj'].description}}</h4>

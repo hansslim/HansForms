@@ -4354,7 +4354,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       formValues: {},
       loading: true,
       errored: false,
-      errorText: "Bad Request (400)"
+      errorText: "Bad Request (400)",
+      dataFetched: false
     };
   },
   mounted: function mounted() {
@@ -4367,12 +4368,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             case 0:
               _this.slug = _this.getSlug();
               _context.next = 3;
-              return _this.getThisForm().then(function (res) {
-                if (res) {
-                  _this.sortElements();
+              return _this.getThisForm().then(function () {
+                try {
+                  if (_this.dataFetched) {
+                    _this.sortElements();
 
+                    _this.loading = false;
+                  }
+                } catch (error) {
+                  console.log(error.message);
+                  _this.errored = true;
+                  _this.errorText = "Unhandled error - ".concat(error);
+                } finally {
                   _this.loading = false;
-                  console.log(_this.form);
                 }
               });
 
@@ -4398,7 +4406,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   if (response && response.data) {
                     if (response.data.error) throw new Error(response.data.error);else {
                       _this2.form = response.data;
-                      return true;
+                      _this2.dataFetched = true;
                     }
                   } else throw new Error();
                 })["catch"](function (error) {
@@ -4424,9 +4432,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     //dev only
                   }
 
-                  return false;
-                })["finally"](function () {
-                  return _this2.loading = false;
+                  _this2.dataFetched = false;
                 });
 
               case 2:
@@ -4466,8 +4472,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 _context3.prev = 0;
                 _context3.next = 3;
                 return _apis_Form__WEBPACK_IMPORTED_MODULE_1__["default"].postFormCompletion(_this3.formValues, _this3.slug).then(function () {
-                  alert("Answer has been proceeded successfully.");
+                  alert("Answer has been proceeded successfully."); //todo: handle errors
 
+                  //todo: handle errors
                   _this3.$router.push("/");
                 });
 
@@ -4758,7 +4765,6 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-//
 //
 //
 //
@@ -45221,8 +45227,9 @@ var render = function() {
     {
       staticStyle: {
         border: "solid black 1px",
-        "border-radius": "20px",
-        padding: "10px"
+        "border-radius": "5px",
+        padding: "10px",
+        margin: "5px"
       }
     },
     [

@@ -23,7 +23,6 @@
                         v-for="form in forms"
                         :key="form.id"
                         :obj="form"
-
                     />
                     <!-- @itemsChanged="handleItemsChanged"-->
 
