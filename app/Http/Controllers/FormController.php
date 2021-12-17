@@ -495,6 +495,13 @@ class FormController extends Controller
                 if ($form->user_id != $userId) {
                     return response("Unauthorized - you don't own this form!", 401);
                 }
+                $currentTime = time();
+                $formEndTime = strtotime($form->end_time);
+
+                if ($currentTime >= $formEndTime) {
+                    $form->is_expired = true;
+                } else $form->is_expired = false;
+
                 return $form;
             }
             else return response('Not Found', 404);

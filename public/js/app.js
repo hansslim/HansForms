@@ -4233,7 +4233,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
               case 8:
                 if (!(min.getTime() && max.getTime())) {
-                  _context.next = 11;
+                  _context.next = 13;
                   break;
                 }
 
@@ -4245,12 +4245,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 throw new Error("Invalid date data");
 
               case 11:
+                _context.next = 14;
+                break;
+
+              case 13:
+                throw new Error("Invalid date data (max or min)");
+
+              case 14:
                 if (!(_this2.form && _this2.form.items.length >= 1)) {
-                  _context.next = 16;
+                  _context.next = 19;
                   break;
                 }
 
-                _context.next = 14;
+                _context.next = 17;
                 return _apis_Form__WEBPACK_IMPORTED_MODULE_4__["default"].postCreateForm(_this2.form).then(function () {
                   alert("Form creation was successful.");
 
@@ -4261,30 +4268,30 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   _this2.loading = false;
                 });
 
-              case 14:
-                _context.next = 17;
-                break;
-
-              case 16:
-                throw new Error("Invalid data");
-
               case 17:
-                _context.next = 24;
+                _context.next = 20;
                 break;
 
               case 19:
-                _context.prev = 19;
+                throw new Error("Form creation error");
+
+              case 20:
+                _context.next = 27;
+                break;
+
+              case 22:
+                _context.prev = 22;
                 _context.t0 = _context["catch"](0);
                 console.log(_context.t0);
                 alert("Form creation wasn't successful.");
                 _this2.loading = false;
 
-              case 24:
+              case 27:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[0, 19]]);
+        }, _callee, null, [[0, 22]]);
       }))();
     }
   },
@@ -4585,6 +4592,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -4670,10 +4678,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                       _this2.errorText = "Requested form was not found.";
                       break;
 
-                    case '410':
-                      _this2.errorText = "Requested form is expired. You cannot answer this form anymore!";
-                      break;
+                    /*case '410':
+                        this.errorText = "Requested form is expired. You cannot answer this form anymore!";
+                        break;*/
+                    //???
 
+                    /*case '410':
+                        this.errorText = "Requested form is expired. You cannot answer this form anymore!";
+                        break;*/
+                    //???
                     default:
                       _this2.errorText = "Unhandled error - ".concat(error);
                       break;
@@ -5266,14 +5279,6 @@ Api.interceptors.response.use(function (response) {
         }
       };
 
-    case 401:
-      console.log("API unauthorized");
-      return {
-        data: {
-          error: '401'
-        }
-      };
-
     case 404:
       console.log("API not found");
       return {
@@ -5292,8 +5297,9 @@ Api.interceptors.response.use(function (response) {
         };
       }
 
+    case 401:
     case 419:
-      console.log("API session expired");
+      console.log("API session expired/unauthorized");
 
       try {
         _store__WEBPACK_IMPORTED_MODULE_2__["default"].dispatch('logout');
@@ -5304,7 +5310,7 @@ Api.interceptors.response.use(function (response) {
 
       return {
         data: {
-          error: '419'
+          error: '401'
         }
       };
 
@@ -5670,6 +5676,53 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToAr
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
+/*export class MyStore {
+    data;
+    constructor() {
+        this.data.items = [];
+    }
+    getItems() {
+        return this.data.items;
+    }
+    addItem(item) {
+        this.data.items = [...this.data.items, item];
+        this.refreshItemsOrder();
+    }
+    refreshItemsOrder() {
+        let i = 0;
+        this.data.items = this.data.items.map((x)=>{
+            let obj = x;
+            obj.order = i++;
+            return obj;
+        });
+    }
+    sortItemsByOrder() {
+        this.data.items = this.data.items.sort((a, b) => {
+            if (a.order < b.order) {
+                return -1;
+            }
+            if (a.order > b.order) {
+                return 1;
+            }
+            return 0;
+        });
+    }
+    changeItem(item) {
+        this.data.items = this.data.items.filter((x)=>x.id!==item.id);
+        this.data.items = [...this.data.items, item];
+        this.sortItemsByOrder();
+    }
+    deleteItem(item) {
+        this.data.items = this.data.items.filter((x)=>x.id!==item.id);
+        this.refreshItemsOrder();
+    }
+    clearStore() {
+        this.data.items = []
+    }
+    setItems(items) {
+        this.data.items = items
+    }
+}*/
 var createFormStore = {
   data: {
     items: []
@@ -46633,6 +46686,8 @@ var render = function() {
           _c("h5", [_vm._v("Opened from " + _vm._s(this.form.start_time))]),
           _vm._v(" "),
           _c("h5", [_vm._v("Closing at " + _vm._s(this.form.end_time))]),
+          _vm._v(" "),
+          this.form.is_expired ? _c("h4", [_vm._v("Expired!")]) : _vm._e(),
           _vm._v(" "),
           _c(
             "p",

@@ -5,6 +5,7 @@
             <h3>{{ this.form.description }}</h3>
             <h5>Opened from {{ this.form.start_time }}</h5>
             <h5>Closing at {{ this.form.end_time }}</h5>
+            <h4 v-if="this.form.is_expired">Expired!</h4>
             <p>Public link:
                 <router-link :to="/form/+getSlug()">{{ publicLink }}</router-link>
             </p>
@@ -117,9 +118,9 @@ export default {
                         case '404':
                             this.errorText = "Requested form was not found.";
                             break;
-                        case '410':
+                        /*case '410':
                             this.errorText = "Requested form is expired. You cannot answer this form anymore!";
-                            break;
+                            break;*/ //???
                         default:
                             this.errorText = `Unhandled error - ${error}`;
                             break; //dev only

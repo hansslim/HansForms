@@ -26,7 +26,8 @@ class Form extends Model
         'start_time',
         'end_time',
         'formElements',
-        'user'
+        'user',
+        'is_expired'
     ];
 
     protected $with = ['formElements'];

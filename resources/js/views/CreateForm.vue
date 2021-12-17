@@ -114,6 +114,7 @@ export default {
                 if (min.getTime() && max.getTime()) {
                     if (parseInt(max.getTime()) <= (parseInt(min.getTime()))) throw new Error("Invalid date data");
                 }
+                else throw new Error("Invalid date data (max or min)");
 
                 //question amount check
                 if (this.form && this.form.items.length >= 1) {
@@ -124,7 +125,7 @@ export default {
                         this.choices = [];
                         this.loading = false;
                     })
-                } else throw new Error("Invalid data");
+                } else throw new Error("Form creation error");
 
             } catch (error) {
                 console.log(error);
