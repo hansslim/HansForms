@@ -5676,74 +5676,38 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToAr
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-/*export class MyStore {
-    data;
-    constructor() {
-        this.data.items = [];
-    }
-    getItems() {
-        return this.data.items;
-    }
-    addItem(item) {
-        this.data.items = [...this.data.items, item];
-        this.refreshItemsOrder();
-    }
-    refreshItemsOrder() {
-        let i = 0;
-        this.data.items = this.data.items.map((x)=>{
-            let obj = x;
-            obj.order = i++;
-            return obj;
-        });
-    }
-    sortItemsByOrder() {
-        this.data.items = this.data.items.sort((a, b) => {
-            if (a.order < b.order) {
-                return -1;
-            }
-            if (a.order > b.order) {
-                return 1;
-            }
-            return 0;
-        });
-    }
-    changeItem(item) {
-        this.data.items = this.data.items.filter((x)=>x.id!==item.id);
-        this.data.items = [...this.data.items, item];
-        this.sortItemsByOrder();
-    }
-    deleteItem(item) {
-        this.data.items = this.data.items.filter((x)=>x.id!==item.id);
-        this.refreshItemsOrder();
-    }
-    clearStore() {
-        this.data.items = []
-    }
-    setItems(items) {
-        this.data.items = items
-    }
-}*/
-var createFormStore = {
-  data: {
-    items: []
-  },
-  getItems: function getItems() {
-    return this.data.items;
-  },
-  addItem: function addItem(item) {
-    this.data.items = [].concat(_toConsumableArray(this.data.items), [item]);
-    this.refreshItemsOrder();
-  },
-  refreshItemsOrder: function refreshItemsOrder() {
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var MyStore = function MyStore() {
+  var _this = this;
+
+  _classCallCheck(this, MyStore);
+
+  _defineProperty(this, "data", {});
+
+  _defineProperty(this, "getItems", function () {
+    return _this.data.items;
+  });
+
+  _defineProperty(this, "addItem", function (item) {
+    _this.data.items = [].concat(_toConsumableArray(_this.data.items), [item]);
+
+    _this.refreshItemsOrder();
+  });
+
+  _defineProperty(this, "refreshItemsOrder", function () {
     var i = 0;
-    this.data.items = this.data.items.map(function (x) {
+    _this.data.items = _this.data.items.map(function (x) {
       var obj = x;
       obj.order = i++;
       return obj;
     });
-  },
-  sortItemsByOrder: function sortItemsByOrder() {
-    this.data.items = this.data.items.sort(function (a, b) {
+  });
+
+  _defineProperty(this, "sortItemsByOrder", function () {
+    _this.data.items = _this.data.items.sort(function (a, b) {
       if (a.order < b.order) {
         return -1;
       }
@@ -5754,79 +5718,38 @@ var createFormStore = {
 
       return 0;
     });
-  },
-  changeItem: function changeItem(item) {
-    this.data.items = this.data.items.filter(function (x) {
-      return x.id !== item.id;
-    });
-    this.data.items = [].concat(_toConsumableArray(this.data.items), [item]);
-    this.sortItemsByOrder();
-  },
-  deleteItem: function deleteItem(item) {
-    this.data.items = this.data.items.filter(function (x) {
-      return x.id !== item.id;
-    });
-    this.refreshItemsOrder();
-  },
-  clearStore: function clearStore() {
-    this.data.items = [];
-  },
-  setItems: function setItems(items) {
-    this.data.items = items;
-  }
-};
-var createFormChoicesStore = {
-  data: {
-    items: []
-  },
-  getItems: function getItems() {
-    return this.data.items;
-  },
-  addItem: function addItem(item) {
-    this.data.items = [].concat(_toConsumableArray(this.data.items), [item]);
-    this.refreshItemsOrder();
-  },
-  refreshItemsOrder: function refreshItemsOrder() {
-    var i = 0;
-    this.data.items = this.data.items.map(function (x) {
-      var obj = x;
-      obj.order = i++;
-      return obj;
-    });
-  },
-  sortItemsByOrder: function sortItemsByOrder() {
-    this.data.items = this.data.items.sort(function (a, b) {
-      if (a.order < b.order) {
-        return -1;
-      }
+  });
 
-      if (a.order > b.order) {
-        return 1;
-      }
+  _defineProperty(this, "changeItem", function (item) {
+    _this.data.items = _this.data.items.filter(function (x) {
+      return x.id !== item.id;
+    });
+    _this.data.items = [].concat(_toConsumableArray(_this.data.items), [item]);
 
-      return 0;
-    });
-  },
-  changeItem: function changeItem(item) {
-    this.data.items = this.data.items.filter(function (x) {
+    _this.sortItemsByOrder();
+  });
+
+  _defineProperty(this, "deleteItem", function (item) {
+    _this.data.items = _this.data.items.filter(function (x) {
       return x.id !== item.id;
     });
-    this.data.items = [].concat(_toConsumableArray(this.data.items), [item]);
-    this.sortItemsByOrder();
-  },
-  deleteItem: function deleteItem(item) {
-    this.data.items = this.data.items.filter(function (x) {
-      return x.id !== item.id;
-    });
-    this.refreshItemsOrder();
-  },
-  clearStore: function clearStore() {
-    this.data.items = [];
-  },
-  setItems: function setItems(items) {
-    this.data.items = items;
-  }
+
+    _this.refreshItemsOrder();
+  });
+
+  _defineProperty(this, "clearStore", function () {
+    _this.data.items = [];
+  });
+
+  _defineProperty(this, "setItems", function (item) {
+    _this.data.items = items;
+  });
+
+  this.data.items = [];
 };
+
+var createFormStore = new MyStore();
+var createFormChoicesStore = new MyStore();
 
 /***/ }),
 
