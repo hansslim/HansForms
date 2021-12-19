@@ -64,6 +64,12 @@ class FormController extends Controller
 
             if (validateDate($startDate, 'Y-m-d H:i') && validateDate($endDate, 'Y-m-d H:i')) {
                 if (new DateTime($request->all()['start_time']) < new DateTime($request->all()['end_time'])) {
+                    $currentTime = time();
+                    $formEndTime = strtotime($endDate);
+                    if ($currentTime > $formEndTime) {
+                        return response("Invalid data (creating expired form is not allowed).", 400);
+                    }
+
                     $formProps['start_time'] = new DateTime($request->all()['start_time']);
                     $formProps['end_time'] = new DateTime($request->all()['end_time']);
                 } else return response("Invalid data (start is higher than end).", 400);
