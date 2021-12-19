@@ -503,10 +503,16 @@ class FormController extends Controller
                 }
                 $currentTime = time();
                 $formEndTime = strtotime($form->end_time);
+                $formStartTime = strtotime($form->start_time);
 
-                if ($currentTime >= $formEndTime) {
-                    $form->is_expired = true;
-                } else $form->is_expired = false;
+                if ($currentTime >= $formEndTime) $form->is_expired = true;
+                else $form->is_expired = false;
+
+                if ($formStartTime <= $currentTime) $form->was_already_published = true;
+                else $form->was_already_published = false;
+
+                if (!$form->is_expired && $form->was_already_published) $form->is_opened = true;
+                else $form->is_opened = false;
 
                 return $form;
             }

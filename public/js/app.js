@@ -4574,6 +4574,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -4586,7 +4591,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       slug: '',
       form: {},
       formValues: {},
-      updateButtonVisibility: false,
       loading: true,
       errored: false,
       errorText: "Bad Request",
@@ -4607,8 +4611,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 try {
                   if (_this.dataFetched) {
                     _this.sortElements();
-
-                    _this.handleUpdateButtonVisibility();
 
                     _this.loading = false;
                   }
@@ -4696,16 +4698,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
         return 0;
       });
-    },
-    handleUpdateButtonVisibility: function handleUpdateButtonVisibility() {
-      if (this.form.start_time) {
-        var startTime = new Date(this.form.start_time);
-        var timeNow = Date.now();
-
-        if (timeNow < startTime) {
-          this.updateButtonVisibility = true;
-        }
-      }
     },
     handleDelete: function handleDelete() {
       var _this3 = this;
@@ -46583,7 +46575,11 @@ var render = function() {
               _vm._v(" "),
               _c("h5", [_vm._v("Closing at " + _vm._s(this.form.end_time))]),
               _vm._v(" "),
-              this.form.is_expired ? _c("h4", [_vm._v("Expired!")]) : _vm._e(),
+              this.form.is_expired
+                ? _c("h4", [_vm._v("Expired!")])
+                : this.form.is_opened
+                ? _c("h4", [_vm._v("Opened to fill in.")])
+                : _c("h4", [_vm._v("Waiting for publication.")]),
               _vm._v(" "),
               _c(
                 "p",
@@ -46612,7 +46608,7 @@ var render = function() {
                     on: { click: _vm.handleDelete }
                   }),
                   _vm._v(" "),
-                  _vm.updateButtonVisibility
+                  !this.form.was_already_published
                     ? _c("FormulateInput", {
                         staticClass: "btn",
                         attrs: { label: "Change", type: "button" },
@@ -46620,11 +46616,13 @@ var render = function() {
                       })
                     : _vm._e(),
                   _vm._v(" "),
-                  _c("FormulateInput", {
-                    staticClass: "btn",
-                    attrs: { label: "Results", type: "button" },
-                    on: { click: _vm.handleResults }
-                  })
+                  this.form.was_already_published
+                    ? _c("FormulateInput", {
+                        staticClass: "btn",
+                        attrs: { label: "Results", type: "button" },
+                        on: { click: _vm.handleResults }
+                      })
+                    : _vm._e()
                 ],
                 1
               ),

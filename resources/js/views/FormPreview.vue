@@ -7,7 +7,11 @@
                     <h3>{{ this.form.description }}</h3>
                     <h5>Opened from {{ this.form.start_time }}</h5>
                     <h5>Closing at {{ this.form.end_time }}</h5>
+
                     <h4 v-if="this.form.is_expired">Expired!</h4>
+                    <h4 v-else-if="this.form.is_opened">Opened to fill in.</h4>
+                    <h4 v-else>Waiting for publication.</h4>
+
                     <p>Public link:
                         <router-link :to="/form/+getSlug()">{{ publicLink }}</router-link>
                     </p>
@@ -25,13 +29,14 @@
                             type="button"
                         />
                         <FormulateInput
-                            v-if="updateButtonVisibility"
+                            v-if="!this.form.was_already_published"
                             class="btn"
                             @click="handleUpdate"
                             label="Change"
                             type="button"
                         />
                         <FormulateInput
+                            v-if="this.form.was_already_published"
                             class="btn"
                             @click="handleResults"
                             label="Results"
@@ -79,7 +84,6 @@ export default {
             slug: '',
             form: {},
             formValues: {},
-            updateButtonVisibility: false,
             loading: true,
             errored: false,
             errorText: "Bad Request",
@@ -92,7 +96,7 @@ export default {
             try {
                 if (this.dataFetched) {
                     this.sortElements();
-                    this.handleUpdateButtonVisibility();
+
                     this.loading = false;
                 }
             } catch (error) {
@@ -148,15 +152,6 @@ export default {
                 return 0;
             });
         },
-        handleUpdateButtonVisibility() {
-            if (this.form.start_time) {
-                const startTime = new Date(this.form.start_time);
-                const timeNow = Date.now();
-                if (timeNow < startTime) {
-                    this.updateButtonVisibility = true;
-                }
-            }
-        },
         handleDelete() {
             if (confirm("Are you sure that you want to delete this form?")) {
                 this.loading = true;
@@ -167,6 +162,7 @@ export default {
             }
         },
         handleDuplicate() {
+
         },
         handleUpdate() {
         },
