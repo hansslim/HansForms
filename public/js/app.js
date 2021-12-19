@@ -4702,16 +4702,65 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     handleDelete: function handleDelete() {
       var _this3 = this;
 
-      if (confirm("Are you sure that you want to delete this form?")) {
-        this.loading = true;
-        _apis_Form__WEBPACK_IMPORTED_MODULE_1__["default"].deleteForm(this.getSlug()).then(function () {
-          _this3.$router.push("/");
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                if (!confirm("Are you sure that you want to delete this form?")) {
+                  _context3.next = 4;
+                  break;
+                }
 
-          _this3.loading = false;
-        });
-      }
+                _this3.loading = true;
+                _context3.next = 4;
+                return _apis_Form__WEBPACK_IMPORTED_MODULE_1__["default"].deleteForm(_this3.getSlug()).then(function () {
+                  _this3.$router.push("/");
+
+                  _this3.loading = false;
+                });
+
+              case 4:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3);
+      }))();
     },
-    handleDuplicate: function handleDuplicate() {},
+    handleDuplicate: function handleDuplicate() {
+      var _this4 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                if (!confirm("Are you sure that you want to duplicate this form?")) {
+                  _context4.next = 4;
+                  break;
+                }
+
+                _this4.loading = true;
+                _context4.next = 4;
+                return _apis_Form__WEBPACK_IMPORTED_MODULE_1__["default"].postDuplicateForm(_this4.getSlug()).then(function (res) {
+                  if (res.status === 200) {
+                    _this4.$router.push("/");
+
+                    _this4.loading = false;
+                  } else throw new Error(res.data.toString());
+                })["catch"](function (error) {
+                  alert("Form duplication was not successful.");
+                });
+
+              case 4:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4);
+      }))();
+    },
     handleUpdate: function handleUpdate() {},
     handleResults: function handleResults() {}
   },
@@ -5410,6 +5459,22 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           }
         }
       }, _callee6);
+    }))();
+  },
+  postDuplicateForm: function postDuplicateForm(slug) {
+    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee7() {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee7$(_context7) {
+        while (1) {
+          switch (_context7.prev = _context7.next) {
+            case 0:
+              return _context7.abrupt("return", _Api__WEBPACK_IMPORTED_MODULE_1__["default"].post('/form/duplicate/' + slug));
+
+            case 1:
+            case "end":
+              return _context7.stop();
+          }
+        }
+      }, _callee7);
     }))();
   }
 });

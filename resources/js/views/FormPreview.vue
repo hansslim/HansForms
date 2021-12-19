@@ -152,17 +152,28 @@ export default {
                 return 0;
             });
         },
-        handleDelete() {
+        async handleDelete() {
             if (confirm("Are you sure that you want to delete this form?")) {
                 this.loading = true;
-                Form.deleteForm(this.getSlug()).then(() => {
+                await Form.deleteForm(this.getSlug()).then(() => {
                     this.$router.push("/");
                     this.loading = false;
                 });
             }
         },
-        handleDuplicate() {
-
+        async handleDuplicate() {
+            if (confirm("Are you sure that you want to duplicate this form?")){
+                this.loading = true;
+                await Form.postDuplicateForm(this.getSlug()).then((res) => {
+                    if (res.status === 200) {
+                        this.$router.push("/");
+                        this.loading = false;
+                    }
+                    else throw new Error(res.data.toString());
+                }).catch((error) => {
+                    alert("Form duplication was not successful.")
+                })
+            }
         },
         handleUpdate() {
         },

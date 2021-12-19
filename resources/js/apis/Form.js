@@ -19,4 +19,7 @@ export default {
     async deleteForm(slug) {
         return Api.delete('/forms/' + slug);
     },
+    async postDuplicateForm(slug) {
+        return Api.post('/form/duplicate/' + slug)
+    }
 };

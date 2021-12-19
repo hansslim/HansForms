@@ -6,6 +6,7 @@ use App\Models\BooleanInput;
 use App\Models\DateInput;
 use App\Models\FormElement;
 use App\Models\InputElement;
+use App\Models\NewPage;
 use App\Models\NumberInput;
 use App\Models\SelectInput;
 use App\Models\SelectInputChoice;
@@ -392,7 +393,7 @@ class FormController extends Controller
                         'order' => $item['order'],
                         'form_id' => $newForm->id
                     ]);
-                    if ($item !== "new_page") {
+                    if ($item !== "new_page") { //todo: rewrite and add new pages creation
                         $newInputElement = InputElement::create([
                             'header' => $item['header'],
                             'is_mandatory' => $item['is_mandatory'],
@@ -491,6 +492,103 @@ class FormController extends Controller
 
             return $form;
         } else return response('Not Found', 404);
+    }
+
+    public function duplicateWithAuth($slug) {
+        $userId = Auth::user()->id;
+        if (!$userId) return response("Unauthorized.", 401);
+
+        $form = Form::where(['slug' => $slug, 'user_id' => $userId])->first();
+        if (!$form) return response("Not found.", 404);
+
+        try {
+            DB::transaction(function () use ($form, $userId) {
+                $formSlug = Uuid::uuid4()->toString();
+                $newForm = Form::create([
+                    'user_id' => $userId,
+                    'slug' => $formSlug, //new one!
+                    'name' => $formSlug, //$form->name,
+                    'description' => $form->description,
+                    'start_time' => $form->start_time, //todo
+                    'end_time' => $form->end_time, //todo
+                    'has_private_token' => $form->has_private_token,
+                ]);
+
+                foreach ($form->formElements as $item) {
+                    $newFormElement = FormElement::create([
+                        'order' => $item['order'],
+                        'form_id' => $newForm->id
+                    ]);
+
+                    if ($item->inputElement) {
+                        $newInputElement = InputElement::create([
+                            'header' => $item->inputElement->header,
+                            'is_mandatory' => $item->inputElement->is_mandatory,
+                            'form_element_id' => $newFormElement->id
+                        ]);
+
+                        if ($item->inputElement->dateInput) {
+                            DateInput::create([
+                                'min' => $item->inputElement->dateInput->min,
+                                'max' => $item->inputElement->dateInput->max,
+                                'input_element_id' => $newInputElement->id
+                            ]);
+                        }
+                        else if ($item->inputElement->textInput) {
+                            TextInput::create([
+                                'min_length' => $item->inputElement->textInput->min_length,
+                                'max_length' => $item->inputElement->textInput->max_length,
+                                'strict_length' => $item->inputElement->textInput->strict_length,
+                                'input_element_id' => $newInputElement->id
+                            ]);
+                        }
+                        else if ($item->inputElement->numberInput) {
+                            NumberInput::create([
+                                'min' => $item->inputElement->numberInput->min,
+                                'max' => $item->inputElement->numberInput->max,
+                                'can_be_decimal' => $item->inputElement->numberInput->can_be_decimal,
+                                'input_element_id' => $newInputElement->id
+                            ]);
+                        }
+                        else if ($item->inputElement->booleanInput) {
+                            BooleanInput::create([
+                                'input_element_id' => $newInputElement->id
+                            ]);
+                        }
+                        else if ($item->inputElement->selectInput) {
+                            $newSelectInput = SelectInput::create([
+                                'is_multiselect' => $item->inputElement->selectInput->is_multiselect,
+                                'min_amount_of_answers' => $item->inputElement->selectInput->min_amount_of_answers,
+                                'max_amount_of_answers' => $item->inputElement->selectInput->max_amount_of_answers,
+                                'strict_amount_of_answers' => $item->inputElement->selectInput->strict_amount_of_answers,
+                                'has_hidden_label' => $item->inputElement->selectInput->has_hidden_label,
+                                'input_element_id' => $newInputElement->id
+                            ]);
+                            foreach ($item->inputElement->selectInput->selectInputChoices as $choice) {
+                                SelectInputChoice::create([
+                                    'text' => $choice->text,
+                                    'hidden_label' => $choice->hidden_label,
+                                    'order' => $choice->order,
+                                    'select_input_id' => $newSelectInput->id
+                                ]);
+
+                            }
+                        }
+                    }
+                    else {
+                        NewPage::create([
+                            'form_element_id' => $newFormElement->id
+                        ]);
+                    }
+                }
+
+
+            });
+        } catch (Exception $exception) {
+            dd($exception);
+            //return response("{$exception->getMessage()}", 500);
+        }
+        return response("Form has been duplicated successfully.", 200);
     }
 
     public function showWithAuth($slug) {
