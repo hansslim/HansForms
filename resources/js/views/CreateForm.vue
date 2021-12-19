@@ -64,8 +64,8 @@
 <script>
 import ItemModal from "../components/Modals/CreateForm/ItemModal";
 import FormElementControl from "../components/FormElementControl";
-import {createFormChoicesStore, createFormStore} from "../components/Modals/CreateForm/stores";
 import Form from "../apis/Form";
+import {createFormChoicesStore, createFormStore} from "../store";
 
 export default {
     name: "CreateForm",

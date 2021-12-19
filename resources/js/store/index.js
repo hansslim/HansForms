@@ -1,9 +1,10 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import VuexPersistence from 'vuex-persist';
+import MyStore from './MyStoreClass'
 
+//store for auth
 Vue.use(Vuex);
-
 const store = new Vuex.Store({
     state: {
         authenticated: false,
@@ -40,5 +41,8 @@ const store = new Vuex.Store({
     },
     plugins: [new VuexPersistence().plugin]
 });
-
 export default store;
+
+//store for create form page
+export const createFormStore = new MyStore();
+export const createFormChoicesStore = new MyStore();

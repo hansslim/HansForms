@@ -59,7 +59,7 @@ import NumberItem from "./NumberItem";
 import DateItem from "./DateItem";
 import SelectItem from "./SelectItem";
 import {v4 as uuidv4} from 'uuid';
-import {createFormChoicesStore, createFormStore} from "./stores";
+import {createFormChoicesStore, createFormStore} from "../../../store";
 
 export default {
     name: "ItemModal",

@@ -27,7 +27,7 @@
 
 <script>
 import {v4 as uuidv4} from 'uuid';
-import {createFormChoicesStore} from "./stores";
+import {createFormChoicesStore} from "../../../store";
 
 export default {
     name: "SelectChoiceModal",

@@ -3119,7 +3119,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _DateItem__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./DateItem */ "./resources/js/components/Modals/CreateForm/DateItem.vue");
 /* harmony import */ var _SelectItem__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./SelectItem */ "./resources/js/components/Modals/CreateForm/SelectItem.vue");
 /* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! uuid */ "./node_modules/uuid/dist/esm-browser/v4.js");
-/* harmony import */ var _stores__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./stores */ "./resources/js/components/Modals/CreateForm/stores.js");
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../store */ "./resources/js/store/index.js");
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -3266,31 +3266,31 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     },
     addNewItem: function addNewItem(data) {
       if (this.item.type === "select") {
-        _stores__WEBPACK_IMPORTED_MODULE_4__.createFormStore.addItem(_objectSpread(_objectSpread({}, this.formValues), {}, {
+        _store__WEBPACK_IMPORTED_MODULE_4__.createFormStore.addItem(_objectSpread(_objectSpread({}, this.formValues), {}, {
           id: (0,uuid__WEBPACK_IMPORTED_MODULE_5__["default"])(),
-          choices: _stores__WEBPACK_IMPORTED_MODULE_4__.createFormChoicesStore.getItems()
+          choices: _store__WEBPACK_IMPORTED_MODULE_4__.createFormChoicesStore.getItems()
         }));
-        _stores__WEBPACK_IMPORTED_MODULE_4__.createFormChoicesStore.clearStore();
-      } else _stores__WEBPACK_IMPORTED_MODULE_4__.createFormStore.addItem(_objectSpread(_objectSpread({}, this.formValues), {}, {
+        _store__WEBPACK_IMPORTED_MODULE_4__.createFormChoicesStore.clearStore();
+      } else _store__WEBPACK_IMPORTED_MODULE_4__.createFormStore.addItem(_objectSpread(_objectSpread({}, this.formValues), {}, {
         id: (0,uuid__WEBPACK_IMPORTED_MODULE_5__["default"])()
       }));
     },
     updateItem: function updateItem() {
       if (this.item.type === "select") {
-        _stores__WEBPACK_IMPORTED_MODULE_4__.createFormStore.changeItem(_objectSpread(_objectSpread({}, this.formValues), {}, {
+        _store__WEBPACK_IMPORTED_MODULE_4__.createFormStore.changeItem(_objectSpread(_objectSpread({}, this.formValues), {}, {
           order: this.item.order,
           id: this.item.id,
-          choices: _stores__WEBPACK_IMPORTED_MODULE_4__.createFormChoicesStore.getItems()
+          choices: _store__WEBPACK_IMPORTED_MODULE_4__.createFormChoicesStore.getItems()
         }));
-        _stores__WEBPACK_IMPORTED_MODULE_4__.createFormChoicesStore.clearStore();
-      } else _stores__WEBPACK_IMPORTED_MODULE_4__.createFormStore.changeItem(_objectSpread(_objectSpread({}, this.formValues), {}, {
+        _store__WEBPACK_IMPORTED_MODULE_4__.createFormChoicesStore.clearStore();
+      } else _store__WEBPACK_IMPORTED_MODULE_4__.createFormStore.changeItem(_objectSpread(_objectSpread({}, this.formValues), {}, {
         id: this.item.id,
         order: this.item.order
       }));
     },
     deleteItem: function deleteItem() {
       if (confirm("Are you sure that you want to delete this item?")) {
-        _stores__WEBPACK_IMPORTED_MODULE_4__.createFormStore.deleteItem(_objectSpread(_objectSpread({}, this.formValues), {}, {
+        _store__WEBPACK_IMPORTED_MODULE_4__.createFormStore.deleteItem(_objectSpread(_objectSpread({}, this.formValues), {}, {
           id: this.item.id,
           order: this.item.order
         }));
@@ -3402,7 +3402,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         case "select":
           {
             try {
-              var actualChoices = _stores__WEBPACK_IMPORTED_MODULE_4__.createFormChoicesStore.getItems();
+              var actualChoices = _store__WEBPACK_IMPORTED_MODULE_4__.createFormChoicesStore.getItems();
 
               if (actualChoices && actualChoices.length >= 2) {
                 if (this.formValues.has_hidden_label) {
@@ -3617,7 +3617,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! uuid */ "./node_modules/uuid/dist/esm-browser/v4.js");
-/* harmony import */ var _stores__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./stores */ "./resources/js/components/Modals/CreateForm/stores.js");
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../store */ "./resources/js/store/index.js");
 //
 //
 //
@@ -3677,7 +3677,7 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       if (isValid) {
-        _stores__WEBPACK_IMPORTED_MODULE_0__.createFormChoicesStore.addItem({
+        _store__WEBPACK_IMPORTED_MODULE_0__.createFormChoicesStore.addItem({
           id: (0,uuid__WEBPACK_IMPORTED_MODULE_1__["default"])(),
           text: this.choiceText,
           hidden_label: this.hiddenLabel
@@ -3687,7 +3687,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     handleUpdateItem: function handleUpdateItem() {
       if (this.choiceText) {
-        _stores__WEBPACK_IMPORTED_MODULE_0__.createFormChoicesStore.changeItem({
+        _store__WEBPACK_IMPORTED_MODULE_0__.createFormChoicesStore.changeItem({
           id: this.id,
           text: this.choiceText,
           hidden_label: this.hiddenLabel,
@@ -3697,7 +3697,7 @@ __webpack_require__.r(__webpack_exports__);
       } else this.trivialFormulateErrorHandler("Choice is required.");
     },
     handleDeleteItem: function handleDeleteItem() {
-      _stores__WEBPACK_IMPORTED_MODULE_0__.createFormChoicesStore.deleteItem({
+      _store__WEBPACK_IMPORTED_MODULE_0__.createFormChoicesStore.deleteItem({
         id: this.id,
         text: this.choiceText,
         hidden_label: this.hiddenLabel,
@@ -3752,7 +3752,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _SelectChoiceItem__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./SelectChoiceItem */ "./resources/js/components/Modals/CreateForm/SelectChoiceItem.vue");
 /* harmony import */ var _SelectChoiceModal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SelectChoiceModal */ "./resources/js/components/Modals/CreateForm/SelectChoiceModal.vue");
-/* harmony import */ var _stores__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./stores */ "./resources/js/components/Modals/CreateForm/stores.js");
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../store */ "./resources/js/store/index.js");
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -3802,19 +3802,19 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             //rewrite hidden labels to 0,1,2,...
             var i = 1;
             this.choices.forEach(function (item) {
-              _stores__WEBPACK_IMPORTED_MODULE_2__.createFormChoicesStore.changeItem(_objectSpread(_objectSpread({}, item), {}, {
+              _store__WEBPACK_IMPORTED_MODULE_2__.createFormChoicesStore.changeItem(_objectSpread(_objectSpread({}, item), {}, {
                 hidden_label: "".concat(i++)
               }));
             });
-            this.choices = _stores__WEBPACK_IMPORTED_MODULE_2__.createFormChoicesStore.getItems();
+            this.choices = _store__WEBPACK_IMPORTED_MODULE_2__.createFormChoicesStore.getItems();
           } else {
             //remove hidden labels
             this.choices.forEach(function (item) {
-              _stores__WEBPACK_IMPORTED_MODULE_2__.createFormChoicesStore.changeItem(_objectSpread(_objectSpread({}, item), {}, {
+              _store__WEBPACK_IMPORTED_MODULE_2__.createFormChoicesStore.changeItem(_objectSpread(_objectSpread({}, item), {}, {
                 hidden_label: ""
               }));
             });
-            this.choices = _stores__WEBPACK_IMPORTED_MODULE_2__.createFormChoicesStore.getItems();
+            this.choices = _store__WEBPACK_IMPORTED_MODULE_2__.createFormChoicesStore.getItems();
           }
         }
       }
@@ -3838,7 +3838,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       });
     },
     handleItemsChanged: function handleItemsChanged() {
-      this.choices = _stores__WEBPACK_IMPORTED_MODULE_2__.createFormChoicesStore.getItems();
+      this.choices = _store__WEBPACK_IMPORTED_MODULE_2__.createFormChoicesStore.getItems();
     }
   },
   mounted: function mounted() {
@@ -3846,7 +3846,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
     if (this.$props['obj']) {
       this.choices = _toConsumableArray(this.$props['obj'].choices);
-      _stores__WEBPACK_IMPORTED_MODULE_2__.createFormChoicesStore.setItems(_toConsumableArray(this.$props['obj'].choices));
+      _store__WEBPACK_IMPORTED_MODULE_2__.createFormChoicesStore.setItems(_toConsumableArray(this.$props['obj'].choices));
       this.$nextTick(function () {
         _this2.tryDataLoad = true;
       });
@@ -4087,8 +4087,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _components_Modals_CreateForm_ItemModal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/Modals/CreateForm/ItemModal */ "./resources/js/components/Modals/CreateForm/ItemModal.vue");
 /* harmony import */ var _components_FormElementControl__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/FormElementControl */ "./resources/js/components/FormElementControl.vue");
-/* harmony import */ var _components_Modals_CreateForm_stores__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/Modals/CreateForm/stores */ "./resources/js/components/Modals/CreateForm/stores.js");
-/* harmony import */ var _apis_Form__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../apis/Form */ "./resources/js/apis/Form.js");
+/* harmony import */ var _apis_Form__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../apis/Form */ "./resources/js/apis/Form.js");
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../store */ "./resources/js/store/index.js");
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -4185,7 +4185,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _this = this;
 
       this.$modal.hideAll();
-      _components_Modals_CreateForm_stores__WEBPACK_IMPORTED_MODULE_3__.createFormChoicesStore.clearStore();
+      _store__WEBPACK_IMPORTED_MODULE_4__.createFormChoicesStore.clearStore();
       this.$modal.show(_components_Modals_CreateForm_ItemModal__WEBPACK_IMPORTED_MODULE_1__["default"], {
         purpose: "add"
       }, {
@@ -4199,7 +4199,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       });
     },
     handleItemsChanged: function handleItemsChanged() {
-      this.form.items = _components_Modals_CreateForm_stores__WEBPACK_IMPORTED_MODULE_3__.createFormStore.getItems();
+      this.form.items = _store__WEBPACK_IMPORTED_MODULE_4__.createFormStore.getItems();
     },
     submitCreateForm: function submitCreateForm() {
       var _this2 = this;
@@ -4258,12 +4258,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 }
 
                 _context.next = 17;
-                return _apis_Form__WEBPACK_IMPORTED_MODULE_4__["default"].postCreateForm(_this2.form).then(function () {
+                return _apis_Form__WEBPACK_IMPORTED_MODULE_3__["default"].postCreateForm(_this2.form).then(function () {
                   alert("Form creation was successful.");
 
                   _this2.$router.push("/");
 
-                  _components_Modals_CreateForm_stores__WEBPACK_IMPORTED_MODULE_3__.createFormStore.clearStore();
+                  _store__WEBPACK_IMPORTED_MODULE_4__.createFormStore.clearStore();
                   _this2.choices = [];
                   _this2.loading = false;
                 });
@@ -5652,107 +5652,6 @@ var FormElementDefaultProps = ["label", "obj", "isMandatory"];
 
 /***/ }),
 
-/***/ "./resources/js/components/Modals/CreateForm/stores.js":
-/*!*************************************************************!*\
-  !*** ./resources/js/components/Modals/CreateForm/stores.js ***!
-  \*************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "createFormStore": () => (/* binding */ createFormStore),
-/* harmony export */   "createFormChoicesStore": () => (/* binding */ createFormChoicesStore)
-/* harmony export */ });
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-var MyStore = function MyStore() {
-  var _this = this;
-
-  _classCallCheck(this, MyStore);
-
-  _defineProperty(this, "data", {});
-
-  _defineProperty(this, "getItems", function () {
-    return _this.data.items;
-  });
-
-  _defineProperty(this, "addItem", function (item) {
-    _this.data.items = [].concat(_toConsumableArray(_this.data.items), [item]);
-
-    _this.refreshItemsOrder();
-  });
-
-  _defineProperty(this, "refreshItemsOrder", function () {
-    var i = 0;
-    _this.data.items = _this.data.items.map(function (x) {
-      var obj = x;
-      obj.order = i++;
-      return obj;
-    });
-  });
-
-  _defineProperty(this, "sortItemsByOrder", function () {
-    _this.data.items = _this.data.items.sort(function (a, b) {
-      if (a.order < b.order) {
-        return -1;
-      }
-
-      if (a.order > b.order) {
-        return 1;
-      }
-
-      return 0;
-    });
-  });
-
-  _defineProperty(this, "changeItem", function (item) {
-    _this.data.items = _this.data.items.filter(function (x) {
-      return x.id !== item.id;
-    });
-    _this.data.items = [].concat(_toConsumableArray(_this.data.items), [item]);
-
-    _this.sortItemsByOrder();
-  });
-
-  _defineProperty(this, "deleteItem", function (item) {
-    _this.data.items = _this.data.items.filter(function (x) {
-      return x.id !== item.id;
-    });
-
-    _this.refreshItemsOrder();
-  });
-
-  _defineProperty(this, "clearStore", function () {
-    _this.data.items = [];
-  });
-
-  _defineProperty(this, "setItems", function (item) {
-    _this.data.items = items;
-  });
-
-  this.data.items = [];
-};
-
-var createFormStore = new MyStore();
-var createFormChoicesStore = new MyStore();
-
-/***/ }),
-
 /***/ "./resources/js/router/index.js":
 /*!**************************************!*\
   !*** ./resources/js/router/index.js ***!
@@ -5870,6 +5769,105 @@ router.beforeEach(function (to, from, next) {
 
 /***/ }),
 
+/***/ "./resources/js/store/MyStoreClass.js":
+/*!********************************************!*\
+  !*** ./resources/js/store/MyStoreClass.js ***!
+  \********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ MyStore)
+/* harmony export */ });
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var MyStore = function MyStore() {
+  var _this = this;
+
+  _classCallCheck(this, MyStore);
+
+  _defineProperty(this, "data", {});
+
+  _defineProperty(this, "getItems", function () {
+    return _this.data.items;
+  });
+
+  _defineProperty(this, "addItem", function (item) {
+    _this.data.items = [].concat(_toConsumableArray(_this.data.items), [item]);
+
+    _this.refreshItemsOrder();
+  });
+
+  _defineProperty(this, "refreshItemsOrder", function () {
+    var i = 0;
+    _this.data.items = _this.data.items.map(function (x) {
+      var obj = x;
+      obj.order = i++;
+      return obj;
+    });
+  });
+
+  _defineProperty(this, "sortItemsByOrder", function () {
+    _this.data.items = _this.data.items.sort(function (a, b) {
+      if (a.order < b.order) {
+        return -1;
+      }
+
+      if (a.order > b.order) {
+        return 1;
+      }
+
+      return 0;
+    });
+  });
+
+  _defineProperty(this, "changeItem", function (item) {
+    _this.data.items = _this.data.items.filter(function (x) {
+      return x.id !== item.id;
+    });
+    _this.data.items = [].concat(_toConsumableArray(_this.data.items), [item]);
+
+    _this.sortItemsByOrder();
+  });
+
+  _defineProperty(this, "deleteItem", function (item) {
+    _this.data.items = _this.data.items.filter(function (x) {
+      return x.id !== item.id;
+    });
+
+    _this.refreshItemsOrder();
+  });
+
+  _defineProperty(this, "clearStore", function () {
+    _this.data.items = [];
+  });
+
+  _defineProperty(this, "setItems", function (items) {
+    _this.data.items = items;
+  });
+
+  this.data.items = [];
+};
+
+
+
+/***/ }),
+
 /***/ "./resources/js/store/index.js":
 /*!*************************************!*\
   !*** ./resources/js/store/index.js ***!
@@ -5879,16 +5877,21 @@ router.beforeEach(function (to, from, next) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
+/* harmony export */   "createFormStore": () => (/* binding */ createFormStore),
+/* harmony export */   "createFormChoicesStore": () => (/* binding */ createFormChoicesStore)
 /* harmony export */ });
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
-/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
-/* harmony import */ var vuex_persist__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vuex-persist */ "./node_modules/vuex-persist/dist/esm/index.js");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var vuex_persist__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vuex-persist */ "./node_modules/vuex-persist/dist/esm/index.js");
+/* harmony import */ var _MyStoreClass__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./MyStoreClass */ "./resources/js/store/MyStoreClass.js");
 
 
 
-vue__WEBPACK_IMPORTED_MODULE_0__["default"].use(vuex__WEBPACK_IMPORTED_MODULE_1__["default"]);
-var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
+ //store for auth
+
+vue__WEBPACK_IMPORTED_MODULE_1__["default"].use(vuex__WEBPACK_IMPORTED_MODULE_2__["default"]);
+var store = new vuex__WEBPACK_IMPORTED_MODULE_2__["default"].Store({
   state: {
     authenticated: false,
     user: null
@@ -5925,9 +5928,12 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
       commit('SET_USER', user);
     }
   },
-  plugins: [new vuex_persist__WEBPACK_IMPORTED_MODULE_2__["default"]().plugin]
+  plugins: [new vuex_persist__WEBPACK_IMPORTED_MODULE_3__["default"]().plugin]
 });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (store);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (store); //store for create form page
+
+var createFormStore = new _MyStoreClass__WEBPACK_IMPORTED_MODULE_0__["default"]();
+var createFormChoicesStore = new _MyStoreClass__WEBPACK_IMPORTED_MODULE_0__["default"]();
 
 /***/ }),
 

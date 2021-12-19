@@ -8,7 +8,7 @@
 <script>
 import SelectChoiceItem from "./SelectChoiceItem";
 import SelectChoiceModal from "./SelectChoiceModal";
-import {createFormChoicesStore} from "./stores";
+import {createFormChoicesStore} from "../../../store";
 
 
 export default {

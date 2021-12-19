@@ -1,4 +1,4 @@
-class MyStore {
+export default class MyStore {
     data = {};
 
     constructor() {
@@ -43,12 +43,8 @@ class MyStore {
     clearStore = () => {
         this.data.items = []
     }
-    setItems = (item) => {
+    setItems = (items) => {
         this.data.items = items
     }
 }
-
-export const createFormStore = new MyStore();
-export const createFormChoicesStore = new MyStore();
-
 
