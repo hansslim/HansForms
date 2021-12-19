@@ -13,7 +13,7 @@
                     <h4 v-else>Waiting for publication.</h4>
 
                     <p>Public link:
-                        <router-link :to="/form/+getSlug()">{{ publicLink }}</router-link>
+                        <router-link :to="/form/+getSlug()">{{ this.publicLink }}</router-link>
                     </p>
                     <div class="d-flex justify-content-center">
                         <FormulateInput
@@ -73,6 +73,9 @@
 <script>
 import Form from "../apis/Form";
 import FormElement from "../components/FormElement";
+import ItemModal from "../components/Modals/CreateForm/ItemModal";
+import FormDuplicationModal from "../components/Modals/FormReview/FormDuplicationModal";
+import {duplicateFormStore} from "../store";
 
 export default {
     name: "FormPreview",
@@ -87,16 +90,17 @@ export default {
             loading: true,
             errored: false,
             errorText: "Bad Request",
-            dataFetched: false
+            dataFetched: false,
+            publicLink: "#"
         }
     },
     async mounted() {
+        this.publicLink = `${window.location}`.replace('/preview', '');
         this.slug = this.getSlug();
         await this.getThisForm().then(() => {
             try {
                 if (this.dataFetched) {
                     this.sortElements();
-
                     this.loading = false;
                 }
             } catch (error) {
@@ -161,30 +165,51 @@ export default {
                 });
             }
         },
-        async handleDuplicate() {
-            if (confirm("Are you sure that you want to duplicate this form?")){
+        async handleDuplicateModalData() {
+            if (!duplicateFormStore.isStoreEmpty()) {
                 this.loading = true;
-                await Form.postDuplicateForm(this.getSlug()).then((res) => {
+                await Form.postDuplicateForm({
+                    slug: this.getSlug(),
+                    ...duplicateFormStore.getData()
+                }).then((res) => {
                     if (res.status === 200) {
-                        this.$router.push("/");
-                        this.loading = false;
-                    }
-                    else throw new Error(res.data.toString());
+                        if (res.headers.duplicatedformslug) {
+                            window.location =
+                                `${window.location}`.replace(new RegExp('/preview.*'), '') +
+                                "/preview/" + res.headers.duplicatedformslug;
+                        } else {
+                            this.$router.push('/');
+                        }
+                        //not used because of redirection
+                        //this.loading = false;
+                    } else throw new Error(res.data.toString());
                 }).catch((error) => {
                     alert("Form duplication was not successful.")
+                    this.loading = false;
                 })
             }
+            duplicateFormStore.clearData();
+        },
+        handleDuplicate() {
+            this.$modal.show(
+                FormDuplicationModal,
+                {
+                    obj: {
+                        name: this.form.name,
+                        description: this.form.description,
+                        start_time: this.form.start_time,
+                        end_time: this.form.end_time,
+                    }
+                },
+                {height: 'auto', width: '60%', scrollable: true},
+                {'before-close': event => this.handleDuplicateModalData()}
+            )
         },
         handleUpdate() {
         },
         handleResults() {
         }
     },
-    computed: {
-        publicLink() {
-            return `${window.location}`.replace('/preview', '');
-        }
-    }
 }
 </script>
 

@@ -13,16 +13,20 @@ use App\Models\SelectInputChoice;
 use App\Models\TextInput;
 use DateTime;
 use Exception;
-use http\Env\Response;
 use Illuminate\Http\Request;
 use App\Models\Form;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Ramsey\Uuid\Uuid;
-use function MongoDB\BSON\toJSON;
 
 class FormController extends Controller
 {
+    public function validateDate($date, $format = 'Y-m-d H:i:s')
+    {
+        $d = DateTime::createFromFormat($format, $date);
+        return $d && $d->format($format) == $date;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -52,7 +56,6 @@ class FormController extends Controller
 
         $formProps['start_time'] = null;
         $formProps['end_time'] = null;
-
         function validateDate($date, $format = 'Y-m-d H:i:s')
         {
             $d = DateTime::createFromFormat($format, $date);
@@ -494,24 +497,71 @@ class FormController extends Controller
         } else return response('Not Found', 404);
     }
 
-    public function duplicateWithAuth($slug) {
+    public function duplicateWithAuth(Request $request)
+    {
+        function validateDate($date, $format = 'Y-m-d H:i:s')
+        {
+            $d = DateTime::createFromFormat($format, $date);
+            return $d && $d->format($format) == $date;
+        }
+
         $userId = Auth::user()->id;
         if (!$userId) return response("Unauthorized.", 401);
 
-        $form = Form::where(['slug' => $slug, 'user_id' => $userId])->first();
-        if (!$form) return response("Not found.", 404);
+        $form = null;
 
+        if (array_key_exists('slug', $request->all())) {
+            if ($request->all()['slug']) {
+                $slug = strval($request->all()['slug']);
+                $form = Form::where(['slug' => $slug, 'user_id' => $userId])->first();
+                if (!$form) return response("Not found.", 404);
+            } else return response("Missing slug", 400);
+        } else return response("Missing slug", 400);
+
+        $formProps = ['name' => "", 'description' => "", "start_time" => "", "end_time" => ""];
+
+        if (array_key_exists('name', $request->all())) {
+            if ($request->all()['name']) $formProps['name'] = strval($request->all()['name']);
+        } else return response("Missing form name", 400);
+
+        if (array_key_exists('description', $request->all())) {
+            if ($request->all()['description']) $formProps['description'] = strval($request->all()['description']);
+        }
+
+        if (array_key_exists('start_time', $request->all()) && array_key_exists('end_time', $request->all())) {
+            $startDate = date('Y-m-d H:i:s', strtotime(str_replace("T", " ", $request->all()['start_time'])));
+            $endDate = date('Y-m-d H:i:s', strtotime(str_replace("T", " ", $request->all()['end_time'])));
+            if (validateDate($startDate) && validateDate($endDate)) {
+                if (new DateTime($request->all()['start_time']) < new DateTime($request->all()['end_time'])) {
+                    $currentTime = time();
+                    $formEndTime = strtotime($endDate);
+                    if ($currentTime > $formEndTime) {
+                        return response("Invalid data (creating expired form is not allowed).", 400);
+                    }
+
+                    $formProps['start_time'] = new DateTime($request->all()['start_time']);
+                    $formProps['end_time'] = new DateTime($request->all()['end_time']);
+                } else return response("Invalid data (start is higher than end).", 400);
+            } else {
+                return response("Invalid data (invalid start/end date) 2.", 400);
+            }
+        } else return response("Invalid data (missing start/end date) 1.", 400);
+
+        $formSlug = Uuid::uuid4()->toString();
         try {
-            DB::transaction(function () use ($form, $userId) {
-                $formSlug = Uuid::uuid4()->toString();
+            DB::transaction(function () use ($form, $userId, $formProps, $formSlug) {
                 $newForm = Form::create([
                     'user_id' => $userId,
                     'slug' => $formSlug, //new one!
-                    'name' => $formSlug, //$form->name,
-                    'description' => $form->description,
-                    'start_time' => $form->start_time, //todo
-                    'end_time' => $form->end_time, //todo
-                    'has_private_token' => $form->has_private_token,
+
+                    //inserted by user
+                    'name' => $formProps['name'],
+                    'description' => $formProps['description'],
+                    'start_time' => $formProps['start_time'],
+                    'end_time' => $formProps['end_time'],
+                    //****************
+
+                    'has_private_token' => false,
                 ]);
 
                 foreach ($form->formElements as $item) {
@@ -533,29 +583,25 @@ class FormController extends Controller
                                 'max' => $item->inputElement->dateInput->max,
                                 'input_element_id' => $newInputElement->id
                             ]);
-                        }
-                        else if ($item->inputElement->textInput) {
+                        } else if ($item->inputElement->textInput) {
                             TextInput::create([
                                 'min_length' => $item->inputElement->textInput->min_length,
                                 'max_length' => $item->inputElement->textInput->max_length,
                                 'strict_length' => $item->inputElement->textInput->strict_length,
                                 'input_element_id' => $newInputElement->id
                             ]);
-                        }
-                        else if ($item->inputElement->numberInput) {
+                        } else if ($item->inputElement->numberInput) {
                             NumberInput::create([
                                 'min' => $item->inputElement->numberInput->min,
                                 'max' => $item->inputElement->numberInput->max,
                                 'can_be_decimal' => $item->inputElement->numberInput->can_be_decimal,
                                 'input_element_id' => $newInputElement->id
                             ]);
-                        }
-                        else if ($item->inputElement->booleanInput) {
+                        } else if ($item->inputElement->booleanInput) {
                             BooleanInput::create([
                                 'input_element_id' => $newInputElement->id
                             ]);
-                        }
-                        else if ($item->inputElement->selectInput) {
+                        } else if ($item->inputElement->selectInput) {
                             $newSelectInput = SelectInput::create([
                                 'is_multiselect' => $item->inputElement->selectInput->is_multiselect,
                                 'min_amount_of_answers' => $item->inputElement->selectInput->min_amount_of_answers,
@@ -574,8 +620,7 @@ class FormController extends Controller
 
                             }
                         }
-                    }
-                    else {
+                    } else {
                         NewPage::create([
                             'form_element_id' => $newFormElement->id
                         ]);
@@ -588,10 +633,12 @@ class FormController extends Controller
             dd($exception);
             //return response("{$exception->getMessage()}", 500);
         }
-        return response("Form has been duplicated successfully.", 200);
+
+        return response("Form has been duplicated successfully.", 200)->header('DuplicatedFormSlug', $formSlug);
     }
 
-    public function showWithAuth($slug) {
+    public function showWithAuth($slug)
+    {
         if (Auth::user()) {
             $userId = Auth::user()->id;
             $form = Form::where('slug', $slug)->first();
@@ -613,10 +660,8 @@ class FormController extends Controller
                 else $form->is_opened = false;
 
                 return $form;
-            }
-            else return response('Not Found', 404);
-        }
-        else {
+            } else return response('Not Found', 404);
+        } else {
             return response("Unauthorized - log in to show your forms...", 401);
         }
     }

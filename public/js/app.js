@@ -4040,6 +4040,110 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Modals/FormReview/FormDuplicationModal.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Modals/FormReview/FormDuplicationModal.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../store */ "./resources/js/store/index.js");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  name: "FormDuplicationModal",
+  props: ['obj'],
+  data: function data() {
+    return {
+      name: "",
+      description: "",
+      start_time: "",
+      end_time: ""
+    };
+  },
+  methods: {
+    handleFormSubmit: function handleFormSubmit() {
+      _store__WEBPACK_IMPORTED_MODULE_0__.duplicateFormStore.setData({
+        name: this.name,
+        description: this.description,
+        start_time: this.start_time,
+        end_time: this.end_time
+      });
+      var error = _store__WEBPACK_IMPORTED_MODULE_0__.duplicateFormStore.validateData();
+
+      if (error) {
+        this.trivialFormulateErrorHandler(error);
+      } else this.$modal.hide(this.$parent.name);
+    },
+    trivialFormulateErrorHandler: function trivialFormulateErrorHandler() {
+      var error = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+      if (error) {
+        this.$formulate.handle({
+          formErrors: [error.toString()]
+        }, 'duplModalForm');
+      } else {
+        this.$formulate.handle({
+          formErrors: []
+        }, 'duplModalForm');
+      }
+    }
+  },
+  mounted: function mounted() {
+    if (this.$props['obj']) {
+      this.name = this.$props['obj'].name;
+      this.description = this.$props['obj'].description;
+      this.start_time = this.$props['obj'].start_time.replace(" ", "T");
+      this.end_time = this.$props['obj'].end_time.replace(" ", "T");
+    } else console.log("error - empty obj");
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/views/CreateForm.vue?vue&type=script&lang=js&":
 /*!************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/views/CreateForm.vue?vue&type=script&lang=js& ***!
@@ -4501,6 +4605,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _apis_Form__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../apis/Form */ "./resources/js/apis/Form.js");
 /* harmony import */ var _components_FormElement__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/FormElement */ "./resources/js/components/FormElement.vue");
+/* harmony import */ var _components_Modals_CreateForm_ItemModal__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/Modals/CreateForm/ItemModal */ "./resources/js/components/Modals/CreateForm/ItemModal.vue");
+/* harmony import */ var _components_Modals_FormReview_FormDuplicationModal__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/Modals/FormReview/FormDuplicationModal */ "./resources/js/components/Modals/FormReview/FormDuplicationModal.vue");
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../store */ "./resources/js/store/index.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -4581,6 +4694,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 
 
+
+
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "FormPreview",
   components: {
@@ -4594,7 +4710,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       loading: true,
       errored: false,
       errorText: "Bad Request",
-      dataFetched: false
+      dataFetched: false,
+      publicLink: "#"
     };
   },
   mounted: function mounted() {
@@ -4605,8 +4722,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
+              _this.publicLink = "".concat(window.location).replace('/preview', '');
               _this.slug = _this.getSlug();
-              _context.next = 3;
+              _context.next = 4;
               return _this.getThisForm().then(function () {
                 try {
                   if (_this.dataFetched) {
@@ -4623,7 +4741,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 }
               });
 
-            case 3:
+            case 4:
             case "end":
               return _context.stop();
           }
@@ -4728,7 +4846,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee3);
       }))();
     },
-    handleDuplicate: function handleDuplicate() {
+    handleDuplicateModalData: function handleDuplicateModalData() {
       var _this4 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4() {
@@ -4736,24 +4854,34 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
-                if (!confirm("Are you sure that you want to duplicate this form?")) {
+                if (_store__WEBPACK_IMPORTED_MODULE_5__.duplicateFormStore.isStoreEmpty()) {
                   _context4.next = 4;
                   break;
                 }
 
                 _this4.loading = true;
                 _context4.next = 4;
-                return _apis_Form__WEBPACK_IMPORTED_MODULE_1__["default"].postDuplicateForm(_this4.getSlug()).then(function (res) {
+                return _apis_Form__WEBPACK_IMPORTED_MODULE_1__["default"].postDuplicateForm(_objectSpread({
+                  slug: _this4.getSlug()
+                }, _store__WEBPACK_IMPORTED_MODULE_5__.duplicateFormStore.getData())).then(function (res) {
                   if (res.status === 200) {
-                    _this4.$router.push("/");
+                    if (res.headers.duplicatedformslug) {
+                      window.location = "".concat(window.location).replace(new RegExp('/preview.*'), '') + "/preview/" + res.headers.duplicatedformslug;
+                    } else {
+                      _this4.$router.push('/');
+                    } //not used because of redirection
+                    //this.loading = false;
 
-                    _this4.loading = false;
                   } else throw new Error(res.data.toString());
                 })["catch"](function (error) {
                   alert("Form duplication was not successful.");
+                  _this4.loading = false;
                 });
 
               case 4:
+                _store__WEBPACK_IMPORTED_MODULE_5__.duplicateFormStore.clearData();
+
+              case 5:
               case "end":
                 return _context4.stop();
             }
@@ -4761,13 +4889,28 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee4);
       }))();
     },
+    handleDuplicate: function handleDuplicate() {
+      var _this5 = this;
+
+      this.$modal.show(_components_Modals_FormReview_FormDuplicationModal__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        obj: {
+          name: this.form.name,
+          description: this.form.description,
+          start_time: this.form.start_time,
+          end_time: this.form.end_time
+        }
+      }, {
+        height: 'auto',
+        width: '60%',
+        scrollable: true
+      }, {
+        'before-close': function beforeClose(event) {
+          return _this5.handleDuplicateModalData();
+        }
+      });
+    },
     handleUpdate: function handleUpdate() {},
     handleResults: function handleResults() {}
-  },
-  computed: {
-    publicLink: function publicLink() {
-      return "".concat(window.location).replace('/preview', '');
-    }
   }
 });
 
@@ -5461,13 +5604,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }, _callee6);
     }))();
   },
-  postDuplicateForm: function postDuplicateForm(slug) {
+  postDuplicateForm: function postDuplicateForm(props) {
     return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee7() {
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee7$(_context7) {
         while (1) {
           switch (_context7.prev = _context7.next) {
             case 0:
-              return _context7.abrupt("return", _Api__WEBPACK_IMPORTED_MODULE_1__["default"].post('/form/duplicate/' + slug));
+              return _context7.abrupt("return", _Api__WEBPACK_IMPORTED_MODULE_1__["default"].post('/form/duplicate/', props));
 
             case 1:
             case "end":
@@ -5901,7 +6044,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
 /* harmony export */   "createFormStore": () => (/* binding */ createFormStore),
-/* harmony export */   "createFormChoicesStore": () => (/* binding */ createFormChoicesStore)
+/* harmony export */   "createFormChoicesStore": () => (/* binding */ createFormChoicesStore),
+/* harmony export */   "duplicateFormStore": () => (/* binding */ duplicateFormStore)
 /* harmony export */ });
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
@@ -5955,7 +6099,52 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_2__["default"].Store({
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (store); //store for create form page
 
 var createFormStore = new _MyStoreClass__WEBPACK_IMPORTED_MODULE_0__["default"]();
-var createFormChoicesStore = new _MyStoreClass__WEBPACK_IMPORTED_MODULE_0__["default"]();
+var createFormChoicesStore = new _MyStoreClass__WEBPACK_IMPORTED_MODULE_0__["default"](); //store for duplicate form modal
+
+var duplicateFormStore = {
+  name: "",
+  description: "",
+  start_time: "",
+  end_time: "",
+  setData: function setData(obj) {
+    if (obj) {
+      this.name = obj.name;
+      this.description = obj.description;
+      this.start_time = obj.start_time;
+      this.end_time = obj.end_time;
+    }
+  },
+  getData: function getData() {
+    return {
+      name: this.name,
+      description: this.description,
+      start_time: this.start_time,
+      end_time: this.end_time
+    };
+  },
+  validateData: function validateData() {
+    if (!this.name) return "Missing form name";
+    var min = new Date(this.start_time);
+    var max = new Date(this.end_time);
+    if (!(min instanceof Date && !isNaN(min.valueOf()))) return "Invalid minimal date";
+    if (!(max instanceof Date && !isNaN(max.valueOf()))) return "Invalid maximal date";
+
+    if (min.getTime() && max.getTime()) {
+      if (parseInt(max.getTime()) <= parseInt(min.getTime())) return "Maximal date is lower than minimal date";
+    } else return "Invalid date values";
+
+    return false;
+  },
+  clearData: function clearData() {
+    this.name = "";
+    this.description = "";
+    this.start_time = "";
+    this.end_time = "";
+  },
+  isStoreEmpty: function isStoreEmpty() {
+    if (this.name === "" && this.description === "" && this.start_time === "" && this.end_time === "") return true;else return false;
+  }
+};
 
 /***/ }),
 
@@ -43694,6 +43883,45 @@ component.options.__file = "resources/js/components/Modals/CreateForm/TextItem.v
 
 /***/ }),
 
+/***/ "./resources/js/components/Modals/FormReview/FormDuplicationModal.vue":
+/*!****************************************************************************!*\
+  !*** ./resources/js/components/Modals/FormReview/FormDuplicationModal.vue ***!
+  \****************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _FormDuplicationModal_vue_vue_type_template_id_3454ccf8_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./FormDuplicationModal.vue?vue&type=template&id=3454ccf8&scoped=true& */ "./resources/js/components/Modals/FormReview/FormDuplicationModal.vue?vue&type=template&id=3454ccf8&scoped=true&");
+/* harmony import */ var _FormDuplicationModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./FormDuplicationModal.vue?vue&type=script&lang=js& */ "./resources/js/components/Modals/FormReview/FormDuplicationModal.vue?vue&type=script&lang=js&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _FormDuplicationModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _FormDuplicationModal_vue_vue_type_template_id_3454ccf8_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render,
+  _FormDuplicationModal_vue_vue_type_template_id_3454ccf8_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  "3454ccf8",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/Modals/FormReview/FormDuplicationModal.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
 /***/ "./resources/js/views/About.vue":
 /*!**************************************!*\
   !*** ./resources/js/views/About.vue ***!
@@ -44335,6 +44563,22 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/Modals/FormReview/FormDuplicationModal.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************************************!*\
+  !*** ./resources/js/components/Modals/FormReview/FormDuplicationModal.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_FormDuplicationModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./FormDuplicationModal.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Modals/FormReview/FormDuplicationModal.vue?vue&type=script&lang=js&");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_FormDuplicationModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
 /***/ "./resources/js/views/CreateForm.vue?vue&type=script&lang=js&":
 /*!********************************************************************!*\
   !*** ./resources/js/views/CreateForm.vue?vue&type=script&lang=js& ***!
@@ -44804,6 +45048,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TextItem_vue_vue_type_template_id_1513b6b1_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TextItem_vue_vue_type_template_id_1513b6b1_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./TextItem.vue?vue&type=template&id=1513b6b1&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Modals/CreateForm/TextItem.vue?vue&type=template&id=1513b6b1&scoped=true&");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/Modals/FormReview/FormDuplicationModal.vue?vue&type=template&id=3454ccf8&scoped=true&":
+/*!***********************************************************************************************************************!*\
+  !*** ./resources/js/components/Modals/FormReview/FormDuplicationModal.vue?vue&type=template&id=3454ccf8&scoped=true& ***!
+  \***********************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_FormDuplicationModal_vue_vue_type_template_id_3454ccf8_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_FormDuplicationModal_vue_vue_type_template_id_3454ccf8_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_FormDuplicationModal_vue_vue_type_template_id_3454ccf8_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./FormDuplicationModal.vue?vue&type=template&id=3454ccf8&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Modals/FormReview/FormDuplicationModal.vue?vue&type=template&id=3454ccf8&scoped=true&");
 
 
 /***/ }),
@@ -46334,6 +46595,110 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Modals/FormReview/FormDuplicationModal.vue?vue&type=template&id=3454ccf8&scoped=true&":
+/*!**************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Modals/FormReview/FormDuplicationModal.vue?vue&type=template&id=3454ccf8&scoped=true& ***!
+  \**************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render),
+/* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "container" },
+    [
+      _c(
+        "FormulateForm",
+        {
+          attrs: { name: "duplModalForm" },
+          on: { submit: _vm.handleFormSubmit }
+        },
+        [
+          _c("h2", [_vm._v("Duplicate form...")]),
+          _vm._v(" "),
+          _c("FormulateInput", {
+            attrs: {
+              type: "text",
+              label: "Form header",
+              validation: [["required"]]
+            },
+            model: {
+              value: _vm.name,
+              callback: function($$v) {
+                _vm.name = $$v
+              },
+              expression: "name"
+            }
+          }),
+          _vm._v(" "),
+          _c("FormulateInput", {
+            attrs: { label: "Form description", type: "textarea" },
+            model: {
+              value: _vm.description,
+              callback: function($$v) {
+                _vm.description = $$v
+              },
+              expression: "description"
+            }
+          }),
+          _vm._v(" "),
+          _c("hr"),
+          _vm._v(" "),
+          _c("FormulateInput", {
+            attrs: {
+              label: "Form publication start time",
+              type: "datetime-local",
+              validation: [["required"]]
+            },
+            model: {
+              value: _vm.start_time,
+              callback: function($$v) {
+                _vm.start_time = $$v
+              },
+              expression: "start_time"
+            }
+          }),
+          _vm._v(" "),
+          _c("FormulateInput", {
+            attrs: {
+              label: "Form publication end time",
+              type: "datetime-local",
+              validation: [["required"]]
+            },
+            model: {
+              value: _vm.end_time,
+              callback: function($$v) {
+                _vm.end_time = $$v
+              },
+              expression: "end_time"
+            }
+          }),
+          _vm._v(" "),
+          _c("FormulateErrors"),
+          _vm._v(" "),
+          _c("FormulateInput", { attrs: { type: "submit", name: "Duplicate" } })
+        ],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/views/About.vue?vue&type=template&id=2995bb7e&":
 /*!************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/views/About.vue?vue&type=template&id=2995bb7e& ***!
@@ -46651,7 +47016,7 @@ var render = function() {
                 [
                   _vm._v("Public link:\n                    "),
                   _c("router-link", { attrs: { to: /form/ + _vm.getSlug() } }, [
-                    _vm._v(_vm._s(_vm.publicLink))
+                    _vm._v(_vm._s(this.publicLink))
                   ])
                 ],
                 1
