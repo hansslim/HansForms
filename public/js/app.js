@@ -2697,7 +2697,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _apis_Form__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../apis/Form */ "./resources/js/apis/Form.js");
 //
 //
 //
@@ -2709,22 +2708,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "FormPreview",
   props: ['obj'],
@@ -2732,21 +2715,6 @@ __webpack_require__.r(__webpack_exports__);
     formLink: function formLink() {
       return "/form/preview/" + this.$props['obj'].slug;
     }
-  },
-  methods: {
-    /*handleDelete() {
-        this.$emit('itemsChanged', 'loadingOn')
-        if (confirm("Are you sure that you want to delete this form?")) {
-            Form.deleteForm(this.$props['obj'].slug);
-            this.$emit('itemsChanged', 'itemsUpdated')
-        }
-        else this.$emit('itemsChanged', 'loadingOff')
-    },
-    handleUpdate() {
-     }*/
-  },
-  mounted: function mounted() {
-    console.log(this.$props['obj']);
   }
 });
 
@@ -4604,6 +4572,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -4619,7 +4589,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       updateButtonVisibility: false,
       loading: true,
       errored: false,
-      errorText: "Bad Request (400)",
+      errorText: "Bad Request",
       dataFetched: false
     };
   },
@@ -4664,40 +4634,34 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _this2 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
+        var errorCode;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                _context2.next = 2;
-                return _apis_Form__WEBPACK_IMPORTED_MODULE_1__["default"].getSpecificFormWithAuth(_this2.slug).then(function (response) {
-                  if (response && response.data) {
-                    if (response.data.error) throw new Error(response.data.error);else {
-                      _this2.form = response.data;
-                      _this2.dataFetched = true;
-                    }
-                  } else throw new Error();
+                errorCode = -1;
+                _context2.next = 3;
+                return _apis_Form__WEBPACK_IMPORTED_MODULE_1__["default"].getSpecificFormWithAuth(_this2.slug).then(function (res) {
+                  if (res.status === 200) {
+                    _this2.form = res.data;
+                    _this2.dataFetched = true;
+                  } else {
+                    console.log(res.status);
+                    errorCode = res.status;
+                    throw new Error();
+                  }
                 })["catch"](function (error) {
-                  console.log(error.message);
                   _this2.errored = true;
 
-                  switch (error.message) {
-                    case '401':
+                  switch (errorCode) {
+                    case 401:
                       _this2.errorText = "Requested form doesn't belong to your account!";
                       break;
 
-                    case '404':
+                    case 404:
                       _this2.errorText = "Requested form was not found.";
                       break;
 
-                    /*case '410':
-                        this.errorText = "Requested form is expired. You cannot answer this form anymore!";
-                        break;*/
-                    //???
-
-                    /*case '410':
-                        this.errorText = "Requested form is expired. You cannot answer this form anymore!";
-                        break;*/
-                    //???
                     default:
                       _this2.errorText = "Unhandled error - ".concat(error);
                       break;
@@ -4707,7 +4671,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   _this2.dataFetched = false;
                 });
 
-              case 2:
+              case 3:
               case "end":
                 return _context2.stop();
             }
@@ -4824,8 +4788,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -4872,7 +4834,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   methods: {
     isFormsObjectEmpty: function isFormsObjectEmpty() {
-      if (Object.keys(this.forms).length === 0) this.notEmpty = true;else this.notEmpty = false;
+      this.notEmpty = Object.keys(this.forms).length === 0;
     },
     getForms: function getForms() {
       var _this2 = this;
@@ -4884,7 +4846,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context2.prev = _context2.next) {
               case 0:
                 if (!_this2.$store.getters['authenticated']) {
-                  _context2.next = 11;
+                  _context2.next = 15;
                   break;
                 }
 
@@ -4895,54 +4857,35 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 4:
                 getForms = _context2.sent;
 
-                if (getForms) {
-                  _this2.forms = getForms.data;
+                if (!(getForms && getForms.status === 200)) {
+                  _context2.next = 9;
+                  break;
                 }
 
-                _context2.next = 11;
+                _this2.forms = getForms.data;
+                _context2.next = 10;
                 break;
 
-              case 8:
-                _context2.prev = 8;
+              case 9:
+                throw new Error(getForms.status.toString());
+
+              case 10:
+                _context2.next = 15;
+                break;
+
+              case 12:
+                _context2.prev = 12;
                 _context2.t0 = _context2["catch"](1);
                 console.log(_context2.t0);
 
-              case 11:
+              case 15:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2, null, [[1, 8]]);
+        }, _callee2, null, [[1, 12]]);
       }))();
     }
-    /*async handleItemsChanged(arg) {
-        switch (arg)
-        {
-            case "loadingOn": {
-                //console.log("loadingOn")
-                this.loading = true;
-                break;
-            }
-            case "loadingOff": {
-                //console.log("loadingOff")
-                this.loading = false;
-                break;
-            }
-            case "itemsUpdated": {
-                //console.log("itemsUpdated")
-                await this.getForms().then(() => {
-                    this.isFormsObjectEmpty();
-                    this.loading = false;
-                })
-                break;
-            }
-            default: {
-                console.log("unhandled purpose");
-                break;
-            }
-        }
-      },*/
-
   }
 });
 
@@ -5021,24 +4964,37 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 3:
                 response = _context.sent;
 
+                if (!(response.status === 200)) {
+                  _context.next = 9;
+                  break;
+                }
+
                 _this.$store.dispatch('login', response.data);
 
                 _this.$router.push('/');
 
-                _context.next = 11;
+                _context.next = 10;
                 break;
 
-              case 8:
-                _context.prev = 8;
+              case 9:
+                throw new Error();
+
+              case 10:
+                _context.next = 16;
+                break;
+
+              case 12:
+                _context.prev = 12;
                 _context.t0 = _context["catch"](0);
                 console.log(_context.t0);
+                alert("Bad credentials");
 
-              case 11:
+              case 16:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[0, 8]]);
+        }, _callee, null, [[0, 12]]);
       }))();
     }
   }
@@ -5224,6 +5180,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _this = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
+        var response;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
@@ -5233,22 +5190,37 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 return _apis_User__WEBPACK_IMPORTED_MODULE_1__["default"].register(_this.user);
 
               case 3:
+                response = _context.sent;
+
+                if (!(response.status === 200)) {
+                  _context.next = 8;
+                  break;
+                }
+
                 _this.$router.push('/login');
 
                 _context.next = 9;
                 break;
 
-              case 6:
-                _context.prev = 6;
-                _context.t0 = _context["catch"](0);
-                console.log(_context.t0);
+              case 8:
+                throw new Error();
 
               case 9:
+                _context.next = 15;
+                break;
+
+              case 11:
+                _context.prev = 11;
+                _context.t0 = _context["catch"](0);
+                console.log(_context.t0);
+                alert("Invalid data provided");
+
+              case 15:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[0, 6]]);
+        }, _callee, null, [[0, 11]]);
       }))();
     }
   }
@@ -5274,7 +5246,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
 var Api = axios__WEBPACK_IMPORTED_MODULE_0___default().create({
   baseURL: 'http://localhost:8000/api'
 });
@@ -5284,16 +5255,16 @@ Api.interceptors.response.use(function (response) {
   switch (error.response.status) {
     case 400:
       console.log("API bad request");
-      return error.response;
+      break;
 
     case 404:
       console.log("API not found");
-      return error.response;
+      break;
 
     case 410:
       {
         console.log("API gone");
-        return error.response;
+        break;
       }
 
     case 401:
@@ -5307,23 +5278,25 @@ Api.interceptors.response.use(function (response) {
         console.log(e);
       }
 
-      return error.response;
+      break;
 
     case 423:
       {
         console.log("API locked");
-        return error.response;
+        break;
       }
 
     case 500:
-      return error.response;
+      break;
 
     case 503:
-      return error.response;
+      break;
 
     default:
       return Promise.reject(error);
   }
+
+  return error.response;
 });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Api);
 
@@ -10411,7 +10384,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/* Full-width inputs */\ninput[type=text][data-v-12f5395a], input[type=password][data-v-12f5395a] {\n    width: 100%;\n    padding: 12px 20px;\n    margin: 8px 0;\n    display: inline-block;\n    border: 1px solid #ccc;\n    box-sizing: border-box;\n}\n\n/* Set a style for all buttons */\nbutton[data-v-12f5395a] {\n    background-color: #04AA6D;\n    color: white;\n    padding: 14px 20px;\n    margin: 8px 0;\n    border: none;\n    cursor: pointer;\n    width: 100%;\n}\n\n/* Add a hover effect for buttons */\nbutton[data-v-12f5395a]:hover {\n    opacity: 0.8;\n}\n\n/* Extra style for the cancel button (red) */\n.cancelbtn[data-v-12f5395a] {\n    width: auto;\n    padding: 10px 18px;\n    background-color: #f44336;\n}\n\n/* Center the avatar image inside this container */\n.imgcontainer[data-v-12f5395a] {\n    text-align: center;\n    margin: 24px 0 12px 0;\n}\n\n/* Avatar image */\nimg.avatar[data-v-12f5395a] {\n    width: 40%;\n    border-radius: 50%;\n}\n\n/* Add padding to containers */\n.container[data-v-12f5395a] {\n    padding: 16px;\n}\n\n/* The \"Forgot password\" text */\nspan.psw[data-v-12f5395a] {\n    float: right;\n    padding-top: 16px;\n}\n\n/* Change styles for span and cancel button on extra small screens */\n@media screen and (max-width: 300px) {\nspan.psw[data-v-12f5395a] {\n        display: block;\n        float: none;\n}\n.cancelbtn[data-v-12f5395a] {\n        width: 100%;\n}\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/* Full-width inputs */\ninput[type=text][data-v-12f5395a], input[type=password][data-v-12f5395a] {\n    width: 100%;\n    padding: 12px 20px;\n    margin: 8px 0;\n    display: inline-block;\n    border: 1px solid #ccc;\n    box-sizing: border-box;\n}\n\n/* Set a style for all buttons */\nbutton[data-v-12f5395a] {\n    background-color: #04AA6D;\n    color: white;\n    padding: 14px 20px;\n    margin: 8px 0;\n    border: none;\n    cursor: pointer;\n    width: 100%;\n}\n\n/* Add a hover effect for buttons */\nbutton[data-v-12f5395a]:hover {\n    opacity: 0.8;\n}\n\n/* Extra style for the cancel button (red) */\n.cancelbtn[data-v-12f5395a] {\n    width: auto;\n    padding: 10px 18px;\n    background-color: #f44336;\n}\n\n/* Center the avatar image inside this container */\n.imgcontainer[data-v-12f5395a] {\n    text-align: center;\n    margin: 24px 0 12px 0;\n}\n\n/* Avatar image */\nimg.avatar[data-v-12f5395a] {\n    width: 40%;\n    border-radius: 50%;\n}\n\n/* Add padding to containers */\n.container[data-v-12f5395a] {\n    padding: 16px;\n}\n\n/* The \"Forgot password\" text */\nspan.psw[data-v-12f5395a] {\n    float: right;\n    padding-top: 16px;\n}\n\n/* Change styles for span and cancel button on extra small screens */\n@media screen and (max-width: 300px) {\nspan.psw[data-v-12f5395a] {\n        display: block;\n        float: none;\n}\n.cancelbtn[data-v-12f5395a] {\n        width: 100%;\n}\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -45212,13 +45185,13 @@ var render = function() {
         _vm._v(" "),
         _c("h4", [_vm._v(_vm._s(this.$props["obj"].description))]),
         _vm._v(
-          "\n            Visible from " +
+          "\n        Visible from " +
             _vm._s(this.$props["obj"].start_time) +
             " to " +
             _vm._s(this.$props["obj"].end_time)
         ),
         _c("br"),
-        _vm._v("\n            " + _vm._s("Show more...") + "\n        ")
+        _vm._v("\n        " + _vm._s("Show more...") + "\n    ")
       ])
     ],
     1
@@ -46655,6 +46628,7 @@ var render = function() {
                 ],
                 1
               ),
+              _vm._v(" "),
               _c("br")
             ]),
             _vm._v(" "),

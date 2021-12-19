@@ -6,28 +6,10 @@
             Visible from {{this.$props['obj'].start_time}} to {{this.$props['obj'].end_time}}<br>
             {{"Show more..."}}
         </router-link>
-<!--        <FormulateInput
-            @click="handleDelete"
-            label="Delete"
-            type="button"
-        />
-        <FormulateInput
-            @click="handleDelete"
-            label="Delete"
-            type="button"
-        />
-        <FormulateInput
-            @click="handleDelete"
-            label="Delete"
-            type="button"
-        />-->
     </div>
 </template>
 
 <script>
-
-import Form from "../apis/Form";
-
 export default {
     name: "FormPreview",
     props: ['obj'],
@@ -35,22 +17,6 @@ export default {
         formLink() {
             return "/form/preview/" + this.$props['obj'].slug;
         }
-    },
-    methods: {
-        /*handleDelete() {
-            this.$emit('itemsChanged', 'loadingOn')
-            if (confirm("Are you sure that you want to delete this form?")) {
-                Form.deleteForm(this.$props['obj'].slug);
-                this.$emit('itemsChanged', 'itemsUpdated')
-            }
-            else this.$emit('itemsChanged', 'loadingOff')
-        },
-        handleUpdate() {
-
-        }*/
-    },
-    mounted() {
-        console.log(this.$props['obj'])
     }
 }
 </script>

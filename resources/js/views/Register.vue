@@ -44,10 +44,14 @@ export default {
     methods: {
         async register() {
             try {
-                await User.register(this.user);
-                this.$router.push('/login');
+                const response = await User.register(this.user);
+                if (response.status === 200) {
+                    this.$router.push('/login');
+                }
+                else throw new Error();
             } catch (e) {
                 console.log(e);
+                alert("Invalid data provided")
             }
         }
     }

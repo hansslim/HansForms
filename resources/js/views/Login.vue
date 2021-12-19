@@ -39,10 +39,14 @@ export default {
         async login() {
             try {
                 const response = await User.login(this.user);
-                this.$store.dispatch('login', response.data);
-                this.$router.push('/');
+                if (response.status === 200) {
+                    this.$store.dispatch('login', response.data);
+                    this.$router.push('/');
+                }
+                else throw new Error();
             } catch (error) {
                console.log(error);
+               alert("Bad credentials")
             }
         },
     }

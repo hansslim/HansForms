@@ -37,14 +37,16 @@
                             label="Results"
                             type="button"
                         />
-                    </div><br>
+                    </div>
+                    <br>
                 </div>
                 <div class="col">
                     <h2>Interactive preview</h2>
                     <p>This is how it is shown to users.</p>
                     <div style="border: black solid 2px">
                         <FormulateForm v-model="formValues">
-                            <form-element v-for="item in this.form.form_elements" :obj="item" :key="item.order"></form-element>
+                            <form-element v-for="item in this.form.form_elements" :obj="item"
+                                          :key="item.order"></form-element>
                         </FormulateForm>
                     </div>
                 </div>
@@ -80,7 +82,7 @@ export default {
             updateButtonVisibility: false,
             loading: true,
             errored: false,
-            errorText: "Bad Request (400)",
+            errorText: "Bad Request",
             dataFetched: false
         }
     },
@@ -104,29 +106,27 @@ export default {
     },
     methods: {
         async getThisForm() {
+            let errorCode = -1;
             await Form.getSpecificFormWithAuth(this.slug)
-                .then((response) => {
-                    if (response && response.data) {
-                        if (response.data.error) throw new Error(response.data.error);
-                        else {
-                            this.form = response.data;
-                            this.dataFetched = true;
-                        }
-                    } else throw new Error();
+                .then((res) => {
+                    if (res.status === 200) {
+                        this.form = res.data;
+                        this.dataFetched = true;
+                    } else {
+                        console.log(res.status)
+                        errorCode = res.status;
+                        throw new Error();
+                    }
                 })
-                .catch(error => {
-                    console.log(error.message)
+                .catch((error) => {
                     this.errored = true;
-                    switch (error.message) {
-                        case '401':
+                    switch (errorCode) {
+                        case 401:
                             this.errorText = "Requested form doesn't belong to your account!";
                             break;
-                        case '404':
+                        case 404:
                             this.errorText = "Requested form was not found.";
                             break;
-                        /*case '410':
-                            this.errorText = "Requested form is expired. You cannot answer this form anymore!";
-                            break;*/ //???
                         default:
                             this.errorText = `Unhandled error - ${error}`;
                             break; //dev only
@@ -166,9 +166,12 @@ export default {
                 });
             }
         },
-        handleDuplicate() {},
-        handleUpdate() {},
-        handleResults() {}
+        handleDuplicate() {
+        },
+        handleUpdate() {
+        },
+        handleResults() {
+        }
     },
     computed: {
         publicLink() {

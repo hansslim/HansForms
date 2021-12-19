@@ -24,8 +24,6 @@
                         :key="form.id"
                         :obj="form"
                     />
-                    <!-- @itemsChanged="handleItemsChanged"-->
-
                 </div>
             </div>
         </div>
@@ -65,51 +63,22 @@ export default {
     },
     methods: {
         isFormsObjectEmpty() {
-            if (Object.keys(this.forms).length === 0) this.notEmpty = true;
-            else this.notEmpty = false;
+            this.notEmpty = Object.keys(this.forms).length === 0;
         },
         async getForms() {
             if (this.$store.getters['authenticated']) {
                 try {
                     const getForms = await Form.getAllForms();
-                    if (getForms) {
+                    if (getForms && getForms.status === 200) {
                         this.forms = getForms.data;
                     }
+                    else throw new Error(getForms.status.toString())
                 } catch (e) {
                     console.log(e);
                 }
             }
 
         },
-        /*async handleItemsChanged(arg) {
-            switch (arg)
-            {
-                case "loadingOn": {
-                    //console.log("loadingOn")
-                    this.loading = true;
-                    break;
-                }
-                case "loadingOff": {
-                    //console.log("loadingOff")
-                    this.loading = false;
-                    break;
-                }
-                case "itemsUpdated": {
-                    //console.log("itemsUpdated")
-                    await this.getForms().then(() => {
-                        this.isFormsObjectEmpty();
-                        this.loading = false;
-                    })
-                    break;
-                }
-                default: {
-                    console.log("unhandled purpose");
-                    break;
-                }
-            }
-
-
-        },*/
     }
 };
 </script>

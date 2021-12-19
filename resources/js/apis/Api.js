@@ -1,5 +1,4 @@
 import axios from 'axios';
-import Vue from 'vue';
 import router from '../router';
 import store from '../store';
 
@@ -15,13 +14,13 @@ Api.interceptors.response.use(
         switch (error.response.status) {
             case 400:
                 console.log("API bad request");
-                return error.response
+                break;
             case 404:
                 console.log("API not found");
-                return error.response
+                break;
             case 410: {
                 console.log("API gone");
-                return error.response
+                break;
             }
             case 401:
             case 419:
@@ -32,16 +31,19 @@ Api.interceptors.response.use(
                 } catch (e) {
                     console.log(e)
                 }
-                return error.response
+                break;
             case 423: {
                 console.log("API locked");
-                return error.response
+                break;
             }
-            case 500: return error.response
-            case 503: return error.response
+            case 500:
+                break;
+            case 503:
+                break;
             default:
                 return Promise.reject(error);
         }
+        return error.response
     });
 
 export default Api;
