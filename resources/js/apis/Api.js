@@ -15,13 +15,13 @@ Api.interceptors.response.use(
         switch (error.response.status) {
             case 400:
                 console.log("API bad request");
-                return {data: {error: '400'}};
+                return error.response
             case 404:
                 console.log("API not found");
-                return {data: {error: '404'}};
+                return error.response
             case 410: {
                 console.log("API gone");
-                return {data: {error: '410'}};
+                return error.response
             }
             case 401:
             case 419:
@@ -32,15 +32,13 @@ Api.interceptors.response.use(
                 } catch (e) {
                     console.log(e)
                 }
-                return {data: {error: '401'}};
+                return error.response
             case 423: {
                 console.log("API locked");
-                return {data: {error: '423'}};
+                return error.response
             }
-            case 503:
-            case 500:
-                alert('Internal Server Error');
-                break;
+            case 500: return error.response
+            case 503: return error.response
             default:
                 return Promise.reject(error);
         }

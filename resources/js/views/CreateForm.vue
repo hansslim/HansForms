@@ -118,14 +118,17 @@ export default {
 
                 //question amount check
                 if (this.form && this.form.items.length >= 1) {
-                    await Form.postCreateForm(this.form).then(() => {
-                        alert("Form creation was successful.")
-                        this.$router.push("/");
-                        createFormStore.clearStore();
-                        this.choices = [];
-                        this.loading = false;
+                    await Form.postCreateForm(this.form).then((res) => {
+                        if (res.status === 200) {
+                            alert("Form creation was successful.")
+                            this.$router.push("/");
+                            createFormStore.clearStore();
+                            this.choices = [];
+                            this.loading = false;
+                        }
+                        else throw new Error(res.data)
                     })
-                } else throw new Error("Form creation error");
+                } else throw new Error("Form creation error (no questions)");
 
             } catch (error) {
                 console.log(error);
