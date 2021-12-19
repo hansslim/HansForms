@@ -4258,14 +4258,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 }
 
                 _context.next = 17;
-                return _apis_Form__WEBPACK_IMPORTED_MODULE_3__["default"].postCreateForm(_this2.form).then(function () {
-                  alert("Form creation was successful.");
+                return _apis_Form__WEBPACK_IMPORTED_MODULE_3__["default"].postCreateForm(_this2.form).then(function (res) {
+                  if (res.status === 200) {
+                    alert("Form creation was successful.");
 
-                  _this2.$router.push("/");
+                    _this2.$router.push("/");
 
-                  _store__WEBPACK_IMPORTED_MODULE_4__.createFormStore.clearStore();
-                  _this2.choices = [];
-                  _this2.loading = false;
+                    _store__WEBPACK_IMPORTED_MODULE_4__.createFormStore.clearStore();
+                    _this2.choices = [];
+                    _this2.loading = false;
+                  } else throw new Error(res.data);
                 });
 
               case 17:
@@ -4273,7 +4275,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 break;
 
               case 19:
-                throw new Error("Form creation error");
+                throw new Error("Form creation error (no questions)");
 
               case 20:
                 _context.next = 27;
@@ -4404,32 +4406,35 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _this2 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
+        var errorCode;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                _context2.next = 2;
-                return _apis_Form__WEBPACK_IMPORTED_MODULE_1__["default"].getSpecificForm(_this2.slug).then(function (response) {
-                  if (response && response.data) {
-                    if (response.data.error) throw new Error(response.data.error);else {
-                      _this2.form = response.data;
-                      _this2.dataFetched = true;
-                    }
-                  } else throw new Error();
+                errorCode = -1;
+                _context2.next = 3;
+                return _apis_Form__WEBPACK_IMPORTED_MODULE_1__["default"].getSpecificForm(_this2.slug).then(function (res) {
+                  if (res.status === 200) {
+                    _this2.form = res.data;
+                    _this2.dataFetched = true;
+                  } else {
+                    console.log(res.status);
+                    errorCode = res.status;
+                    throw new Error();
+                  }
                 })["catch"](function (error) {
-                  console.log(error.message);
                   _this2.errored = true;
 
-                  switch (error.message) {
-                    case '423':
+                  switch (errorCode) {
+                    case 423:
                       _this2.errorText = "Requested form is not available at this moment. Try it later.";
                       break;
 
-                    case '410':
+                    case 410:
                       _this2.errorText = "Requested form is expired. You cannot answer this form anymore!";
                       break;
 
-                    case '404':
+                    case 404:
                       _this2.errorText = "Requested form was not found.";
                       break;
 
@@ -4442,7 +4447,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   _this2.dataFetched = false;
                 });
 
-              case 2:
+              case 3:
               case "end":
                 return _context2.stop();
             }
@@ -4534,6 +4539,12 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -5273,28 +5284,16 @@ Api.interceptors.response.use(function (response) {
   switch (error.response.status) {
     case 400:
       console.log("API bad request");
-      return {
-        data: {
-          error: '400'
-        }
-      };
+      return error.response;
 
     case 404:
       console.log("API not found");
-      return {
-        data: {
-          error: '404'
-        }
-      };
+      return error.response;
 
     case 410:
       {
         console.log("API gone");
-        return {
-          data: {
-            error: '410'
-          }
-        };
+        return error.response;
       }
 
     case 401:
@@ -5308,26 +5307,19 @@ Api.interceptors.response.use(function (response) {
         console.log(e);
       }
 
-      return {
-        data: {
-          error: '401'
-        }
-      };
+      return error.response;
 
     case 423:
       {
         console.log("API locked");
-        return {
-          data: {
-            error: '423'
-          }
-        };
+        return error.response;
       }
 
-    case 503:
     case 500:
-      alert('Internal Server Error');
-      break;
+      return error.response;
+
+    case 503:
+      return error.response;
 
     default:
       return Promise.reject(error);
@@ -46607,93 +46599,98 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", [
     !this.loading && !this.errored
-      ? _c("div", [
-          _c("h1", [_vm._v(_vm._s(this.form.name))]),
-          _vm._v(" "),
-          _c("h3", [_vm._v(_vm._s(this.form.description))]),
-          _vm._v(" "),
-          _c("h5", [_vm._v("Opened from " + _vm._s(this.form.start_time))]),
-          _vm._v(" "),
-          _c("h5", [_vm._v("Closing at " + _vm._s(this.form.end_time))]),
-          _vm._v(" "),
-          this.form.is_expired ? _c("h4", [_vm._v("Expired!")]) : _vm._e(),
-          _vm._v(" "),
-          _c(
-            "p",
-            [
-              _vm._v("Public link:\n            "),
-              _c("router-link", { attrs: { to: /form/ + _vm.getSlug() } }, [
-                _vm._v(_vm._s(_vm.publicLink))
-              ])
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "d-flex justify-content-center" },
-            [
-              _c("FormulateInput", {
-                staticClass: "btn",
-                attrs: { label: "Duplicate", type: "button" },
-                on: { click: _vm.handleDuplicate }
-              }),
+      ? _c("div", { staticClass: "container" }, [
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col" }, [
+              _c("h1", [_vm._v(_vm._s(this.form.name))]),
               _vm._v(" "),
-              _c("FormulateInput", {
-                staticClass: "btn",
-                attrs: { label: "Delete", type: "button" },
-                on: { click: _vm.handleDelete }
-              }),
+              _c("h3", [_vm._v(_vm._s(this.form.description))]),
               _vm._v(" "),
-              _vm.updateButtonVisibility
-                ? _c("FormulateInput", {
-                    staticClass: "btn",
-                    attrs: { label: "Change", type: "button" },
-                    on: { click: _vm.handleUpdate }
-                  })
-                : _vm._e(),
+              _c("h5", [_vm._v("Opened from " + _vm._s(this.form.start_time))]),
               _vm._v(" "),
-              _c("FormulateInput", {
-                staticClass: "btn",
-                attrs: { label: "Results", type: "button" },
-                on: { click: _vm.handleResults }
-              })
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c("br"),
-          _vm._v(" "),
-          _c("h2", [_vm._v("Interactive preview")]),
-          _vm._v(" "),
-          _c("p", [_vm._v("This is how it is shown to users.")]),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticStyle: { border: "black solid 2px" } },
-            [
+              _c("h5", [_vm._v("Closing at " + _vm._s(this.form.end_time))]),
+              _vm._v(" "),
+              this.form.is_expired ? _c("h4", [_vm._v("Expired!")]) : _vm._e(),
+              _vm._v(" "),
               _c(
-                "FormulateForm",
-                {
-                  model: {
-                    value: _vm.formValues,
-                    callback: function($$v) {
-                      _vm.formValues = $$v
-                    },
-                    expression: "formValues"
-                  }
-                },
-                _vm._l(this.form.form_elements, function(item) {
-                  return _c("form-element", {
-                    key: item.order,
-                    attrs: { obj: item }
+                "p",
+                [
+                  _vm._v("Public link:\n                    "),
+                  _c("router-link", { attrs: { to: /form/ + _vm.getSlug() } }, [
+                    _vm._v(_vm._s(_vm.publicLink))
+                  ])
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "d-flex justify-content-center" },
+                [
+                  _c("FormulateInput", {
+                    staticClass: "btn",
+                    attrs: { label: "Duplicate", type: "button" },
+                    on: { click: _vm.handleDuplicate }
+                  }),
+                  _vm._v(" "),
+                  _c("FormulateInput", {
+                    staticClass: "btn",
+                    attrs: { label: "Delete", type: "button" },
+                    on: { click: _vm.handleDelete }
+                  }),
+                  _vm._v(" "),
+                  _vm.updateButtonVisibility
+                    ? _c("FormulateInput", {
+                        staticClass: "btn",
+                        attrs: { label: "Change", type: "button" },
+                        on: { click: _vm.handleUpdate }
+                      })
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _c("FormulateInput", {
+                    staticClass: "btn",
+                    attrs: { label: "Results", type: "button" },
+                    on: { click: _vm.handleResults }
                   })
-                }),
+                ],
+                1
+              ),
+              _c("br")
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col" }, [
+              _c("h2", [_vm._v("Interactive preview")]),
+              _vm._v(" "),
+              _c("p", [_vm._v("This is how it is shown to users.")]),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticStyle: { border: "black solid 2px" } },
+                [
+                  _c(
+                    "FormulateForm",
+                    {
+                      model: {
+                        value: _vm.formValues,
+                        callback: function($$v) {
+                          _vm.formValues = $$v
+                        },
+                        expression: "formValues"
+                      }
+                    },
+                    _vm._l(this.form.form_elements, function(item) {
+                      return _c("form-element", {
+                        key: item.order,
+                        attrs: { obj: item }
+                      })
+                    }),
+                    1
+                  )
+                ],
                 1
               )
-            ],
-            1
-          )
+            ])
+          ])
         ])
       : _vm._e(),
     _vm._v(" "),

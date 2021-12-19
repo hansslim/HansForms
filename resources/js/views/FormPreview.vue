@@ -1,49 +1,55 @@
 <template>
     <div>
-        <div v-if="!this.loading && !this.errored">
-            <h1>{{ this.form.name }}</h1>
-            <h3>{{ this.form.description }}</h3>
-            <h5>Opened from {{ this.form.start_time }}</h5>
-            <h5>Closing at {{ this.form.end_time }}</h5>
-            <h4 v-if="this.form.is_expired">Expired!</h4>
-            <p>Public link:
-                <router-link :to="/form/+getSlug()">{{ publicLink }}</router-link>
-            </p>
-            <div class="d-flex justify-content-center">
-                <FormulateInput
-                    class="btn"
-                    @click="handleDuplicate"
-                    label="Duplicate"
-                    type="button"
-                />
-                <FormulateInput
-                    class="btn"
-                    @click="handleDelete"
-                    label="Delete"
-                    type="button"
-                />
-                <FormulateInput
-                    v-if="updateButtonVisibility"
-                    class="btn"
-                    @click="handleUpdate"
-                    label="Change"
-                    type="button"
-                />
-                <FormulateInput
-                    class="btn"
-                    @click="handleResults"
-                    label="Results"
-                    type="button"
-                />
+        <div v-if="!this.loading && !this.errored" class="container">
+            <div class="row">
+                <div class="col">
+                    <h1>{{ this.form.name }}</h1>
+                    <h3>{{ this.form.description }}</h3>
+                    <h5>Opened from {{ this.form.start_time }}</h5>
+                    <h5>Closing at {{ this.form.end_time }}</h5>
+                    <h4 v-if="this.form.is_expired">Expired!</h4>
+                    <p>Public link:
+                        <router-link :to="/form/+getSlug()">{{ publicLink }}</router-link>
+                    </p>
+                    <div class="d-flex justify-content-center">
+                        <FormulateInput
+                            class="btn"
+                            @click="handleDuplicate"
+                            label="Duplicate"
+                            type="button"
+                        />
+                        <FormulateInput
+                            class="btn"
+                            @click="handleDelete"
+                            label="Delete"
+                            type="button"
+                        />
+                        <FormulateInput
+                            v-if="updateButtonVisibility"
+                            class="btn"
+                            @click="handleUpdate"
+                            label="Change"
+                            type="button"
+                        />
+                        <FormulateInput
+                            class="btn"
+                            @click="handleResults"
+                            label="Results"
+                            type="button"
+                        />
+                    </div><br>
+                </div>
+                <div class="col">
+                    <h2>Interactive preview</h2>
+                    <p>This is how it is shown to users.</p>
+                    <div style="border: black solid 2px">
+                        <FormulateForm v-model="formValues">
+                            <form-element v-for="item in this.form.form_elements" :obj="item" :key="item.order"></form-element>
+                        </FormulateForm>
+                    </div>
+                </div>
             </div>
-            <br>
-            <h2>Interactive preview</h2>
-            <p>This is how it is shown to users.</p>
-            <div style="border: black solid 2px">
-                <FormulateForm v-model="formValues">
-                    <form-element v-for="item in this.form.form_elements" :obj="item" :key="item.order"></form-element>
-                </FormulateForm>
-            </div>
+
         </div>
 
         <div v-if="this.loading">
