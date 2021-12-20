@@ -13,7 +13,17 @@ class BooleanInput extends Model
         'input_element_id'
     ];
 
+    protected $visible = [
+        'id',
+        'input_element_id',
+        'booleanInputAnswers'
+    ];
+
     public function inputElement() {
         return $this->belongsTo(InputElement::class);
+    }
+
+    public function booleanInputAnswers() {
+        return $this->hasMany(BooleanInputAnswer::class);
     }
 }

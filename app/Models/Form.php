@@ -25,11 +25,15 @@ class Form extends Model
         'description',
         'start_time',
         'end_time',
+        'has_private_token',
+
+        //visible props, not DB columns
         'formElements',
+        'formCompletions',
         'user',
         'is_expired',
         'was_already_published',
-        'is_opened'
+        'is_opened',
     ];
 
     protected $with = ['formElements'];

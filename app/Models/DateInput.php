@@ -15,7 +15,19 @@ class DateInput extends Model
         'max'
     ];
 
+    protected $visible = [
+        'id',
+        'input_element_id',
+        'min',
+        'max',
+        'dateInputAnswers'
+    ];
+
     public function inputElement() {
         return $this->belongsTo(InputElement::class);
+    }
+
+    public function dateInputAnswers() {
+        return $this->hasMany(DateInputAnswer::class);
     }
 }

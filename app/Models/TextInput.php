@@ -13,10 +13,23 @@ class TextInput extends Model
         'input_element_id',
         'min_length',
         'max_length',
-        'strict_lenght'
+        'strict_length'
+    ];
+
+    protected $visible = [
+        'id',
+        'input_element_id',
+        'min_length',
+        'max_length',
+        'strict_length',
+        'textInputAnswers'
     ];
 
     public function inputElement() {
         return $this->belongsTo(InputElement::class);
+    }
+
+    public function textInputAnswers() {
+        return $this->hasMany(TextInputAnswer::class);
     }
 }

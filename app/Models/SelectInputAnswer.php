@@ -18,15 +18,18 @@ class SelectInputAnswer extends Model
         'select_choice_id'
     ];
 
-    public function formCompletion() {
+    public function formCompletion()
+    {
         return $this->belongsTo(FormCompletion::class);
     }
 
-    public function selectInput() {
+    public function selectInput()
+    {
         return $this->belongsTo(SelectInput::class);
     }
 
-    public function selectInputChoice() {
+    public function selectInputChoice()
+    {
         return $this->belongsTo(SelectInputChoice::class);
     }
 }

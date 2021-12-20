@@ -16,7 +16,20 @@ class NumberInput extends Model
         'can_be_decimal',
     ];
 
+    protected $visible = [
+        'id',
+        'input_element_id',
+        'min',
+        'max',
+        'can_be_decimal',
+        'numberInputAnswers'
+    ];
+
     public function inputElement() {
         return $this->belongsTo(InputElement::class);
+    }
+
+    public function numberInputAnswers() {
+        return $this->hasMany(NumberInputAnswer::class);
     }
 }

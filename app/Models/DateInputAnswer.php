@@ -17,11 +17,13 @@ class DateInputAnswer extends Model
         'date_input_id'
     ];
 
-    public function formCompletion() {
+    public function formCompletion()
+    {
         return $this->belongsTo(FormCompletion::class);
     }
 
-    public function dateInput() {
+    public function dateInput()
+    {
         return $this->belongsTo(DateInput::class);
     }
 }

@@ -17,7 +17,22 @@ class SelectInputChoice extends Model
         'select_input_id',
     ];
 
+    protected $visible = [
+        'id',
+        'text',
+        'description',
+        'hidden_label',
+        'order',
+        'select_input_id',
+        'select_input_choice_id',
+        'selectInputAnswers'
+    ];
+
     public function selectInput() {
         return $this->belongsTo(SelectInput::class);
+    }
+
+    public function selectInputAnswers() {
+        return $this->hasMany(SelectInputAnswer::class, 'select_choice_id');
     }
 }

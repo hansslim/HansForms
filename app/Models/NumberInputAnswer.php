@@ -17,11 +17,13 @@ class NumberInputAnswer extends Model
         'number_input_id'
     ];
 
-    public function formCompletion() {
+    public function formCompletion()
+    {
         return $this->belongsTo(FormCompletion::class);
     }
 
-    public function numberInput() {
+    public function numberInput()
+    {
         return $this->belongsTo(NumberInput::class);
     }
 }

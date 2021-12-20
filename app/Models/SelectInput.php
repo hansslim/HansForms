@@ -26,7 +26,7 @@ class SelectInput extends Model
         return $this->belongsTo(InputElement::class);
     }
 
-    public function  selectInputChoices() {
+    public function selectInputChoices() {
         return $this->hasMany(SelectInputChoice::class);
     }
 }

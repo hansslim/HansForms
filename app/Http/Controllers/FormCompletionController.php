@@ -26,16 +26,18 @@ class FormCompletionController extends Controller
      */
     public function index($slug)
     {
-        $userId = Auth::user()->id;
-        if ($userId) {
-            $formId = Form::where(['user_id'=> $userId, 'slug' => $slug])->first()->id;
-            if ($formId) {
-                $results = FormCompletion::where(['form_id'=> $formId])->get();
-                return $results;
-            }
+        $user = Auth::user();
+        if ($user) {
+            $formResults = Form::where(['slug' => $slug, 'user_id' => $user->id])->with(
+                'formElements.inputElement.textInput.textInputAnswers',
+                'formElements.inputElement.numberInput.numberInputAnswers',
+                'formElements.inputElement.dateInput.dateInputAnswers',
+                'formElements.inputElement.booleanInput.booleanInputAnswers',
+                'formElements.inputElement.selectInput.selectInputChoices.selectInputAnswers',
+            )->first();
+            if ($formResults) return $formResults;
             else return response("Not found.", 404);
-        }
-        else return response("Unauthorized.", 401);
+        } else return response("Unauthorized.", 401);
     }
 
     /**

@@ -17,11 +17,13 @@ class TextInputAnswer extends Model
         'text_input_id'
     ];
 
-    public function formCompletion() {
+    public function formCompletion()
+    {
         return $this->belongsTo(FormCompletion::class);
     }
 
-    public function textInput() {
+    public function textInput()
+    {
         return $this->belongsTo(TextInput::class);
     }
 }
