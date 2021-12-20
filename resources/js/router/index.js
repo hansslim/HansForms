@@ -11,6 +11,7 @@ import Form from "../views/Form";
 import NotFound from "../views/NotFound";
 import CreateForm from "../views/CreateForm";
 import FormPreview from "../views/FormPreview";
+import FormResults from "../views/FormResults";
 
 Vue.use(VueRouter);
 
@@ -52,6 +53,12 @@ const routes = [
         path: "/form/preview/:slug",
         name: "FormPreview",
         component: FormPreview,
+        meta: {requiresAuth: true}
+    },
+    {
+        path: "/form/results/:slug",
+        name: "FormResults",
+        component: FormResults,
         meta: {requiresAuth: true}
     },
     {

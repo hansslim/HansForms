@@ -11,6 +11,7 @@ use App\Models\SelectInputAnswer;
 use App\Models\TextInputAnswer;
 use DateTime;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use mysql_xdevapi\Exception;
@@ -23,9 +24,18 @@ class FormCompletionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($slug)
     {
-        //
+        $userId = Auth::user()->id;
+        if ($userId) {
+            $formId = Form::where(['user_id'=> $userId, 'slug' => $slug])->first()->id;
+            if ($formId) {
+                $results = FormCompletion::where(['form_id'=> $formId])->get();
+                return $results;
+            }
+            else return response("Not found.", 404);
+        }
+        else return response("Unauthorized.", 401);
     }
 
     /**
@@ -33,10 +43,10 @@ class FormCompletionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    /*public function create()
     {
         //
-    }
+    }*/
 
     /**
      * Store a newly created resource in storage.

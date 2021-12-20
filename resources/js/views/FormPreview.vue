@@ -208,6 +208,7 @@ export default {
         handleUpdate() {
         },
         handleResults() {
+            this.$router.push("/form/results/"+this.getSlug());
         }
     },
 }

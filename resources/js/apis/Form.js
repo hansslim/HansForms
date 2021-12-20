@@ -21,5 +21,8 @@ export default {
     },
     async postDuplicateForm(props) {
         return Api.post('/form/duplicate/', props)
+    },
+    async getFormResults(slug) {
+        return Api.get('/form/results/' + slug)
     }
 };
