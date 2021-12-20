@@ -1,5 +1,12 @@
 <template>
     <div>
+        <div v-if="!this.loading">
+            <FormulateInput
+            class="btn"
+            @click="handleGoBack"
+            label="Go back"
+            type="button"
+        /></div>
         <div v-if="!this.loading && !this.errored">
 <!--            <result-component v-for="item in this.formResults.form_elements" :key="item.order" :obj="item"></result-component>-->
              {{ formResults }}
@@ -31,7 +38,8 @@ export default {
             if (resFormRes.status === 200) {
                 this.formResults = resFormRes.data;
                 this.loading = false;
-            } else {
+            }
+            else {
                 this.errorCode = resFormRes.status
                 throw new Error(resFormRes.data);
             }
@@ -39,6 +47,9 @@ export default {
             this.errored = true;
             this.loading = false;
             switch (this.errorCode) {
+                case 204:
+                    this.errorText = "Form hasn't been answered yet.";
+                    break;
                 case 401:
                     this.errorText = "Unauthorized.";
                     break;
@@ -55,6 +66,9 @@ export default {
         getSlug() {
             return this.$route.params['slug'] ?? '';
         },
+        handleGoBack() {
+            this.$router.go(-1);
+        }
     }
 }
 </script>

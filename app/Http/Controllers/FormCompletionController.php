@@ -28,6 +28,8 @@ class FormCompletionController extends Controller
     {
         $user = Auth::user();
         if ($user) {
+            $hasResults = FormCompletion::where(['form_id' => Form::where(['slug' => $slug])->first()->id])->first();
+            if (!$hasResults) return response("No content", 204);
             $formResults = Form::where(['slug' => $slug, 'user_id' => $user->id])->with(
                 'formElements.inputElement.textInput.textInputAnswers',
                 'formElements.inputElement.numberInput.numberInputAnswers',

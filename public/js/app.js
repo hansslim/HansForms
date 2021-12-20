@@ -5140,6 +5140,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -5179,6 +5186,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 _this.loading = false;
 
                 switch (_this.errorCode) {
+                  case 204:
+                    _this.errorText = "Form hasn't been answered yet.";
+                    break;
+
                   case 401:
                     _this.errorText = "Unauthorized.";
                     break;
@@ -5206,6 +5217,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _this$$route$params$s;
 
       return (_this$$route$params$s = this.$route.params['slug']) !== null && _this$$route$params$s !== void 0 ? _this$$route$params$s : '';
+    },
+    handleGoBack: function handleGoBack() {
+      this.$router.go(-1);
     }
   }
 });
@@ -48126,6 +48140,20 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
+    !this.loading
+      ? _c(
+          "div",
+          [
+            _c("FormulateInput", {
+              staticClass: "btn",
+              attrs: { label: "Go back", type: "button" },
+              on: { click: _vm.handleGoBack }
+            })
+          ],
+          1
+        )
+      : _vm._e(),
+    _vm._v(" "),
     !this.loading && !this.errored
       ? _c("div", [
           _vm._v("\n             " + _vm._s(_vm.formResults) + "\n        ")
