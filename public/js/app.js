@@ -5172,8 +5172,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           switch (_context.prev = _context.next) {
             case 0:
               _apis_Form__WEBPACK_IMPORTED_MODULE_1__["default"].getFormResults(_this.getSlug()).then(function (resFormRes) {
-                console.log(resFormRes.status);
-
                 if (resFormRes.status === 200) {
                   _this.formResults = resFormRes.data;
                   _this.loading = false;

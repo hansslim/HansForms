@@ -28,17 +28,18 @@ class FormCompletionController extends Controller
     {
         $user = Auth::user();
         if ($user) {
-            $hasResults = FormCompletion::where(['form_id' => Form::where(['slug' => $slug])->first()->id])->first();
-            if (!$hasResults) return response("No content", 204);
-            $formResults = Form::where(['slug' => $slug, 'user_id' => $user->id])->with(
+            $wantedFormResults = Form::where(['slug' => $slug, 'user_id' => $user->id])->with(
                 'formElements.inputElement.textInput.textInputAnswers',
                 'formElements.inputElement.numberInput.numberInputAnswers',
                 'formElements.inputElement.dateInput.dateInputAnswers',
                 'formElements.inputElement.booleanInput.booleanInputAnswers',
                 'formElements.inputElement.selectInput.selectInputChoices.selectInputAnswers',
             )->first();
-            if ($formResults) return $formResults;
-            else return response("Not found.", 404);
+            if ($wantedFormResults) {
+                $hasResults = FormCompletion::where(['form_id' => $wantedFormResults->id])->first();
+                if ($hasResults) return $wantedFormResults;
+                else return response("No content.", 204);
+            } else return response("Not found.", 404);
         } else return response("Unauthorized.", 401);
     }
 

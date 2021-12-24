@@ -34,7 +34,6 @@ export default {
     },
     async mounted() {
         Form.getFormResults(this.getSlug()).then((resFormRes) => {
-            console.log(resFormRes.status)
             if (resFormRes.status === 200) {
                 this.formResults = resFormRes.data;
                 this.loading = false;
