@@ -4743,31 +4743,27 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                _context3.prev = 0;
+                _this3.loading = true;
                 _context3.next = 3;
-                return _apis_Form__WEBPACK_IMPORTED_MODULE_1__["default"].postFormCompletion(_this3.formValues, _this3.slug).then(function () {
-                  alert("Answer has been proceeded successfully."); //todo: handle errors
+                return _apis_Form__WEBPACK_IMPORTED_MODULE_1__["default"].postFormCompletion(_this3.formValues, _this3.slug).then(function (res) {
+                  if (res.status === 200) {
+                    alert("Answer has been proceeded successfully.");
 
-                  //todo: handle errors
-                  _this3.$router.push("/");
+                    _this3.$router.push("/");
+                  } else {
+                    alert("Form completion is invalid. Check your answers (".concat(res.data, ")."));
+                  }
                 });
 
               case 3:
-                _context3.next = 9;
-                break;
+                _this3.loading = false;
 
-              case 5:
-                _context3.prev = 5;
-                _context3.t0 = _context3["catch"](0);
-                console.log(_context3.t0);
-                alert(_context3.t0);
-
-              case 9:
+              case 4:
               case "end":
                 return _context3.stop();
             }
           }
-        }, _callee3, null, [[0, 5]]);
+        }, _callee3);
       }))();
     }
   },

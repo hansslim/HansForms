@@ -63,35 +63,33 @@ export default {
     methods: {
         async getThisForm() {
             let errorCode = -1;
-            await Form.getSpecificForm(this.slug)
-                .then((res) => {
-                    if (res.status === 200) {
-                        this.form = res.data;
-                        this.dataFetched = true;
-                    } else {
-                        console.log(res.status)
-                        errorCode = res.status;
-                        throw new Error();
-                    }
-                })
-                .catch(error => {
-                    this.errored = true;
-                    switch (errorCode) {
-                        case 423:
-                            this.errorText = "Requested form is not available at this moment. Try it later.";
-                            break;
-                        case 410:
-                            this.errorText = "Requested form is expired. You cannot answer this form anymore!";
-                            break;
-                        case 404:
-                            this.errorText = "Requested form was not found.";
-                            break;
-                        default:
-                            this.errorText = `Unhandled error - ${error}`;
-                            break; //dev only
-                    }
-                    this.dataFetched = false;
-                })
+            await Form.getSpecificForm(this.slug).then((res) => {
+                if (res.status === 200) {
+                    this.form = res.data;
+                    this.dataFetched = true;
+                } else {
+                    console.log(res.status)
+                    errorCode = res.status;
+                    throw new Error();
+                }
+            }).catch(error => {
+                this.errored = true;
+                switch (errorCode) {
+                    case 423:
+                        this.errorText = "Requested form is not available at this moment. Try it later.";
+                        break;
+                    case 410:
+                        this.errorText = "Requested form is expired. You cannot answer this form anymore!";
+                        break;
+                    case 404:
+                        this.errorText = "Requested form was not found.";
+                        break;
+                    default:
+                        this.errorText = `Unhandled error - ${error}`;
+                        break; //dev only
+                }
+                this.dataFetched = false;
+            })
         },
         getSlug() {
             return this.$route.params['slug'] ?? '';
@@ -108,16 +106,16 @@ export default {
             });
         },
         async submitForm() {
-            try {
-                await Form.postFormCompletion(this.formValues, this.slug).then(() => {
-                    alert("Answer has been proceeded successfully."); //todo: handle errors
+            this.loading = true;
+            await Form.postFormCompletion(this.formValues, this.slug).then((res) => {
+                if (res.status === 200) {
+                    alert("Answer has been proceeded successfully.");
                     this.$router.push("/");
-                });
-
-            } catch (error) {
-                console.log(error);
-                alert(error);
-            }
+                } else {
+                    alert(`Form completion is invalid. Check your answers (${res.data}).`);
+                }
+            })
+            this.loading = false;
         }
     },
     computed: {
