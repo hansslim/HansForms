@@ -113,6 +113,7 @@ class FormController extends Controller
 
         $questionOrder = 0;
         $validatedQuestions = [];
+        $atLeastOneMandatory = false;
 
         foreach ($request->all()['items'] as $item) {
             $validatedQuestion = [];
@@ -146,6 +147,8 @@ class FormController extends Controller
                 $validatedQuestion['header'] = $item['header'];
                 $validatedQuestion['is_mandatory'] = $item['is_mandatory'];
                 $validatedQuestion['order'] = $item['order'];
+
+                $atLeastOneMandatory = $item['is_mandatory'];
             } catch (Exception $exception) {
                 return response("Unhandled input error (in basic values).", 400);
             }
@@ -377,6 +380,8 @@ class FormController extends Controller
             }
             $validatedQuestions[] = $validatedQuestion;
         }
+
+        if (!$atLeastOneMandatory) return response("Invalid form (expected at least one mandatory question).", 400);
 
         try {
             DB::transaction(function () use ($validatedQuestions, $userId, $formProps) {
