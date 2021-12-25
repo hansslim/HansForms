@@ -49,7 +49,6 @@ class FormController extends Controller
     public function store(Request $request)
     {
         $userId = -1;
-
         $formProps = [];
         $formProps['header'] = null;
         $formProps['description'] = null;
@@ -148,7 +147,9 @@ class FormController extends Controller
                 $validatedQuestion['is_mandatory'] = $item['is_mandatory'];
                 $validatedQuestion['order'] = $item['order'];
 
-                $atLeastOneMandatory = $item['is_mandatory'];
+                if ($validatedQuestion['is_mandatory']) {
+                    $atLeastOneMandatory = true;
+                }
             } catch (Exception $exception) {
                 return response("Unhandled input error (in basic values).", 400);
             }
