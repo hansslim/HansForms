@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\FormCompletionsExport;
 use App\Models\BooleanInputAnswer;
 use App\Models\DateInputAnswer;
 use App\Models\Form;
@@ -12,10 +13,8 @@ use App\Models\TextInputAnswer;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
-use mysql_xdevapi\Exception;
-use Symfony\Component\HttpFoundation\Exception\BadRequestException;
+use Maatwebsite\Excel\Facades\Excel;
 
 class FormCompletionController extends Controller
 {
@@ -41,6 +40,29 @@ class FormCompletionController extends Controller
                 else return response("No content.", 204);
             } else return response("Not found.", 404);
         } else return response("Unauthorized.", 401);
+    }
+
+    public function export($slug) {
+        $data = $this->index($slug);
+        if ($data) {
+            if ($data instanceof Form) { //means that some data were sent (so it's 200)
+                return Excel::download(new FormCompletionsExport($data), 'export.xlsx');
+            }
+            else {
+                return match ($data->getStatusCode()) {
+                    204 => response("No content.", 204),
+                    401 => response("Unauthorized.", 401),
+                    404 => response("Not found.", 404),
+                    default => response("Unhandled error.", 500),
+                };
+            }
+        }
+        else return response("Unhandled error (no data).", 500);
+
+
+
+
+
     }
 
     /**
@@ -367,6 +389,7 @@ class FormCompletionController extends Controller
                             case null:
                             case 'null':
                             case '':
+                            case 'choice-null':
                             {
                                 if ($isMandatory) {
                                     error_log("Bad request (validation was not successful [select-{$answer['id']} (radio) is mandatory])", 400);

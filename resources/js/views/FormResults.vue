@@ -6,8 +6,17 @@
             @click="handleGoBack"
             label="Go back"
             type="button"
-        /></div>
+            />
+            <FormulateInput
+                v-if="!this.loading && !this.errored"
+                class="btn"
+                @click="handleDownload"
+                label="Download"
+                type="button"
+            />
+        </div>
         <div v-if="!this.loading && !this.errored">
+
 <!--            <result-component v-for="item in this.formResults.form_elements" :key="item.order" :obj="item"></result-component>-->
              {{ formResults }}
         </div>
@@ -67,6 +76,17 @@ export default {
         },
         handleGoBack() {
             this.$router.go(-1);
+        },
+        async handleDownload() {
+            await Form.getFormResultsDownload(this.getSlug()).then(response => {
+                const url = window.URL.createObjectURL(new Blob([response.data], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', this.getSlug() + '.xlsx');
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+            }).catch(console.error)
         }
     }
 }

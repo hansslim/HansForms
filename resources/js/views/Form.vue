@@ -113,6 +113,7 @@ export default {
                     this.$router.push("/");
                 } else {
                     alert(`Form completion is invalid. Check your answers (${res.data}).`);
+                    console.log(res.data);
                 }
             })
             this.loading = false;

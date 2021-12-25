@@ -4752,6 +4752,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     _this3.$router.push("/");
                   } else {
                     alert("Form completion is invalid. Check your answers (".concat(res.data, ")."));
+                    console.log(res.data);
                   }
                 });
 
@@ -5143,6 +5144,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -5214,6 +5224,35 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     handleGoBack: function handleGoBack() {
       this.$router.go(-1);
+    },
+    handleDownload: function handleDownload() {
+      var _this2 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.next = 2;
+                return _apis_Form__WEBPACK_IMPORTED_MODULE_1__["default"].getFormResultsDownload(_this2.getSlug()).then(function (response) {
+                  var url = window.URL.createObjectURL(new Blob([response.data], {
+                    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                  }));
+                  var link = document.createElement('a');
+                  link.href = url;
+                  link.setAttribute('download', _this2.getSlug() + '.xlsx');
+                  document.body.appendChild(link);
+                  link.click();
+                  link.remove();
+                })["catch"](console.error);
+
+              case 2:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }))();
     }
   }
 });
@@ -5938,6 +5977,24 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           }
         }
       }, _callee8);
+    }))();
+  },
+  getFormResultsDownload: function getFormResultsDownload(slug) {
+    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee9() {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee9$(_context9) {
+        while (1) {
+          switch (_context9.prev = _context9.next) {
+            case 0:
+              return _context9.abrupt("return", _Api__WEBPACK_IMPORTED_MODULE_1__["default"].get('/form/results/' + slug + "/download", {
+                responseType: "blob"
+              }));
+
+            case 1:
+            case "end":
+              return _context9.stop();
+          }
+        }
+      }, _callee9);
     }))();
   }
 });
@@ -48142,7 +48199,15 @@ var render = function() {
               staticClass: "btn",
               attrs: { label: "Go back", type: "button" },
               on: { click: _vm.handleGoBack }
-            })
+            }),
+            _vm._v(" "),
+            !this.loading && !this.errored
+              ? _c("FormulateInput", {
+                  staticClass: "btn",
+                  attrs: { label: "Download", type: "button" },
+                  on: { click: _vm.handleDownload }
+                })
+              : _vm._e()
           ],
           1
         )
