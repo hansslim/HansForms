@@ -15,13 +15,9 @@ class FormCompletionsExport implements FromArray
         $this->formData = $formData;
     }
 
-    /**
-     * @return \Illuminate\Support\Collection
-     */
     public function array(): array
     {
         //form name
-
         //question headers
         //completion 1
         //completion 2
@@ -35,7 +31,7 @@ class FormCompletionsExport implements FromArray
         $headerRow = ["Completion ID"]; //corner value
         $completionRows = [];
 
-        //should it be there? is it useful? todo
+        //todo remove dd()
         $correspondingCompletionsIds = [];
         foreach (FormCompletion::where(['form_id' => $this->formData->id])->get() as $item) {
             array_push($correspondingCompletionsIds, $item->id);
@@ -76,12 +72,17 @@ class FormCompletionsExport implements FromArray
                     }
 
                     foreach ($arrById as $key => $value) {
-                        array_push($completionRows[$key], implode(";", $value));
+                        if (in_array($key, $notAnsweredYet)) {
+                            if (($thisKey = array_search($key, $notAnsweredYet)) !== false) unset($notAnsweredYet[$thisKey]);
+                            array_push($completionRows[$key], implode(";", $value));
+                        }
+                        else dd("error 1");
                     }
 
-                    $mandatoryPart = null;
+                    if (count($notAnsweredYet) > 0) dd("error 2", $notAnsweredYet, $answers);
+
+                    $mandatoryPart = "";
                     if ($inputElement->is_mandatory == true) $mandatoryPart = " (mandatory)";
-                    else $mandatoryPart = " (not mandatory)";
                     array_push($headerRow, $inputElement->header . $mandatoryPart);
                     continue;
                 }
@@ -97,9 +98,8 @@ class FormCompletionsExport implements FromArray
 
                 if (count($notAnsweredYet) > 0) dd("error 2", $notAnsweredYet, $answers);
 
-                $mandatoryPart = null;
+                $mandatoryPart = "";
                 if ($inputElement->is_mandatory == true) $mandatoryPart = " (mandatory)";
-                else $mandatoryPart = " (not mandatory)";
                 array_push($headerRow, $inputElement->header . $mandatoryPart);
             }
             $elementCount++;
