@@ -267,13 +267,13 @@ class FormController extends Controller
                 case "select":
                 {
                     try {
-                        //todo: validate max amount concerning the choices amount
                         $is_multiselect = false;
                         $min_amount_of_answers = null;
                         $max_amount_of_answers = null;
                         $strict_amount_of_answers = null;
                         $has_hidden_label = false;
                         $choices = [];
+                        $choicesCount = -1;
 
                         $validatedQuestion['is_multiselect'] = $is_multiselect;
                         $validatedQuestion['min_amount_of_answers'] = $min_amount_of_answers;
@@ -287,6 +287,7 @@ class FormController extends Controller
                                 return response("Invalid data for select question (expected array of choices).", 400);
                             }
                             if (count($item['choices']) >= 2) {
+                                $choicesCount = count($item['choices']);
                                 if (array_key_exists('has_hidden_label', $item)) {
                                     if (is_bool($item["has_hidden_label"])) $has_hidden_label = $item["has_hidden_label"];
                                 } else return response("Invalid data (missing has_hidden_label value).", 400);
@@ -336,16 +337,22 @@ class FormController extends Controller
 
                         if (array_key_exists('is_multiselect', $item)) {
                             if (is_bool($item['is_multiselect'])) $is_multiselect = $item['is_multiselect'];
+
+                            if (array_key_exists('min_amount_of_answers', $item)) {
+                                if (intval($item['min_amount_of_answers']) &&
+                                    intval($item['min_amount_of_answers']) >= 0 &&
+                                    intval($item['min_amount_of_answers']) < $choicesCount) $min_amount_of_answers = intval($item['min_amount_of_answers']);
+                            }
+                            if (array_key_exists('max_amount_of_answers', $item)) {
+                                if (intval($item['max_amount_of_answers']) &&
+                                    intval($item['max_amount_of_answers']) > 0 &&
+                                    intval($item['max_amount_of_answers']) <= $choicesCount) $max_amount_of_answers = intval($item['max_amount_of_answers']);
+                            }
+                            if (array_key_exists('strict_amount_of_answers', $item)) {
+                                if (intval($item['strict_amount_of_answers']) && intval($item['strict_amount_of_answers']) > 0) $strict_amount_of_answers = intval($item['strict_amount_of_answers']);
+                            }
                         }
-                        if (array_key_exists('min_amount_of_answers', $item)) {
-                            if (intval($item['min_amount_of_answers']) && intval($item['min_amount_of_answers']) >= 0) $min_amount_of_answers = intval($item['min_amount_of_answers']);
-                        }
-                        if (array_key_exists('max_amount_of_answers', $item)) {
-                            if (intval($item['max_amount_of_answers']) && intval($item['max_amount_of_answers']) > 0) $max_amount_of_answers = intval($item['max_amount_of_answers']);
-                        }
-                        if (array_key_exists('strict_amount_of_answers', $item)) {
-                            if (intval($item['strict_amount_of_answers']) && intval($item['strict_amount_of_answers']) > 0) $strict_amount_of_answers = intval($item['strict_amount_of_answers']);
-                        }
+
 
                         $validatedQuestion['is_multiselect'] = $is_multiselect;
                         if ($is_multiselect) {
