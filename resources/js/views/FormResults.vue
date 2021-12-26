@@ -1,11 +1,19 @@
 <template>
     <div>
+        <div v-if="this.loading">{{ "loading" }}</div>
+        <div v-if="!this.loading">
+            <h1>Results</h1>
+            <h2 v-if="!this.loading && !this.errored">{{this.formResults.name}}</h2>
+            <p v-if="!this.loading && !this.errored">{{this.formResults.description}}</p>
+        </div>
+        <div v-if="this.errored">{{ errorText }}</div>
+
         <div v-if="!this.loading">
             <FormulateInput
-            class="btn"
-            @click="handleGoBack"
-            label="Go back"
-            type="button"
+                class="btn"
+                @click="handleGoBack"
+                label="Go back"
+                type="button"
             />
             <FormulateInput
                 v-if="!this.loading && !this.errored"
@@ -14,31 +22,47 @@
                 label="Download"
                 type="button"
             />
+            <FormulateInput
+                v-if="!this.loading && !this.errored"
+                class="btn"
+                @click="handleChangeView"
+                label="Change results view"
+                type="button"
+            />
         </div>
         <div v-if="!this.loading && !this.errored">
-
-<!--            <result-component v-for="item in this.formResults.form_elements" :key="item.order" :obj="item"></result-component>-->
-             {{ formResults }}
+            <hr>
+            <result-component
+                v-if="!detailedSummaryView"
+                v-for="item in this.formResults.form_elements"
+                :key="item.order"
+                :obj="item"
+                :completionsIds="getCompletionsIds()"
+            />
+            <results-table
+                v-if="detailedSummaryView"
+                :obj="this.formResults.results_table"
+            />
         </div>
-        <div v-if="this.loading">{{ "loading" }}</div>
-        <div v-if="this.errored">{{ errorText }}</div>
     </div>
 </template>
 
 <script>
 import Form from "../apis/Form";
 import ResultComponent from "../components/ResultComponents/ResultComponent";
+import DetailedResultsTable from "../components/ResultComponents/DetailedResultsTable";
 
 export default {
     name: "FormResults",
-    components: {'result-component': ResultComponent},
+    components: {'result-component': ResultComponent, 'results-table': DetailedResultsTable},
     data() {
         return {
             formResults: {},
             loading: true,
             errored: false,
             errorCode: -1,
-            errorText: "Bad request."
+            errorText: "Bad request.",
+            detailedSummaryView: false
         }
     },
     async mounted() {
@@ -74,6 +98,10 @@ export default {
         getSlug() {
             return this.$route.params['slug'] ?? '';
         },
+        getCompletionsIds() {
+            //console.log(Object.keys(this.formResults.results_table[2]))
+            return Object.keys(this.formResults.results_table[2])
+        },
         handleGoBack() {
             this.$router.go(-1);
         },
@@ -87,8 +115,12 @@ export default {
                 link.click();
                 link.remove();
             }).catch(console.error)
+        },
+        handleChangeView() {
+            this.detailedSummaryView = !this.detailedSummaryView;
         }
-    }
+    },
+
 }
 </script>
 

@@ -34,6 +34,7 @@ class Form extends Model
         'is_expired',
         'was_already_published',
         'is_opened',
+        'results_table'
     ];
 
     protected $with = ['formElements'];

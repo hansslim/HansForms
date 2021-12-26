@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Writer\Csv;
 
 class FormCompletionController extends Controller
 {
@@ -37,7 +38,10 @@ class FormCompletionController extends Controller
             )->first();
             if ($wantedFormResults) {
                 $hasResults = FormCompletion::where(['form_id' => $wantedFormResults->id])->first();
-                if ($hasResults) return $wantedFormResults;
+                if ($hasResults) {
+                    $wantedFormResults->results_table = (new FormCompletionsExport($wantedFormResults))->array();
+                    return $wantedFormResults;
+                }
                 else return response("No content.", 204);
             } else return response("Not found.", 404);
         } else return response("Unauthorized.", 401);
