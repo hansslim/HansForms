@@ -112,7 +112,7 @@ export default {
                     alert("Answer has been proceeded successfully.");
                     this.$router.push("/");
                 } else {
-                    alert(`Form completion is invalid. Check your answers (${res.data}).`);
+                    alert(`Form completion is invalid (${res.data}).`);
                     console.log(res.data);
                 }
             })

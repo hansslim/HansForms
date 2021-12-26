@@ -21,7 +21,7 @@ use Ramsey\Uuid\Uuid;
 
 class FormController extends Controller
 {
-    public function validateDate($date, $format = 'Y-m-d H:i:s')
+    private function validateDate($date, $format = 'Y-m-d H:i:s')
     {
         $d = DateTime::createFromFormat($format, $date);
         return $d && $d->format($format) == $date;
@@ -32,7 +32,7 @@ class FormController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
         return Form::where('user_id', Auth::user()->id)
             ->without('formElements', 'user')
@@ -55,17 +55,12 @@ class FormController extends Controller
 
         $formProps['start_time'] = null;
         $formProps['end_time'] = null;
-        function validateDate($date, $format = 'Y-m-d H:i:s')
-        {
-            $d = DateTime::createFromFormat($format, $date);
-            return $d && $d->format($format) == $date;
-        }
 
         if (array_key_exists('start_time', $request->all()) && array_key_exists('end_time', $request->all())) {
             $startDate = str_replace("T", " ", $request->all()['start_time']);
             $endDate = str_replace("T", " ", $request->all()['end_time']);
 
-            if (validateDate($startDate, 'Y-m-d H:i') && validateDate($endDate, 'Y-m-d H:i')) {
+            if ($this->validateDate($startDate, 'Y-m-d H:i') && $this->validateDate($endDate, 'Y-m-d H:i')) {
                 if (new DateTime($request->all()['start_time']) < new DateTime($request->all()['end_time'])) {
                     $currentTime = time();
                     $formEndTime = strtotime($endDate);
@@ -212,11 +207,11 @@ class FormController extends Controller
                         $validatedQuestion['max'] = $max;
 
                         if (array_key_exists('min', $item)) {
-                            if (validateDate($item['min'], 'Y-m-d')) $min = $item['min'];
+                            if ($this->validateDate($item['min'], 'Y-m-d')) $min = $item['min'];
                         }
 
                         if (array_key_exists('max', $item)) {
-                            if (validateDate($item['max'], 'Y-m-d')) $max = $item['max'];
+                            if ($this->validateDate($item['max'], 'Y-m-d')) $max = $item['max'];
                         }
 
                         if ($max && $min) {
@@ -505,12 +500,6 @@ class FormController extends Controller
 
     public function duplicateWithAuth(Request $request)
     {
-        function validateDate($date, $format = 'Y-m-d H:i:s')
-        {
-            $d = DateTime::createFromFormat($format, $date);
-            return $d && $d->format($format) == $date;
-        }
-
         $userId = Auth::user()->id;
         if (!$userId) return response("Unauthorized.", 401);
 
@@ -537,7 +526,7 @@ class FormController extends Controller
         if (array_key_exists('start_time', $request->all()) && array_key_exists('end_time', $request->all())) {
             $startDate = date('Y-m-d H:i:s', strtotime(str_replace("T", " ", $request->all()['start_time'])));
             $endDate = date('Y-m-d H:i:s', strtotime(str_replace("T", " ", $request->all()['end_time'])));
-            if (validateDate($startDate) && validateDate($endDate)) {
+            if ($this->validateDate($startDate) && $this->validateDate($endDate)) {
                 if (new DateTime($request->all()['start_time']) < new DateTime($request->all()['end_time'])) {
                     $currentTime = time();
                     $formEndTime = strtotime($endDate);

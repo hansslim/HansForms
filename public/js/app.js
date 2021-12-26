@@ -4751,7 +4751,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
                     _this3.$router.push("/");
                   } else {
-                    alert("Form completion is invalid. Check your answers (".concat(res.data, ")."));
+                    alert("Form completion is invalid (".concat(res.data, ")."));
                     console.log(res.data);
                   }
                 });
