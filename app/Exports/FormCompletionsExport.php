@@ -79,12 +79,16 @@ class FormCompletionsExport implements FromArray
                         array_push($completionRows[$key], implode(";", $value));
                     }
 
-                    array_push($headerRow, $inputElement->header . " {$inputElement->is_mandatory}");
+                    $mandatoryPart = null;
+                    if ($inputElement->is_mandatory == true) $mandatoryPart = " (mandatory)";
+                    else $mandatoryPart = " (not mandatory)";
+                    array_push($headerRow, $inputElement->header . $mandatoryPart);
                     continue;
                 }
                 foreach ($answers as $answer) {
                     if (in_array($answer->form_completion_id, $notAnsweredYet)) {
                         if (($key = array_search($answer->form_completion_id, $notAnsweredYet)) !== false) unset($notAnsweredYet[$key]);
+
                         if ($answer->value === false) array_push($completionRows[$answer->form_completion_id], "false");
                         else if ($answer->value === true) array_push($completionRows[$answer->form_completion_id], "true");
                         else array_push($completionRows[$answer->form_completion_id], $answer->value);
@@ -92,7 +96,11 @@ class FormCompletionsExport implements FromArray
                 }
 
                 if (count($notAnsweredYet) > 0) dd("error 2", $notAnsweredYet, $answers);
-                array_push($headerRow, $inputElement->header . " {$inputElement->is_mandatory}");
+
+                $mandatoryPart = null;
+                if ($inputElement->is_mandatory == true) $mandatoryPart = " (mandatory)";
+                else $mandatoryPart = " (not mandatory)";
+                array_push($headerRow, $inputElement->header . $mandatoryPart);
             }
             $elementCount++;
         }
