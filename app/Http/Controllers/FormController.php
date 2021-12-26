@@ -349,7 +349,9 @@ class FormController extends Controller
                                     intval($item['max_amount_of_answers']) <= $choicesCount) $max_amount_of_answers = intval($item['max_amount_of_answers']);
                             }
                             if (array_key_exists('strict_amount_of_answers', $item)) {
-                                if (intval($item['strict_amount_of_answers']) && intval($item['strict_amount_of_answers']) > 0) $strict_amount_of_answers = intval($item['strict_amount_of_answers']);
+                                if (intval($item['strict_amount_of_answers']) &&
+                                    intval($item['strict_amount_of_answers']) > 0 &&
+                                    intval($item['strict_amount_of_answers']) <= $choicesCount) $strict_amount_of_answers = intval($item['strict_amount_of_answers']);
                             }
                         }
 

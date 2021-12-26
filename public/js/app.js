@@ -3387,37 +3387,52 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                     return false;
                   }
                 }
+
+                if (this.formValues.min_amount_of_answers !== "" && this.formValues.min_amount_of_answers !== undefined) {
+                  if (isNaN(parseInt(this.formValues.min_amount_of_answers))) {
+                    this.trivialFormulateErrorHandler("Invalid minimal amount of choices value.");
+                    return false;
+                  }
+
+                  if (parseInt(this.formValues.min_amount_of_answers) >= actualChoices.length) {
+                    this.trivialFormulateErrorHandler("Invalid minimal amount of choices value (choices amount is less or equal).");
+                    return false;
+                  }
+                }
+
+                if (this.formValues.max_amount_of_answers !== "" && this.formValues.max_amount_of_answers !== undefined) {
+                  if (isNaN(parseInt(this.formValues.max_amount_of_answers))) {
+                    this.trivialFormulateErrorHandler("Invalid maximal amount of choices value.");
+                    return false;
+                  }
+
+                  if (parseInt(this.formValues.max_amount_of_answers) > actualChoices.length) {
+                    this.trivialFormulateErrorHandler("Invalid maximal amount of choices value (choices amount is less).");
+                    return false;
+                  }
+                }
+
+                if (this.formValues.strict_amount_of_answers !== "" && this.formValues.strict_amount_of_answers !== undefined) {
+                  if (isNaN(parseInt(this.formValues.strict_amount_of_answers))) {
+                    this.trivialFormulateErrorHandler("Invalid strict amount of choices value.");
+                    return false;
+                  }
+
+                  if (parseInt(this.formValues.strict_amount_of_answers) >= actualChoices.length) {
+                    this.trivialFormulateErrorHandler("Invalid strict amount of choices value (choices amount is less or equal).");
+                    return false;
+                  }
+                }
+
+                if (this.formValues.min_amount_of_answers && this.formValues.max_amount_of_answers) {
+                  if (parseInt(this.formValues.max_amount_of_answers) <= parseInt(this.formValues.min_amount_of_answers)) {
+                    this.trivialFormulateErrorHandler('Minimal amount of choices value is higher than maximal amount of choices value.');
+                    return false;
+                  }
+                }
               } else {
                 this.trivialFormulateErrorHandler("You have to add at least 2 choices.");
                 return false;
-              }
-
-              if (this.formValues.min_amount_of_answers !== "" && this.formValues.min_amount_of_answers !== undefined) {
-                if (isNaN(parseInt(this.formValues.min_amount_of_answers))) {
-                  this.trivialFormulateErrorHandler("Invalid minimal amount of choices value.");
-                  return false;
-                }
-              }
-
-              if (this.formValues.max_amount_of_answers !== "" && this.formValues.max_amount_of_answers !== undefined) {
-                if (isNaN(parseInt(this.formValues.max_amount_of_answers))) {
-                  this.trivialFormulateErrorHandler("Invalid maximal amount of choices value.");
-                  return false;
-                }
-              }
-
-              if (this.formValues.strict_amount_of_answers !== "" && this.formValues.strict_amount_of_answers !== undefined) {
-                if (isNaN(parseInt(this.formValues.strict_amount_of_answers))) {
-                  this.trivialFormulateErrorHandler("Invalid strict amount of choices value.");
-                  return false;
-                }
-              }
-
-              if (this.formValues.min_amount_of_answers && this.formValues.max_amount_of_answers) {
-                if (parseInt(this.formValues.max_amount_of_answers) <= parseInt(this.formValues.min_amount_of_answers)) {
-                  this.trivialFormulateErrorHandler('Minimal amount of choices value is higher than maximal amount of choices value.');
-                  return false;
-                }
               }
 
               this.trivialFormulateErrorHandler();
