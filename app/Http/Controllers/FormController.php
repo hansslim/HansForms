@@ -34,10 +34,13 @@ class FormController extends Controller
      */
     public function index()
     {
-        return Form::where('user_id', Auth::user()->id)
-            ->without('formElements', 'user')
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $userId = Auth::user()->id;
+        if ($userId) {
+            return Form::where('user_id', $userId)
+                ->without('formElements', 'user')
+                ->orderBy('created_at', 'desc')
+                ->get();
+        } else return response("Unauthorized", 401);
     }
 
     /**
@@ -49,6 +52,9 @@ class FormController extends Controller
     public function store(Request $request)
     {
         $userId = -1;
+        if (!Auth::user()) return response("Unauthorized - log in to create forms...", 401);
+        else $userId = Auth::user()->id;
+
         $formProps = [];
         $formProps['header'] = null;
         $formProps['description'] = null;
@@ -78,9 +84,6 @@ class FormController extends Controller
 
         //todo: validate and process these values
         $formProps['has_private_token'] = false; //wip
-
-        if (!Auth::user()) return response("Unauthorized - log in to create forms...", 401);
-        else $userId = Auth::user()->id;
 
         if (!$request->all()) return response("Invalid data (expected data).", 400);
 
@@ -512,6 +515,7 @@ class FormController extends Controller
         $userId = Auth::user()->id;
         if (!$userId) return response("Unauthorized.", 401);
 
+        //todo: check if form belongs to user!
         $form = null;
 
         if (array_key_exists('slug', $request->all())) {
@@ -670,6 +674,59 @@ class FormController extends Controller
         }
     }
 
+    public function publishResults(Request $request, $slug)
+    {
+        if (!($request->all() && is_array($request->all()))) {
+            return response("Bad request", 400);
+        }
+        $user = Auth::user();
+        if ($user) {
+            $form = Form::where(['slug' => $slug, 'user_id' => $user->id])->first();
+            if ($form) {
+                $correspondingIds = [];
+                foreach ($form->formElements as $value) {
+                    if ($value->inputElement) if ($value->inputElement->id) $correspondingIds[] = $value->inputElement->id;
+                }
+
+                $validatedHasPublicResults = null;
+                if (array_key_exists("has_public_results", $request->all())) {
+                    if ($request->all()["has_public_results"]) $validatedHasPublicResults = true;
+                    else $validatedHasPublicResults = false;
+                    unset($request->all()["has_public_results"]);
+                }
+
+                $validatedQuestions = ["true" => [], "false" => []];
+                foreach ($request->all() as $key => $value) {
+                    if (in_array($key, $correspondingIds)) {
+                        if ($value) $validatedQuestions["true"][] = $key;
+                        else $validatedQuestions["false"][] = $key;
+                    }
+                }
+                //dd($validatedQuestions);
+                try {
+                    DB::transaction(function () use ($form, $validatedHasPublicResults, $validatedQuestions) {
+                        if ($validatedHasPublicResults !== null) {
+                            $form->has_public_results = $validatedHasPublicResults;
+                            $form->save();
+                        }
+
+                        if (count($validatedQuestions['true']) > 0)
+                            InputElement::whereIn('id', $validatedQuestions['true'])
+                                ->update(['has_public_results' => true]);
+                        if (count($validatedQuestions['false']) > 0)
+                            InputElement::whereIn('id', $validatedQuestions['false'])
+                                ->update(['has_public_results' => false]);
+                    });
+                } catch (Exception $exception) {
+                    dd($exception);
+                    //return response("{$exception->getMessage()}", 500);
+                }
+                return response("Form publication restrictions has been modified successfully", 200);
+            } else return response("Not found.", 404);
+        } else return response("Unauthorized.", 401);
+    }
+
+
     /**
      * Update the specified resource in storage.
      *
@@ -677,7 +734,8 @@ class FormController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public
+    function update(Request $request, $id)
     {
         //todo: refuse update when is start_time > server time
     }
@@ -688,7 +746,8 @@ class FormController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($slug)
+    public
+    function destroy($slug)
     {
         if (!Auth::user()) return response("Unauthorized - log in to delete forms...", 401);
         else {

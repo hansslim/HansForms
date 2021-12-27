@@ -24,6 +24,8 @@ Route::get('/logged_user', [UserController::class, 'show']);
 Route::get('/form/{slug}', [FormController::class, 'show']);
 Route::post('/form/complete/{slug}', [FormCompletionController::class, 'store']);
 
+Route::get('/form/public_results/{slug}', [FormCompletionController::class, 'publicIndex']);
+
 //require user privileges
 Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::get('/form/authenticated/{slug}', [FormController::class, 'showWithAuth']);
@@ -34,6 +36,7 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::post('/form/duplicate/', [FormController::class, 'duplicateWithAuth']);
     Route::get('/form/results/{slug}', [FormCompletionController::class, 'index']);
     Route::get('/form/results/{slug}/download', [FormCompletionController::class, 'export']);
+    Route::post('/form/results/{slug}/publish_results', [FormController::class, 'publishResults']);
 
     Route::post('/logout', [UserController::class, 'logout']);
 });

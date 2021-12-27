@@ -3942,6 +3942,113 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Modals/FormResults/FormResultsPublicationModal.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Modals/FormResults/FormResultsPublicationModal.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _apis_Form__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../apis/Form */ "./resources/js/apis/Form.js");
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  name: "FormResultsPublicationModal",
+  props: ['questions', 'publicResults', 'slug'],
+  data: function data() {
+    return {
+      formValues: {},
+      publicLink: ""
+    };
+  },
+  mounted: function mounted() {
+    this.publicLink = "".concat(window.location).replace('/results/', '/public_results/');
+  },
+  methods: {
+    handleSubmit: function handleSubmit() {
+      var _this = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                //todo: select at least 1
+                console.log(_this.formValues);
+                _context.next = 3;
+                return _apis_Form__WEBPACK_IMPORTED_MODULE_1__["default"].postPublishFormResults(_this.formValues, _this.$props['slug']).then(function (res) {
+                  if (res.status === 200) {
+                    _this.$modal.hide(_this.$parent.name);
+
+                    window.location.reload();
+                  }
+                });
+
+              case 3:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }))();
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Modals/FormReview/FormDuplicationModal.vue?vue&type=script&lang=js&":
 /*!*********************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Modals/FormReview/FormDuplicationModal.vue?vue&type=script&lang=js& ***!
@@ -4354,7 +4461,6 @@ __webpack_require__.r(__webpack_exports__);
         }
       }
     });
-    console.log(this.$props['parsedData']);
   }
 });
 
@@ -5207,6 +5313,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _apis_Form__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../apis/Form */ "./resources/js/apis/Form.js");
 /* harmony import */ var _components_ResultComponents_ResultComponent__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/ResultComponents/ResultComponent */ "./resources/js/components/ResultComponents/ResultComponent.vue");
 /* harmony import */ var _components_ResultComponents_DetailedResultsTable__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/ResultComponents/DetailedResultsTable */ "./resources/js/components/ResultComponents/DetailedResultsTable.vue");
+/* harmony import */ var _components_Modals_FormResults_FormResultsPublicationModal__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/Modals/FormResults/FormResultsPublicationModal */ "./resources/js/components/Modals/FormResults/FormResultsPublicationModal.vue");
+/* harmony import */ var _components_Modals_CreateForm_ItemModal__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/Modals/CreateForm/ItemModal */ "./resources/js/components/Modals/CreateForm/ItemModal.vue");
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -5262,6 +5370,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+
+
 
 
 
@@ -5278,7 +5395,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       errored: false,
       errorCode: -1,
       errorText: "Bad request.",
-      detailedSummaryView: false
+      detailedSummaryView: false,
+      arePublicResults: true
     };
   },
   mounted: function mounted() {
@@ -5289,38 +5407,81 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              _apis_Form__WEBPACK_IMPORTED_MODULE_1__["default"].getFormResults(_this.getSlug()).then(function (resFormRes) {
-                if (resFormRes.status === 200) {
-                  _this.formResults = resFormRes.data;
+              if (_this.$route.path.includes('/results/')) {
+                _this.arePublicResults = false;
+              }
+
+              if (_this.arePublicResults) {
+                _apis_Form__WEBPACK_IMPORTED_MODULE_1__["default"].getPublicFormResults(_this.getSlug()).then(function (resFormRes) {
+                  console.log(resFormRes);
+
+                  if (resFormRes.status === 200) {
+                    _this.formResults = resFormRes.data;
+                    _this.loading = false;
+                  } else {
+                    _this.errorCode = resFormRes.status;
+                    throw new Error(resFormRes.data);
+                  }
+                })["catch"](function () {
+                  _this.errored = true;
                   _this.loading = false;
-                } else {
-                  _this.errorCode = resFormRes.status;
-                  throw new Error(resFormRes.data);
-                }
-              })["catch"](function () {
+
+                  switch (_this.errorCode) {
+                    case 204:
+                      _this.errorText = "Form hasn't been answered yet.";
+                      break;
+
+                    case 401:
+                      _this.errorText = "Unauthorized.";
+                      break;
+
+                    case 404:
+                      _this.errorText = "Not found.";
+                      break;
+
+                    default:
+                      _this.errorText = "Unhandled error.";
+                      break;
+                  }
+                });
+              } else if (!_this.arePublicResults && _this.$store.getters['authenticated']) {
+                _apis_Form__WEBPACK_IMPORTED_MODULE_1__["default"].getFormResults(_this.getSlug()).then(function (resFormRes) {
+                  if (resFormRes.status === 200) {
+                    _this.formResults = resFormRes.data;
+                    _this.loading = false;
+                  } else {
+                    _this.errorCode = resFormRes.status;
+                    throw new Error(resFormRes.data);
+                  }
+                })["catch"](function () {
+                  _this.errored = true;
+                  _this.loading = false;
+
+                  switch (_this.errorCode) {
+                    case 204:
+                      _this.errorText = "Form hasn't been answered yet.";
+                      break;
+
+                    case 401:
+                      _this.errorText = "Unauthorized.";
+                      break;
+
+                    case 404:
+                      _this.errorText = "Not found.";
+                      break;
+
+                    default:
+                      _this.errorText = "Unhandled error.";
+                      break;
+                  }
+                });
+              } else {
                 _this.errored = true;
                 _this.loading = false;
+                _this.errorText = "Bad request.";
+              }
 
-                switch (_this.errorCode) {
-                  case 204:
-                    _this.errorText = "Form hasn't been answered yet.";
-                    break;
-
-                  case 401:
-                    _this.errorText = "Unauthorized.";
-                    break;
-
-                  case 404:
-                    _this.errorText = "Not found.";
-                    break;
-
-                  default:
-                    _this.errorText = "Unhandled error.";
-                    break;
-                }
-              });
-
-            case 1:
+            case 2:
             case "end":
               return _context.stop();
           }
@@ -5335,7 +5496,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       return (_this$$route$params$s = this.$route.params['slug']) !== null && _this$$route$params$s !== void 0 ? _this$$route$params$s : '';
     },
     getCompletionsIds: function getCompletionsIds() {
-      //console.log(Object.keys(this.formResults.results_table[2]))
       return Object.keys(this.formResults.results_table[2]);
     },
     handleGoBack: function handleGoBack() {
@@ -5372,6 +5532,25 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     handleChangeView: function handleChangeView() {
       this.detailedSummaryView = !this.detailedSummaryView;
+    },
+    handlePublication: function handlePublication() {
+      this.$modal.show(_components_Modals_FormResults_FormResultsPublicationModal__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        questions: this.formResults.form_elements.map(function (x) {
+          return {
+            id: "".concat(x.input_element.id),
+            header: x.input_element.header,
+            "public": x.input_element.has_public_results
+          };
+        }),
+        publicResults: this.formResults.has_public_results,
+        slug: this.getSlug()
+      }, {
+        height: 'auto',
+        width: '60%',
+        scrollable: true
+      }, {
+        /*'before-close': event => this.handleItemsChanged()*/
+      });
     }
   }
 });
@@ -6098,15 +6277,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }, _callee8);
     }))();
   },
-  getFormResultsDownload: function getFormResultsDownload(slug) {
+  getPublicFormResults: function getPublicFormResults(slug) {
     return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee9() {
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee9$(_context9) {
         while (1) {
           switch (_context9.prev = _context9.next) {
             case 0:
-              return _context9.abrupt("return", _Api__WEBPACK_IMPORTED_MODULE_1__["default"].get('/form/results/' + slug + "/download", {
-                responseType: "blob"
-              }));
+              return _context9.abrupt("return", _Api__WEBPACK_IMPORTED_MODULE_1__["default"].get('/form/public_results/' + slug));
 
             case 1:
             case "end":
@@ -6114,6 +6291,40 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           }
         }
       }, _callee9);
+    }))();
+  },
+  getFormResultsDownload: function getFormResultsDownload(slug) {
+    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee10() {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee10$(_context10) {
+        while (1) {
+          switch (_context10.prev = _context10.next) {
+            case 0:
+              return _context10.abrupt("return", _Api__WEBPACK_IMPORTED_MODULE_1__["default"].get('/form/results/' + slug + "/download", {
+                responseType: "blob"
+              }));
+
+            case 1:
+            case "end":
+              return _context10.stop();
+          }
+        }
+      }, _callee10);
+    }))();
+  },
+  postPublishFormResults: function postPublishFormResults(data, slug) {
+    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee11() {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee11$(_context11) {
+        while (1) {
+          switch (_context11.prev = _context11.next) {
+            case 0:
+              return _context11.abrupt("return", _Api__WEBPACK_IMPORTED_MODULE_1__["default"].post('/form/results/' + slug + "/publish_results", data));
+
+            case 1:
+            case "end":
+              return _context11.stop();
+          }
+        }
+      }, _callee11);
     }))();
   }
 });
@@ -6399,6 +6610,10 @@ var routes = [{
   meta: {
     requiresAuth: true
   }
+}, {
+  path: "/form/public_results/:slug",
+  name: "FormPublicResults",
+  component: _views_FormResults__WEBPACK_IMPORTED_MODULE_10__["default"]
 }, {
   path: "/create_form",
   name: "CreateForm",
@@ -82850,6 +83065,45 @@ component.options.__file = "resources/js/components/Modals/CreateForm/TextItem.v
 
 /***/ }),
 
+/***/ "./resources/js/components/Modals/FormResults/FormResultsPublicationModal.vue":
+/*!************************************************************************************!*\
+  !*** ./resources/js/components/Modals/FormResults/FormResultsPublicationModal.vue ***!
+  \************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _FormResultsPublicationModal_vue_vue_type_template_id_7081ab58_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./FormResultsPublicationModal.vue?vue&type=template&id=7081ab58&scoped=true& */ "./resources/js/components/Modals/FormResults/FormResultsPublicationModal.vue?vue&type=template&id=7081ab58&scoped=true&");
+/* harmony import */ var _FormResultsPublicationModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./FormResultsPublicationModal.vue?vue&type=script&lang=js& */ "./resources/js/components/Modals/FormResults/FormResultsPublicationModal.vue?vue&type=script&lang=js&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _FormResultsPublicationModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _FormResultsPublicationModal_vue_vue_type_template_id_7081ab58_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render,
+  _FormResultsPublicationModal_vue_vue_type_template_id_7081ab58_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  "7081ab58",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/Modals/FormResults/FormResultsPublicationModal.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
 /***/ "./resources/js/components/Modals/FormReview/FormDuplicationModal.vue":
 /*!****************************************************************************!*\
   !*** ./resources/js/components/Modals/FormReview/FormDuplicationModal.vue ***!
@@ -83801,6 +84055,22 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/Modals/FormResults/FormResultsPublicationModal.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************************************!*\
+  !*** ./resources/js/components/Modals/FormResults/FormResultsPublicationModal.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_FormResultsPublicationModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./FormResultsPublicationModal.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Modals/FormResults/FormResultsPublicationModal.vue?vue&type=script&lang=js&");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_FormResultsPublicationModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
 /***/ "./resources/js/components/Modals/FormReview/FormDuplicationModal.vue?vue&type=script&lang=js&":
 /*!*****************************************************************************************************!*\
   !*** ./resources/js/components/Modals/FormReview/FormDuplicationModal.vue?vue&type=script&lang=js& ***!
@@ -84398,6 +84668,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TextItem_vue_vue_type_template_id_1513b6b1_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TextItem_vue_vue_type_template_id_1513b6b1_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./TextItem.vue?vue&type=template&id=1513b6b1&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Modals/CreateForm/TextItem.vue?vue&type=template&id=1513b6b1&scoped=true&");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/Modals/FormResults/FormResultsPublicationModal.vue?vue&type=template&id=7081ab58&scoped=true&":
+/*!*******************************************************************************************************************************!*\
+  !*** ./resources/js/components/Modals/FormResults/FormResultsPublicationModal.vue?vue&type=template&id=7081ab58&scoped=true& ***!
+  \*******************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_FormResultsPublicationModal_vue_vue_type_template_id_7081ab58_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_FormResultsPublicationModal_vue_vue_type_template_id_7081ab58_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_FormResultsPublicationModal_vue_vue_type_template_id_7081ab58_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./FormResultsPublicationModal.vue?vue&type=template&id=7081ab58&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Modals/FormResults/FormResultsPublicationModal.vue?vue&type=template&id=7081ab58&scoped=true&");
 
 
 /***/ }),
@@ -86041,6 +86328,116 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Modals/FormResults/FormResultsPublicationModal.vue?vue&type=template&id=7081ab58&scoped=true&":
+/*!**********************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Modals/FormResults/FormResultsPublicationModal.vue?vue&type=template&id=7081ab58&scoped=true& ***!
+  \**********************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render),
+/* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function () {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "container" },
+    [
+      _c("h2", [_vm._v("Publication")]),
+      _vm._v(" "),
+      _c("h4", [
+        _vm._v(
+          "Current status: " +
+            _vm._s(this.$props["publicResults"] === true ? "public" : "private")
+        ),
+      ]),
+      _vm._v(" "),
+      this.$props["publicResults"]
+        ? _c("div", [
+            _vm._v("\n        Public link: "),
+            _c("a", { attrs: { href: this.publicLink } }, [
+              _vm._v(_vm._s(this.publicLink)),
+            ]),
+            _vm._v(" "),
+            _c("hr"),
+          ])
+        : _vm._e(),
+      _vm._v(" "),
+      _c(
+        "FormulateForm",
+        {
+          on: { submit: _vm.handleSubmit },
+          model: {
+            value: _vm.formValues,
+            callback: function ($$v) {
+              _vm.formValues = $$v
+            },
+            expression: "formValues",
+          },
+        },
+        [
+          _c("FormulateInput", {
+            staticClass: "form-check form-switch",
+            attrs: {
+              label: "Set results public",
+              name: "has_public_results",
+              type: "checkbox",
+              checked: this.$props["publicResults"],
+              "element-class": "form-check-input",
+              "label-class": "form-check-label",
+            },
+          }),
+          _vm._v(" "),
+          _c("hr"),
+          _vm._v(" "),
+          _c("h5", [
+            _vm._v("Mark questions that you want to show to the public..."),
+          ]),
+          _vm._v(" "),
+          _vm._l(this.$props["questions"], function (item) {
+            return _c(
+              "div",
+              { key: item.id },
+              [
+                _c("FormulateInput", {
+                  attrs: {
+                    "wrapper-class": "form-check",
+                    label: item.header,
+                    name: item.id,
+                    type: "checkbox",
+                    checked: item.public,
+                    "element-class": "form-check-input",
+                    "label-class": "form-check-label",
+                  },
+                }),
+                _c("br"),
+              ],
+              1
+            )
+          }),
+          _vm._v(" "),
+          _c("FormulateInput", {
+            attrs: { label: "Change restrictions", type: "submit" },
+          }),
+        ],
+        2
+      ),
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Modals/FormReview/FormDuplicationModal.vue?vue&type=template&id=3454ccf8&scoped=true&":
 /*!**************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Modals/FormReview/FormDuplicationModal.vue?vue&type=template&id=3454ccf8&scoped=true& ***!
@@ -86808,7 +87205,9 @@ var render = function () {
     _vm._v(" "),
     this.errored ? _c("div", [_vm._v(_vm._s(_vm.errorText))]) : _vm._e(),
     _vm._v(" "),
-    !this.loading
+    !this.loading &&
+    this.$store.getters["authenticated"] &&
+    !this.arePublicResults
       ? _c(
           "div",
           [
@@ -86831,6 +87230,14 @@ var render = function () {
                   staticClass: "btn",
                   attrs: { label: "Change results view", type: "button" },
                   on: { click: _vm.handleChangeView },
+                })
+              : _vm._e(),
+            _vm._v(" "),
+            !this.loading && !this.errored
+              ? _c("FormulateInput", {
+                  staticClass: "btn",
+                  attrs: { label: "Publication...", type: "button" },
+                  on: { click: _vm.handlePublication },
                 })
               : _vm._e(),
           ],

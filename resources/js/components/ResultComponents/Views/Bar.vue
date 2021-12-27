@@ -31,7 +31,6 @@ export default {
                 }
             }
         })
-        console.log(this.$props['parsedData'])
     }
 }
 </script>

@@ -25,7 +25,13 @@ export default {
     async getFormResults(slug) {
         return Api.get('/form/results/' + slug)
     },
+    async getPublicFormResults(slug) {
+        return Api.get('/form/public_results/' + slug)
+    },
     async getFormResultsDownload(slug) {
         return Api.get('/form/results/' + slug + "/download", {responseType: "blob"})
+    },
+    async postPublishFormResults(data, slug) {
+        return Api.post('/form/results/' + slug + "/publish_results", data)
     }
 };

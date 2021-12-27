@@ -16,7 +16,8 @@ class Form extends Model
         'end_time',
         'start_time',
         'has_private_token',
-        'user_id'
+        'user_id',
+        'has_public_results'
     ];
 
     protected $visible = [
@@ -26,6 +27,7 @@ class Form extends Model
         'start_time',
         'end_time',
         'has_private_token',
+        'has_public_results',
 
         //visible props, not DB columns
         'formElements',

@@ -13,13 +13,16 @@ class InputElement extends Model
         'header',
         'description',
         'is_mandatory',
-        'form_element_id'
+        'form_element_id',
+        'has_public_results'
     ];
 
     protected $visible = [
+        'id',
         'header',
         'description',
         'is_mandatory',
+        'has_public_results',
         'booleanInput',
         'dateInput',
         'textInput',

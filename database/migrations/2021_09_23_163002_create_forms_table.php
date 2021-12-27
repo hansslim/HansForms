@@ -20,6 +20,8 @@ class CreateFormsTable extends Migration
             $table->string("description")->nullable();
             $table->dateTime("start_time");
             $table->dateTime("end_time");
+            $table->boolean("has_public_results")->default(false);
+
             $table->boolean("has_private_token");
             $table->timestamps();
 

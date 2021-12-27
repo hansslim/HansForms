@@ -62,6 +62,11 @@ const routes = [
         meta: {requiresAuth: true}
     },
     {
+        path: "/form/public_results/:slug",
+        name: "FormPublicResults",
+        component: FormResults,
+    },
+    {
         path: "/create_form",
         name: "CreateForm",
         component: CreateForm,

@@ -18,7 +18,7 @@ class CreateInputElementsTable extends Migration
             $table->string("header");
             $table->string("description")->nullable();
             $table->boolean("is_mandatory");
-            //$table->json("special_rules")->nullable();
+            $table->boolean("has_public_results")->default(false);
             $table->timestamps();
 
             //fk: form_element_id

@@ -14,3 +14,4 @@ const mix = require('laravel-mix');
 mix.js('resources/js/app.js', 'public/js')
     .vue()
     .sass('resources/sass/app.scss', 'public/css');
+    //.sass('../node_modules/@braid/vue-formulate/themes/snow/snow.scss', 'public/css');
