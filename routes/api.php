@@ -22,7 +22,10 @@ Route::post('/register', [UserController::class, 'register']);
 Route::get('/logged_user', [UserController::class, 'show']);
 
 Route::get('/form/{slug}', [FormController::class, 'show']);
+Route::get('/private_form/{token}', [FormController::class, 'privateShow']);
+
 Route::post('/form/complete/{slug}', [FormCompletionController::class, 'store']);
+Route::post('/form/private_complete/{token}', [FormCompletionController::class, 'privateStore']);
 
 Route::get('/form/public_results/{slug}', [FormCompletionController::class, 'publicIndex']);
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\BooleanInput;
 use App\Models\DateInput;
 use App\Models\FormElement;
+use App\Models\FormPrivateAccessToken;
 use App\Models\InputElement;
 use App\Models\NewPage;
 use App\Models\NumberInput;
@@ -17,6 +18,7 @@ use Illuminate\Http\Request;
 use App\Models\Form;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Ramsey\Uuid\Uuid;
 
 class FormController extends Controller
@@ -83,7 +85,53 @@ class FormController extends Controller
         } else return response("Invalid data (missing start/end date).", 400);
 
         //todo: validate and process these values
-        $formProps['has_private_token'] = false; //wip
+        $formProps['has_private_token'] = false;
+        $formProps['private_emails'] = [];
+
+        if (array_key_exists('has_private_token', $request->all())) {
+            if (is_bool($request->all()['has_private_token'])) $formProps['has_private_token'] = true;
+        }
+
+        if ($formProps['has_private_token']) {
+            if (array_key_exists('private_emails', $request->all())) {
+                //basic input mode
+                if (is_array($request->all()['private_emails']) && count($request->all()['private_emails']) > 0) {
+                    //emails validation
+                    $validator = Validator::make($request->all(), [
+                        'private_emails.*.email' => 'email|required|regex:/(.+)@(.+)\.(.+)/i',
+                    ]);
+
+                    if ($validator->fails()) {
+                        return response("Invalid data (invalid private emails - basic input mode).", 400);
+                    }
+                    else {
+                        $formProps['private_emails'] = array_map(function ($validatorEmail) {
+                            return $validatorEmail['email'];
+                        }, $validator->validated()['private_emails']);
+                    }
+                }
+                //raw text input mode
+                else if ($request->all()['private_emails']){
+                    $dataToValidate['emails'] = explode("\n", $request->all()['private_emails']);
+
+                    $validator = Validator::make($dataToValidate, [
+                        'emails.*' => 'email|required|regex:/(.+)@(.+)\.(.+)/i',
+                    ]);
+
+                    if ($validator->fails()) {
+                        return response("Invalid data (invalid private emails - raw text input mode).", 400);
+                    }
+                    else {
+                        $formProps['private_emails'] = $dataToValidate['emails'];
+                    }
+                }
+                else {
+                    return response("Invalid data (missing array or formatted string of private emails).", 400);
+                }
+            }
+            else return response("Invalid data (missing array of private emails).", 400);
+        }
+
 
         if (!$request->all()) return response("Invalid data (expected data).", 400);
 
@@ -476,6 +524,17 @@ class FormController extends Controller
                         }
                     }
                 }
+
+                if ($formProps['has_private_token']) {
+                    foreach ($formProps['private_emails'] as $validatedEmail) {
+                        $token = Uuid::uuid4()->toString();
+                        FormPrivateAccessToken::create([
+                            'token' => $token,
+                            'email' => $validatedEmail,
+                            'form_id' => $newForm->id,
+                        ]);
+                    }
+                }
             });
         } catch (Exception $exception) {
             dd($exception);
@@ -495,6 +554,7 @@ class FormController extends Controller
     {
         $form = Form::where('slug', $slug)->first();
         if ($form) {
+            if ($form->has_private_token) return response('You can access this form only with valid token.', 400);
             $currentTime = time();
             $formEndTime = strtotime($form->end_time);
             $formStartTime = strtotime($form->start_time);
@@ -508,6 +568,33 @@ class FormController extends Controller
 
             return $form;
         } else return response('Not Found', 404);
+    }
+
+    public function privateShow($token) {
+        $privateAccessToken = FormPrivateAccessToken::where('token', $token)->first();
+        //todo: try to rewrite using show method above
+        if ($privateAccessToken) {
+            if ($privateAccessToken->was_used) return response('Token is expired', 410);
+            else {
+                $form = (Form::where('id', $privateAccessToken->form_id)->first())->makeHidden(['slug']);
+                if ($form) {
+                    $currentTime = time();
+                    $formEndTime = strtotime($form->end_time);
+                    $formStartTime = strtotime($form->start_time);
+
+                    if ($currentTime >= $formEndTime) {
+                        return response('Expired - no longer available', 410);
+                    }
+                    if ($currentTime <= $formStartTime) {
+                        return response('Not available at this moment', 423);
+                    }
+
+                    return $form;
+                }
+                else return response('Bad request', 400);
+            }
+
+        } else return response('Not found', 404);
     }
 
     public function duplicateWithAuth(Request $request)
@@ -569,7 +656,7 @@ class FormController extends Controller
                     'end_time' => $formProps['end_time'],
                     //****************
 
-                    'has_private_token' => false,
+                    'has_private_token' => false, //todo: copy emails
                 ]);
 
                 foreach ($form->formElements as $item) {

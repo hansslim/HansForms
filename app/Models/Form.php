@@ -55,4 +55,8 @@ class Form extends Model
     {
         return $this->hasMany(FormCompletion::class);
     }
+
+    public function formPrivateAccessTokens() {
+        return $this->hasMany(FormPrivateAccessToken::class);
+    }
 }

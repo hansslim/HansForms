@@ -461,6 +461,11 @@ class FormCompletionController extends Controller
         }
         return response('Answer has been proceeded successfully.', 200);
     }
+
+    public function privateStore(Request $request, $token) {
+
+    }
+
     public function publicIndex($slug) {
         $wantedFormResults = Form::where(['slug' => $slug, 'has_public_results' => true])->with(
             'formElements.inputElement.textInput.textInputAnswers',
