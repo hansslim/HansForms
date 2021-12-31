@@ -49,6 +49,36 @@ class FormCompletionController extends Controller
         } else return response("Unauthorized.", 401);
     }
 
+    public function publicIndex($slug) {
+        $wantedFormResults = Form::where(['slug' => $slug, 'has_public_results' => true])->with(
+            'formElements.inputElement.textInput.textInputAnswers',
+            'formElements.inputElement.numberInput.numberInputAnswers',
+            'formElements.inputElement.dateInput.dateInputAnswers',
+            'formElements.inputElement.booleanInput.booleanInputAnswers',
+            'formElements.inputElement.selectInput.selectInputChoices.selectInputAnswers',
+        )->first();
+        if ($wantedFormResults) {
+            $hasResults = FormCompletion::where(['form_id' => $wantedFormResults->id])->first();
+
+            $atLeastOnePublic = false;
+            foreach ($wantedFormResults->formElements as $key => $element) {
+                if ($element->inputElement) {
+                    if (!$element->inputElement->has_public_results) unset($wantedFormResults->formElements[$key]);
+                    else $atLeastOnePublic = true;
+                }
+            }
+
+            if (!$atLeastOnePublic) return response("No content.", 204);
+
+            if ($hasResults) {
+                $wantedFormResults->results_table = (new FormCompletionsExport($wantedFormResults))->array();
+                return $wantedFormResults;
+            }
+            return $wantedFormResults;
+        }
+        else return response("Not found", 404);
+    }
+
     public function export($slug) {
         $data = $this->index($slug);
         if ($data) {
@@ -483,31 +513,5 @@ class FormCompletionController extends Controller
             });
         }
         return $response;
-    }
-
-    public function publicIndex($slug) {
-        $wantedFormResults = Form::where(['slug' => $slug, 'has_public_results' => true])->with(
-            'formElements.inputElement.textInput.textInputAnswers',
-            'formElements.inputElement.numberInput.numberInputAnswers',
-            'formElements.inputElement.dateInput.dateInputAnswers',
-            'formElements.inputElement.booleanInput.booleanInputAnswers',
-            'formElements.inputElement.selectInput.selectInputChoices.selectInputAnswers',
-        )->first();
-        if ($wantedFormResults) {
-            $hasResults = FormCompletion::where(['form_id' => $wantedFormResults->id])->first();
-
-            foreach ($wantedFormResults->formElements as $key => $element) {
-                if ($element->inputElement) {
-                    if (!$element->inputElement->has_public_results) unset($wantedFormResults->formElements[$key]);
-                }
-            }
-
-            if ($hasResults) {
-                $wantedFormResults->results_table = (new FormCompletionsExport($wantedFormResults))->array();
-                return $wantedFormResults;
-            }
-            return $wantedFormResults;
-        }
-        else return response("Not found", 404);
     }
 }

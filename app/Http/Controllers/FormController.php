@@ -772,7 +772,9 @@ class FormController extends Controller
             if ($form) {
                 $correspondingIds = [];
                 foreach ($form->formElements as $value) {
-                    if ($value->inputElement) if ($value->inputElement->id) $correspondingIds[] = $value->inputElement->id;
+                    if ($value->inputElement) if ($value->inputElement->id) {
+                        $correspondingIds[] = $value->inputElement->id;
+                    }
                 }
 
                 $validatedHasPublicResults = null;
@@ -789,6 +791,12 @@ class FormController extends Controller
                         else $validatedQuestions["false"][] = $key;
                     }
                 }
+
+                if ($validatedHasPublicResults) {
+                    if (count($validatedQuestions["true"]) <= 0)
+                        return response("Bad request (at least one public question expected)", 400);
+                }
+
                 //dd($validatedQuestions);
                 try {
                     DB::transaction(function () use ($form, $validatedHasPublicResults, $validatedQuestions) {

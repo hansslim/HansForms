@@ -95,7 +95,7 @@ export default {
                 this.loading = false;
                 switch (this.errorCode) {
                     case 204:
-                        this.errorText = "Form hasn't been answered yet.";
+                        this.errorText = "No content.";
                         break;
                     case 401:
                         this.errorText = "Unauthorized.";

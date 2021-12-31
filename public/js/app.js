@@ -4012,6 +4012,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "FormResultsPublicationModal",
@@ -4019,11 +4030,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   data: function data() {
     return {
       formValues: {},
-      publicLink: ""
+      publicLink: "",
+      errored: false,
+      disabledCheckboxes: true,
+      loading: true
     };
   },
   mounted: function mounted() {
     this.publicLink = "".concat(window.location).replace('/results/', '/public_results/');
+    this.disabledCheckboxes = !this.$props['publicResults'];
+    this.loading = false;
   },
   methods: {
     handleSubmit: function handleSubmit() {
@@ -4034,24 +4050,64 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                //todo: select at least 1
-                console.log(_this.formValues);
-                _context.next = 3;
+                if (_this.errored) {
+                  _context.next = 4;
+                  break;
+                }
+
+                _this.loading = true;
+                _context.next = 4;
                 return _apis_Form__WEBPACK_IMPORTED_MODULE_1__["default"].postPublishFormResults(_this.formValues, _this.$props['slug']).then(function (res) {
                   if (res.status === 200) {
                     _this.$modal.hide(_this.$parent.name);
 
+                    _this.loading = false;
                     window.location.reload();
                   }
                 });
 
-              case 3:
+              case 4:
               case "end":
                 return _context.stop();
             }
           }
         }, _callee);
       }))();
+    },
+    handleFormInputChange: function handleFormInputChange() {
+      this.trivialFormulateErrorHandler();
+
+      if (this.formValues.has_public_results) {
+        this.disabledCheckboxes = false;
+        var trueCount = 0;
+        Object.values(this.formValues).forEach(function (x) {
+          if (x) trueCount++;
+        });
+
+        if (trueCount < 2) {
+          this.trivialFormulateErrorHandler("You have to choose at least one question to have public results.");
+          this.errored = true;
+        } else {
+          this.trivialFormulateErrorHandler();
+          this.errored = false;
+        }
+      } else {
+        this.disabledCheckboxes = true;
+        this.errored = false;
+      }
+    },
+    trivialFormulateErrorHandler: function trivialFormulateErrorHandler() {
+      var error = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+      if (error) {
+        this.$formulate.handle({
+          formErrors: [error.toString()]
+        }, 'modalForm');
+      } else {
+        this.$formulate.handle({
+          formErrors: []
+        }, 'modalForm');
+      }
     }
   }
 });
@@ -5286,6 +5342,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
 
 
 
@@ -5305,7 +5362,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       errored: false,
       errorText: "Bad Request",
       dataFetched: false,
-      publicLink: "#"
+      publicLink: "#",
+      hasPublicLink: true
     };
   },
   mounted: function mounted() {
@@ -5316,12 +5374,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              _this.publicLink = "".concat(window.location).replace('/preview', '');
               _this.slug = _this.getSlug();
-              _context.next = 4;
+              _context.next = 3;
               return _this.getThisForm().then(function () {
                 try {
                   if (_this.dataFetched) {
+                    if (_this.form.has_private_token) _this.hasPublicLink = false;
+                    if (_this.hasPublicLink) _this.publicLink = "".concat(window.location).replace('/preview', '');
+                    console.log(_this.form);
+
                     _this.sortElements();
 
                     _this.loading = false;
@@ -5335,7 +5396,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 }
               });
 
-            case 4:
+            case 3:
             case "end":
               return _context.stop();
           }
@@ -5643,7 +5704,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
                   switch (_this.errorCode) {
                     case 204:
-                      _this.errorText = "Form hasn't been answered yet.";
+                      _this.errorText = "No content.";
                       break;
 
                     case 401:
@@ -86608,92 +86669,116 @@ var render = function () {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "container" },
-    [
-      _c("h2", [_vm._v("Publication")]),
-      _vm._v(" "),
-      _c("h4", [
-        _vm._v(
-          "Current status: " +
-            _vm._s(this.$props["publicResults"] === true ? "public" : "private")
-        ),
-      ]),
-      _vm._v(" "),
-      this.$props["publicResults"]
-        ? _c("div", [
-            _vm._v("\n        Public link: "),
-            _c("a", { attrs: { href: this.publicLink } }, [
-              _vm._v(_vm._s(this.publicLink)),
+  return _c("div", { staticClass: "container" }, [
+    _c("h2", [_vm._v("Publication")]),
+    _vm._v(" "),
+    !_vm.loading
+      ? _c(
+          "div",
+          [
+            _c("h4", [
+              _vm._v(
+                "Current status: " +
+                  _vm._s(
+                    this.$props["publicResults"] === true ? "public" : "private"
+                  )
+              ),
             ]),
             _vm._v(" "),
-            _c("hr"),
-          ])
-        : _vm._e(),
-      _vm._v(" "),
-      _c(
-        "FormulateForm",
-        {
-          on: { submit: _vm.handleSubmit },
-          model: {
-            value: _vm.formValues,
-            callback: function ($$v) {
-              _vm.formValues = $$v
-            },
-            expression: "formValues",
-          },
-        },
-        [
-          _c("FormulateInput", {
-            staticClass: "form-check form-switch",
-            attrs: {
-              label: "Set results public",
-              name: "has_public_results",
-              type: "checkbox",
-              checked: this.$props["publicResults"],
-              "element-class": "form-check-input",
-              "label-class": "form-check-label",
-            },
-          }),
-          _vm._v(" "),
-          _c("hr"),
-          _vm._v(" "),
-          _c("h5", [
-            _vm._v("Mark questions that you want to show to the public..."),
-          ]),
-          _vm._v(" "),
-          _vm._l(this.$props["questions"], function (item) {
-            return _c(
-              "div",
-              { key: item.id },
+            this.$props["publicResults"]
+              ? _c("div", [
+                  _vm._v("\n            Public link: "),
+                  _c("a", { attrs: { href: this.publicLink } }, [
+                    _vm._v(_vm._s(this.publicLink)),
+                  ]),
+                  _vm._v(" "),
+                  _c("hr"),
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            _c(
+              "FormulateForm",
+              {
+                attrs: { name: "modalForm" },
+                on: {
+                  submit: _vm.handleSubmit,
+                  input: _vm.handleFormInputChange,
+                },
+                model: {
+                  value: _vm.formValues,
+                  callback: function ($$v) {
+                    _vm.formValues = $$v
+                  },
+                  expression: "formValues",
+                },
+              },
               [
                 _c("FormulateInput", {
+                  staticClass: "form-check form-switch",
                   attrs: {
-                    label: item.header,
-                    name: item.id,
+                    label: "Set results public",
+                    name: "has_public_results",
                     type: "checkbox",
-                    checked: item.public,
-                    "wrapper-class": "form-check",
+                    checked: this.$props["publicResults"],
+                    value: this.$props["publicResults"],
                     "element-class": "form-check-input",
                     "label-class": "form-check-label",
                   },
                 }),
-                _c("br"),
+                _vm._v(" "),
+                _c("hr"),
+                _vm._v(" "),
+                !this.disabledCheckboxes
+                  ? _c(
+                      "div",
+                      [
+                        _c("h5", [
+                          _vm._v(
+                            "Mark questions that you want to show to the public..."
+                          ),
+                        ]),
+                        _vm._v(" "),
+                        _vm._l(this.$props["questions"], function (item) {
+                          return _c(
+                            "div",
+                            { key: item.id },
+                            [
+                              _c("FormulateInput", {
+                                attrs: {
+                                  label: item.header,
+                                  name: item.id,
+                                  type: "checkbox",
+                                  checked: item.public,
+                                  value: item.public,
+                                  "wrapper-class": "form-check",
+                                  "element-class": "form-check-input",
+                                  "label-class": "form-check-label",
+                                },
+                              }),
+                              _vm._v(" "),
+                              _c("br"),
+                            ],
+                            1
+                          )
+                        }),
+                      ],
+                      2
+                    )
+                  : _vm._e(),
+                _vm._v(" "),
+                _c("FormulateErrors"),
+                _vm._v(" "),
+                _c("FormulateInput", {
+                  attrs: { label: "Change restrictions", type: "submit" },
+                }),
               ],
               1
-            )
-          }),
-          _vm._v(" "),
-          _c("FormulateInput", {
-            attrs: { label: "Change restrictions", type: "submit" },
-          }),
-        ],
-        2
-      ),
-    ],
-    1
-  )
+            ),
+          ],
+          1
+        )
+      : _c("div", [_vm._v("\n        loading\n    ")]),
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -87471,16 +87556,20 @@ var render = function () {
                 ? _c("h4", [_vm._v("Opened to fill in.")])
                 : _c("h4", [_vm._v("Waiting for publication.")]),
               _vm._v(" "),
-              _c(
-                "p",
-                [
-                  _vm._v("Public link:\n                    "),
-                  _c("router-link", { attrs: { to: /form/ + _vm.getSlug() } }, [
-                    _vm._v(_vm._s(this.publicLink)),
-                  ]),
-                ],
-                1
-              ),
+              this.hasPublicLink
+                ? _c(
+                    "p",
+                    [
+                      _vm._v("Public link:\n                    "),
+                      _c(
+                        "router-link",
+                        { attrs: { to: /form/ + _vm.getSlug() } },
+                        [_vm._v(_vm._s(this.publicLink))]
+                      ),
+                    ],
+                    1
+                  )
+                : _c("p", [_vm._v("Private form")]),
               _vm._v(" "),
               _c(
                 "div",

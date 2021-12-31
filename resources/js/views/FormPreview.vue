@@ -12,9 +12,10 @@
                     <h4 v-else-if="this.form.is_opened">Opened to fill in.</h4>
                     <h4 v-else>Waiting for publication.</h4>
 
-                    <p>Public link:
+                    <p v-if="this.hasPublicLink">Public link:
                         <router-link :to="/form/+getSlug()">{{ this.publicLink }}</router-link>
                     </p>
+                    <p v-else>Private form</p>
                     <div class="d-flex justify-content-center">
                         <FormulateInput
                             class="btn"
@@ -91,16 +92,21 @@ export default {
             errored: false,
             errorText: "Bad Request",
             dataFetched: false,
-            publicLink: "#"
+            publicLink: "#",
+            hasPublicLink: true
         }
     },
     async mounted() {
-        this.publicLink = `${window.location}`.replace('/preview', '');
         this.slug = this.getSlug();
         await this.getThisForm().then(() => {
             try {
                 if (this.dataFetched) {
+                    if (this.form.has_private_token) this.hasPublicLink = false;
+                    if (this.hasPublicLink) this.publicLink = `${window.location}`.replace('/preview', '');
+                    console.log(this.form)
+
                     this.sortElements();
+
                     this.loading = false;
                 }
             } catch (error) {
