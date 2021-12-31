@@ -8,7 +8,7 @@
         </div>
         <div v-if="this.errored">{{ errorText }}</div>
 
-        <div v-if="!this.loading && this.$store.getters['authenticated'] && !this.arePublicResults">
+        <div v-if="!this.loading">
             <FormulateInput
                 class="btn"
                 @click="handleGoBack"
@@ -16,7 +16,7 @@
                 type="button"
             />
             <FormulateInput
-                v-if="!this.loading && !this.errored"
+                v-if="!this.loading && !this.errored && this.$store.getters['authenticated'] && !this.arePublicResults"
                 class="btn"
                 @click="handleDownload"
                 label="Download"
@@ -30,7 +30,7 @@
                 type="button"
             />
             <FormulateInput
-                v-if="!this.loading && !this.errored"
+                v-if="!this.loading && !this.errored && this.$store.getters['authenticated'] && !this.arePublicResults"
                 class="btn"
                 @click="handlePublication"
                 label="Publication..."
@@ -156,13 +156,16 @@ export default {
         },
         async handleDownload() {
             await Form.getFormResultsDownload(this.getSlug()).then(response => {
-                const url = window.URL.createObjectURL(new Blob([response.data], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));
-                const link = document.createElement('a');
-                link.href = url;
-                link.setAttribute('download', this.getSlug() + '.xlsx');
-                document.body.appendChild(link);
-                link.click();
-                link.remove();
+                if (response.status === 200) {
+                    const url = window.URL.createObjectURL(new Blob([response.data], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', this.getSlug() + '.xlsx');
+                    document.body.appendChild(link);
+                    link.click();
+                    link.remove();
+                }
+                else throw new Error("Can't download file.")
             }).catch(console.error)
         },
         handleChangeView() {

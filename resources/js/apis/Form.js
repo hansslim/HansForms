@@ -7,11 +7,17 @@ export default {
     async getSpecificForm(slug) {
         return Api.get('/form/' + slug)
     },
+    async getSpecificPrivateForm(token) {
+        return Api.get('/private_form/' + token)
+    },
     async getSpecificFormWithAuth(slug) {
         return Api.get('/form/authenticated/' + slug)
     },
     async postFormCompletion(formCompletion, slug) {
         return Api.post('/form/complete/' + slug, formCompletion);
+    },
+    async postPrivateFormCompletion(formCompletion, token) {
+        return Api.post('/form/private_complete/' + token, formCompletion);
     },
     async postCreateForm(newForm) {
         return Api.post('/forms/', newForm);

@@ -20,11 +20,11 @@
             <h5>Mark questions that you want to show to the public...</h5>
             <div v-for="item in this.$props['questions']" :key="item.id">
                 <FormulateInput
-                    wrapper-class="form-check"
                     :label="item.header"
                     :name="item.id"
                     type="checkbox"
                     :checked="item.public"
+                    wrapper-class="form-check"
                     element-class="form-check-input"
                     label-class="form-check-label"
                 /><br>

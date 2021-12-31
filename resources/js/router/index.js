@@ -50,6 +50,11 @@ const routes = [
         component: Form,
     },
     {
+        path: "/private_form/:token",
+        name: "PrivateForm",
+        component: Form,
+    },
+    {
         path: "/form/preview/:slug",
         name: "FormPreview",
         component: FormPreview,

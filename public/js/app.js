@@ -4612,6 +4612,65 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -4629,12 +4688,22 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         start_time: "",
         end_time: "",
         has_private_token: false,
+        private_emails: [],
         items: []
       },
-      loading: true
+      loading: true,
+      privateEmailsTextareaInputMode: false
     };
   },
   methods: {
+    debug: function debug() {
+      console.log(this.form);
+      this.submitCreateForm();
+    },
+    handleInputModeChange: function handleInputModeChange() {
+      this.form.private_emails = [];
+      this.privateEmailsTextareaInputMode = !this.privateEmailsTextareaInputMode;
+    },
     showAddItemModal: function showAddItemModal() {
       var _this = this;
 
@@ -4718,8 +4787,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
                     _this2.$router.push("/");
 
-                    _store__WEBPACK_IMPORTED_MODULE_4__.createFormStore.clearStore();
-                    _this2.choices = [];
+                    _store__WEBPACK_IMPORTED_MODULE_4__.createFormStore.clearStore(); //this.choices = [];
+
+                    //this.choices = [];
                     _this2.loading = false;
                   } else throw new Error(res.data);
                 });
@@ -4813,6 +4883,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   data: function data() {
     return {
       slug: '',
+      token: '',
       form: {},
       formValues: {},
       loading: true,
@@ -4829,8 +4900,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
+              if (!_this.$route.path.includes('/form/')) {
+                _context.next = 6;
+                break;
+              }
+
               _this.slug = _this.getSlug();
-              _context.next = 3;
+              _context.next = 4;
               return _this.getThisForm().then(function () {
                 try {
                   if (_this.dataFetched) {
@@ -4847,7 +4923,43 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 }
               });
 
-            case 3:
+            case 4:
+              _context.next = 14;
+              break;
+
+            case 6:
+              if (!_this.$route.path.includes('/private_form/')) {
+                _context.next = 12;
+                break;
+              }
+
+              _this.token = _this.getToken();
+              _context.next = 10;
+              return _this.getThisPrivateForm().then(function () {
+                try {
+                  if (_this.dataFetched) {
+                    _this.sortElements();
+
+                    _this.loading = false;
+                  }
+                } catch (error) {
+                  console.log(error.message);
+                  _this.errored = true;
+                  _this.errorText = "Unhandled error - ".concat(error);
+                } finally {
+                  _this.loading = false;
+                }
+              });
+
+            case 10:
+              _context.next = 14;
+              break;
+
+            case 12:
+              _this.errored = true;
+              _this.loading = false;
+
+            case 14:
             case "end":
               return _context.stop();
           }
@@ -4888,6 +5000,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                       _this2.errorText = "Requested form is expired. You cannot answer this form anymore!";
                       break;
 
+                    case 400:
+                      _this2.errorText = "Bad request. Check your link to the form.";
+                      break;
+
                     case 404:
                       _this2.errorText = "Requested form was not found.";
                       break;
@@ -4909,10 +5025,72 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee2);
       }))();
     },
+    getThisPrivateForm: function getThisPrivateForm() {
+      var _this3 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
+        var errorCode;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                errorCode = -1;
+                _context3.next = 3;
+                return _apis_Form__WEBPACK_IMPORTED_MODULE_1__["default"].getSpecificPrivateForm(_this3.token).then(function (res) {
+                  if (res.status === 200) {
+                    _this3.form = res.data;
+                    _this3.dataFetched = true;
+                  } else {
+                    console.log(res.status);
+                    errorCode = res.status;
+                    throw new Error();
+                  }
+                })["catch"](function (error) {
+                  _this3.errored = true;
+
+                  switch (errorCode) {
+                    case 423:
+                      _this3.errorText = "Requested form is not available at this moment. Try it later.";
+                      break;
+
+                    case 410:
+                      _this3.errorText = "Requested form is expired. You cannot answer this form anymore!";
+                      break;
+
+                    case 400:
+                      _this3.errorText = "Bad request. Check your link to the form.";
+                      break;
+
+                    case 404:
+                      _this3.errorText = "Requested form was not found.";
+                      break;
+
+                    default:
+                      _this3.errorText = "Unhandled error - ".concat(error);
+                      break;
+                    //dev only
+                  }
+
+                  _this3.dataFetched = false;
+                });
+
+              case 3:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3);
+      }))();
+    },
     getSlug: function getSlug() {
       var _this$$route$params$s;
 
       return (_this$$route$params$s = this.$route.params['slug']) !== null && _this$$route$params$s !== void 0 ? _this$$route$params$s : '';
+    },
+    getToken: function getToken() {
+      var _this$$route$params$t;
+
+      return (_this$$route$params$t = this.$route.params['token']) !== null && _this$$route$params$t !== void 0 ? _this$$route$params$t : '';
     },
     sortElements: function sortElements() {
       this.form.form_elements.sort(function (a, b) {
@@ -4928,35 +5106,63 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       });
     },
     submitForm: function submitForm() {
-      var _this3 = this;
+      var _this4 = this;
 
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee4$(_context4) {
           while (1) {
-            switch (_context3.prev = _context3.next) {
+            switch (_context4.prev = _context4.next) {
               case 0:
-                _this3.loading = true;
-                _context3.next = 3;
-                return _apis_Form__WEBPACK_IMPORTED_MODULE_1__["default"].postFormCompletion(_this3.formValues, _this3.slug).then(function (res) {
+                _this4.loading = true;
+
+                if (!_this4.slug) {
+                  _context4.next = 6;
+                  break;
+                }
+
+                _context4.next = 4;
+                return _apis_Form__WEBPACK_IMPORTED_MODULE_1__["default"].postFormCompletion(_this4.formValues, _this4.slug).then(function (res) {
                   if (res.status === 200) {
                     alert("Answer has been proceeded successfully.");
 
-                    _this3.$router.push("/");
+                    _this4.$router.push("/");
                   } else {
                     alert("Form completion is invalid (".concat(res.data, ")."));
                     console.log(res.data);
                   }
                 });
 
-              case 3:
-                _this3.loading = false;
-
               case 4:
+                _context4.next = 9;
+                break;
+
+              case 6:
+                if (!_this4.token) {
+                  _context4.next = 9;
+                  break;
+                }
+
+                _context4.next = 9;
+                return _apis_Form__WEBPACK_IMPORTED_MODULE_1__["default"].postPrivateFormCompletion(_this4.formValues, _this4.token).then(function (res) {
+                  if (res.status === 200) {
+                    alert("Answer has been proceeded successfully.");
+
+                    _this4.$router.push("/");
+                  } else {
+                    alert("Form completion is invalid (".concat(res.data, ")."));
+                    console.log(res.data);
+                  }
+                });
+
+              case 9:
+                _this4.loading = false;
+
+              case 10:
               case "end":
-                return _context3.stop();
+                return _context4.stop();
             }
           }
-        }, _callee3);
+        }, _callee4);
       }))();
     }
   },
@@ -5511,15 +5717,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 0:
                 _context2.next = 2;
                 return _apis_Form__WEBPACK_IMPORTED_MODULE_1__["default"].getFormResultsDownload(_this2.getSlug()).then(function (response) {
-                  var url = window.URL.createObjectURL(new Blob([response.data], {
-                    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-                  }));
-                  var link = document.createElement('a');
-                  link.href = url;
-                  link.setAttribute('download', _this2.getSlug() + '.xlsx');
-                  document.body.appendChild(link);
-                  link.click();
-                  link.remove();
+                  if (response.status === 200) {
+                    var url = window.URL.createObjectURL(new Blob([response.data], {
+                      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                    }));
+                    var link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', _this2.getSlug() + '.xlsx');
+                    document.body.appendChild(link);
+                    link.click();
+                    link.remove();
+                  } else throw new Error("Can't download file.");
                 })["catch"](console.error);
 
               case 2:
@@ -6181,13 +6389,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }, _callee2);
     }))();
   },
-  getSpecificFormWithAuth: function getSpecificFormWithAuth(slug) {
+  getSpecificPrivateForm: function getSpecificPrivateForm(token) {
     return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
-              return _context3.abrupt("return", _Api__WEBPACK_IMPORTED_MODULE_1__["default"].get('/form/authenticated/' + slug));
+              return _context3.abrupt("return", _Api__WEBPACK_IMPORTED_MODULE_1__["default"].get('/private_form/' + token));
 
             case 1:
             case "end":
@@ -6197,13 +6405,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }, _callee3);
     }))();
   },
-  postFormCompletion: function postFormCompletion(formCompletion, slug) {
+  getSpecificFormWithAuth: function getSpecificFormWithAuth(slug) {
     return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4() {
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee4$(_context4) {
         while (1) {
           switch (_context4.prev = _context4.next) {
             case 0:
-              return _context4.abrupt("return", _Api__WEBPACK_IMPORTED_MODULE_1__["default"].post('/form/complete/' + slug, formCompletion));
+              return _context4.abrupt("return", _Api__WEBPACK_IMPORTED_MODULE_1__["default"].get('/form/authenticated/' + slug));
 
             case 1:
             case "end":
@@ -6213,13 +6421,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }, _callee4);
     }))();
   },
-  postCreateForm: function postCreateForm(newForm) {
+  postFormCompletion: function postFormCompletion(formCompletion, slug) {
     return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee5() {
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee5$(_context5) {
         while (1) {
           switch (_context5.prev = _context5.next) {
             case 0:
-              return _context5.abrupt("return", _Api__WEBPACK_IMPORTED_MODULE_1__["default"].post('/forms/', newForm));
+              return _context5.abrupt("return", _Api__WEBPACK_IMPORTED_MODULE_1__["default"].post('/form/complete/' + slug, formCompletion));
 
             case 1:
             case "end":
@@ -6229,13 +6437,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }, _callee5);
     }))();
   },
-  deleteForm: function deleteForm(slug) {
+  postPrivateFormCompletion: function postPrivateFormCompletion(formCompletion, token) {
     return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee6() {
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee6$(_context6) {
         while (1) {
           switch (_context6.prev = _context6.next) {
             case 0:
-              return _context6.abrupt("return", _Api__WEBPACK_IMPORTED_MODULE_1__["default"]["delete"]('/forms/' + slug));
+              return _context6.abrupt("return", _Api__WEBPACK_IMPORTED_MODULE_1__["default"].post('/form/private_complete/' + token, formCompletion));
 
             case 1:
             case "end":
@@ -6245,13 +6453,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }, _callee6);
     }))();
   },
-  postDuplicateForm: function postDuplicateForm(props) {
+  postCreateForm: function postCreateForm(newForm) {
     return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee7() {
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee7$(_context7) {
         while (1) {
           switch (_context7.prev = _context7.next) {
             case 0:
-              return _context7.abrupt("return", _Api__WEBPACK_IMPORTED_MODULE_1__["default"].post('/form/duplicate/', props));
+              return _context7.abrupt("return", _Api__WEBPACK_IMPORTED_MODULE_1__["default"].post('/forms/', newForm));
 
             case 1:
             case "end":
@@ -6261,13 +6469,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }, _callee7);
     }))();
   },
-  getFormResults: function getFormResults(slug) {
+  deleteForm: function deleteForm(slug) {
     return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee8() {
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee8$(_context8) {
         while (1) {
           switch (_context8.prev = _context8.next) {
             case 0:
-              return _context8.abrupt("return", _Api__WEBPACK_IMPORTED_MODULE_1__["default"].get('/form/results/' + slug));
+              return _context8.abrupt("return", _Api__WEBPACK_IMPORTED_MODULE_1__["default"]["delete"]('/forms/' + slug));
 
             case 1:
             case "end":
@@ -6277,13 +6485,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }, _callee8);
     }))();
   },
-  getPublicFormResults: function getPublicFormResults(slug) {
+  postDuplicateForm: function postDuplicateForm(props) {
     return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee9() {
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee9$(_context9) {
         while (1) {
           switch (_context9.prev = _context9.next) {
             case 0:
-              return _context9.abrupt("return", _Api__WEBPACK_IMPORTED_MODULE_1__["default"].get('/form/public_results/' + slug));
+              return _context9.abrupt("return", _Api__WEBPACK_IMPORTED_MODULE_1__["default"].post('/form/duplicate/', props));
 
             case 1:
             case "end":
@@ -6293,15 +6501,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }, _callee9);
     }))();
   },
-  getFormResultsDownload: function getFormResultsDownload(slug) {
+  getFormResults: function getFormResults(slug) {
     return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee10() {
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee10$(_context10) {
         while (1) {
           switch (_context10.prev = _context10.next) {
             case 0:
-              return _context10.abrupt("return", _Api__WEBPACK_IMPORTED_MODULE_1__["default"].get('/form/results/' + slug + "/download", {
-                responseType: "blob"
-              }));
+              return _context10.abrupt("return", _Api__WEBPACK_IMPORTED_MODULE_1__["default"].get('/form/results/' + slug));
 
             case 1:
             case "end":
@@ -6311,13 +6517,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }, _callee10);
     }))();
   },
-  postPublishFormResults: function postPublishFormResults(data, slug) {
+  getPublicFormResults: function getPublicFormResults(slug) {
     return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee11() {
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee11$(_context11) {
         while (1) {
           switch (_context11.prev = _context11.next) {
             case 0:
-              return _context11.abrupt("return", _Api__WEBPACK_IMPORTED_MODULE_1__["default"].post('/form/results/' + slug + "/publish_results", data));
+              return _context11.abrupt("return", _Api__WEBPACK_IMPORTED_MODULE_1__["default"].get('/form/public_results/' + slug));
 
             case 1:
             case "end":
@@ -6325,6 +6531,40 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           }
         }
       }, _callee11);
+    }))();
+  },
+  getFormResultsDownload: function getFormResultsDownload(slug) {
+    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee12() {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee12$(_context12) {
+        while (1) {
+          switch (_context12.prev = _context12.next) {
+            case 0:
+              return _context12.abrupt("return", _Api__WEBPACK_IMPORTED_MODULE_1__["default"].get('/form/results/' + slug + "/download", {
+                responseType: "blob"
+              }));
+
+            case 1:
+            case "end":
+              return _context12.stop();
+          }
+        }
+      }, _callee12);
+    }))();
+  },
+  postPublishFormResults: function postPublishFormResults(data, slug) {
+    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee13() {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee13$(_context13) {
+        while (1) {
+          switch (_context13.prev = _context13.next) {
+            case 0:
+              return _context13.abrupt("return", _Api__WEBPACK_IMPORTED_MODULE_1__["default"].post('/form/results/' + slug + "/publish_results", data));
+
+            case 1:
+            case "end":
+              return _context13.stop();
+          }
+        }
+      }, _callee13);
     }))();
   }
 });
@@ -6595,6 +6835,10 @@ var routes = [{
 }, {
   path: "/form/:slug",
   name: "Form",
+  component: _views_Form__WEBPACK_IMPORTED_MODULE_6__["default"]
+}, {
+  path: "/private_form/:token",
+  name: "PrivateForm",
   component: _views_Form__WEBPACK_IMPORTED_MODULE_6__["default"]
 }, {
   path: "/form/preview/:slug",
@@ -86406,11 +86650,11 @@ var render = function () {
               [
                 _c("FormulateInput", {
                   attrs: {
-                    "wrapper-class": "form-check",
                     label: item.header,
                     name: item.id,
                     type: "checkbox",
                     checked: item.public,
+                    "wrapper-class": "form-check",
                     "element-class": "form-check-input",
                     "label-class": "form-check-label",
                   },
@@ -86807,79 +87051,226 @@ var render = function () {
                 "div",
                 { staticStyle: { "padding-bottom": "5vh" } },
                 [
-                  _c("FormulateInput", {
-                    attrs: {
-                      type: "text",
-                      label: "Form header",
-                      validation: [["required"]],
+                  _c(
+                    "div",
+                    {
+                      staticClass:
+                        " d-flex justify-content-center align-items-center flex-wrap",
                     },
-                    model: {
-                      value: _vm.form.header,
-                      callback: function ($$v) {
-                        _vm.$set(_vm.form, "header", $$v)
-                      },
-                      expression: "form.header",
-                    },
-                  }),
+                    [
+                      _c("FormulateInput", {
+                        staticClass: "m-2",
+                        attrs: {
+                          type: "text",
+                          label: "Form header",
+                          validation: [["required"]],
+                          "input-class": "form-control",
+                        },
+                        model: {
+                          value: _vm.form.header,
+                          callback: function ($$v) {
+                            _vm.$set(_vm.form, "header", $$v)
+                          },
+                          expression: "form.header",
+                        },
+                      }),
+                      _vm._v(" "),
+                      _c("FormulateInput", {
+                        staticClass: "m-2",
+                        attrs: {
+                          label: "Form description",
+                          type: "text",
+                          "input-class": "form-control",
+                        },
+                        model: {
+                          value: _vm.form.description,
+                          callback: function ($$v) {
+                            _vm.$set(_vm.form, "description", $$v)
+                          },
+                          expression: "form.description",
+                        },
+                      }),
+                      _vm._v(" "),
+                      _c("FormulateInput", {
+                        staticClass: "m-2",
+                        attrs: {
+                          label: "Form publication start time",
+                          type: "datetime-local",
+                          validation: [["required"]],
+                          "input-class": "form-control",
+                        },
+                        model: {
+                          value: _vm.form.start_time,
+                          callback: function ($$v) {
+                            _vm.$set(_vm.form, "start_time", $$v)
+                          },
+                          expression: "form.start_time",
+                        },
+                      }),
+                      _vm._v(" "),
+                      _c("FormulateInput", {
+                        staticClass: "m-2",
+                        attrs: {
+                          label: "Form publication end time",
+                          type: "datetime-local",
+                          validation: [["required"]],
+                          "input-class": "form-control",
+                        },
+                        model: {
+                          value: _vm.form.end_time,
+                          callback: function ($$v) {
+                            _vm.$set(_vm.form, "end_time", $$v)
+                          },
+                          expression: "form.end_time",
+                        },
+                      }),
+                      _vm._v(" "),
+                      _c("FormulateInput", {
+                        staticClass: "m-2",
+                        attrs: {
+                          label: "Form with private access ",
+                          type: "checkbox",
+                        },
+                        model: {
+                          value: _vm.form.has_private_token,
+                          callback: function ($$v) {
+                            _vm.$set(_vm.form, "has_private_token", $$v)
+                          },
+                          expression: "form.has_private_token",
+                        },
+                      }),
+                    ],
+                    1
+                  ),
                   _vm._v(" "),
-                  _c("FormulateInput", {
-                    attrs: { label: "Form description", type: "textarea" },
-                    model: {
-                      value: _vm.form.description,
-                      callback: function ($$v) {
-                        _vm.$set(_vm.form, "description", $$v)
-                      },
-                      expression: "form.description",
-                    },
-                  }),
-                  _vm._v(" "),
-                  _c("hr"),
-                  _vm._v(" "),
-                  _c("FormulateInput", {
-                    attrs: {
-                      label: "Form publication start time",
-                      type: "datetime-local",
-                      validation: [["required"]],
-                    },
-                    model: {
-                      value: _vm.form.start_time,
-                      callback: function ($$v) {
-                        _vm.$set(_vm.form, "start_time", $$v)
-                      },
-                      expression: "form.start_time",
-                    },
-                  }),
-                  _vm._v(" "),
-                  _c("FormulateInput", {
-                    attrs: {
-                      label: "Form publication end time",
-                      type: "datetime-local",
-                      validation: [["required"]],
-                    },
-                    model: {
-                      value: _vm.form.end_time,
-                      callback: function ($$v) {
-                        _vm.$set(_vm.form, "end_time", $$v)
-                      },
-                      expression: "form.end_time",
-                    },
-                  }),
-                  _vm._v(" "),
-                  _c("hr"),
-                  _vm._v(" "),
-                  _c("FormulateInput", {
-                    attrs: {
-                      label: "Form with private access (WIP)",
-                      type: "checkbox",
-                    },
-                    model: {
-                      value: _vm.form.has_private_token,
-                      callback: function ($$v) {
-                        _vm.$set(_vm.form, "has_private_token", $$v)
-                      },
-                      expression: "form.has_private_token",
-                    },
-                  }),
+                  _vm.form.has_private_token
+                    ? _c("div", [
+                        _c("hr"),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "h6" }, [
+                          _vm._v(
+                            "Form can be accessed and answered only via unique link with access\n                        token that will be sent on every email from below.\n                    "
+                          ),
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "d-inline-flex" }, [
+                          _c("div", { staticClass: "font-weight-bold pr-1" }, [
+                            _vm._v("Invited emails"),
+                          ]),
+                          _vm._v(" "),
+                          this.privateEmailsTextareaInputMode
+                            ? _c(
+                                "div",
+                                { staticClass: "font-weight-normal pr-1" },
+                                [
+                                  _vm._v(
+                                    "\n                                (Raw text input mode)\n                        "
+                                  ),
+                                ]
+                              )
+                            : _c(
+                                "div",
+                                { staticClass: "font-weight-normal pr-1" },
+                                [
+                                  _vm._v(
+                                    "\n                            (Basic input mode)\n                        "
+                                  ),
+                                ]
+                              ),
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "a",
+                          {
+                            staticClass: "d-block mb-2",
+                            attrs: { href: "#" },
+                            on: { click: _vm.handleInputModeChange },
+                          },
+                          [_vm._v("Change mode")]
+                        ),
+                        _vm._v(" "),
+                        !this.privateEmailsTextareaInputMode
+                          ? _c("div", [
+                              _c(
+                                "div",
+                                {
+                                  staticStyle: {
+                                    "max-height": "100px",
+                                    "overflow-y": "auto",
+                                  },
+                                },
+                                [
+                                  _c(
+                                    "FormulateInput",
+                                    {
+                                      attrs: {
+                                        type: "group",
+                                        name: "emails",
+                                        repeatable: true,
+                                        "add-label": "Add Email",
+                                        validation: "required",
+                                        "remove-position": "after",
+                                        "remove-label": "Remove",
+                                        minimum: "1",
+                                      },
+                                      model: {
+                                        value: _vm.form.private_emails,
+                                        callback: function ($$v) {
+                                          _vm.$set(
+                                            _vm.form,
+                                            "private_emails",
+                                            $$v
+                                          )
+                                        },
+                                        expression: "form.private_emails",
+                                      },
+                                    },
+                                    [
+                                      _c(
+                                        "div",
+                                        { staticClass: "d-inline-flex m-1" },
+                                        [
+                                          _c("FormulateInput", {
+                                            attrs: {
+                                              type: "email",
+                                              name: "email",
+                                              validation: "required|email",
+                                            },
+                                          }),
+                                        ],
+                                        1
+                                      ),
+                                    ]
+                                  ),
+                                ],
+                                1
+                              ),
+                            ])
+                          : _c(
+                              "div",
+                              [
+                                _vm._v(
+                                  "\n                        (Web validation limited! Please, separate emails by enter. Invalid data will be ignored.)\n                        "
+                                ),
+                                _c("FormulateInput", {
+                                  attrs: {
+                                    type: "textarea",
+                                    name: "emails",
+                                    validation: "required",
+                                  },
+                                  model: {
+                                    value: _vm.form.private_emails,
+                                    callback: function ($$v) {
+                                      _vm.$set(_vm.form, "private_emails", $$v)
+                                    },
+                                    expression: "form.private_emails",
+                                  },
+                                }),
+                              ],
+                              1
+                            ),
+                      ])
+                    : _vm._e(),
                   _vm._v(" "),
                   _c("hr"),
                   _vm._v(" "),
@@ -86920,6 +87311,7 @@ var render = function () {
                     [
                       _c("FormulateInput", {
                         attrs: { type: "submit", label: "Create this form" },
+                        on: { click: _vm.debug },
                       }),
                     ],
                     1
@@ -87205,9 +87597,7 @@ var render = function () {
     _vm._v(" "),
     this.errored ? _c("div", [_vm._v(_vm._s(_vm.errorText))]) : _vm._e(),
     _vm._v(" "),
-    !this.loading &&
-    this.$store.getters["authenticated"] &&
-    !this.arePublicResults
+    !this.loading
       ? _c(
           "div",
           [
@@ -87217,7 +87607,10 @@ var render = function () {
               on: { click: _vm.handleGoBack },
             }),
             _vm._v(" "),
-            !this.loading && !this.errored
+            !this.loading &&
+            !this.errored &&
+            this.$store.getters["authenticated"] &&
+            !this.arePublicResults
               ? _c("FormulateInput", {
                   staticClass: "btn",
                   attrs: { label: "Download", type: "button" },
@@ -87233,7 +87626,10 @@ var render = function () {
                 })
               : _vm._e(),
             _vm._v(" "),
-            !this.loading && !this.errored
+            !this.loading &&
+            !this.errored &&
+            this.$store.getters["authenticated"] &&
+            !this.arePublicResults
               ? _c("FormulateInput", {
                   staticClass: "btn",
                   attrs: { label: "Publication...", type: "button" },

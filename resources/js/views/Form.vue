@@ -34,6 +34,7 @@ export default {
     data() {
         return {
             slug: '',
+            token: '',
             form: {},
             formValues: {},
             loading: true,
@@ -43,22 +44,44 @@ export default {
         }
     },
     async mounted() {
-        this.slug = this.getSlug();
-        await this.getThisForm().then(() => {
-            try {
-                if (this.dataFetched) {
-                    this.sortElements();
+        if (this.$route.path.includes('/form/')) {
+            this.slug = this.getSlug();
+            await this.getThisForm().then(() => {
+                try {
+                    if (this.dataFetched) {
+                        this.sortElements();
+                        this.loading = false;
+                    }
+                } catch (error) {
+                    console.log(error.message)
+                    this.errored = true;
+                    this.errorText = `Unhandled error - ${error}`;
+                } finally {
                     this.loading = false;
                 }
-            } catch (error) {
-                console.log(error.message)
-                this.errored = true;
-                this.errorText = `Unhandled error - ${error}`;
-            } finally {
-                this.loading = false;
-            }
-        });
-
+            });
+        }
+        else if (this.$route.path.includes('/private_form/')) {
+            this.token = this.getToken();
+            await this.getThisPrivateForm().then(() => {
+                try {
+                    if (this.dataFetched) {
+                        this.sortElements();
+                        this.loading = false;
+                    }
+                } catch (error) {
+                    console.log(error.message)
+                    this.errored = true;
+                    this.errorText = `Unhandled error - ${error}`;
+                } finally {
+                    this.loading = false;
+                }
+            });
+        }
+        else {
+            this.errored = true;
+            this.loading = false;
+        }
     },
     methods: {
         async getThisForm() {
@@ -81,6 +104,42 @@ export default {
                     case 410:
                         this.errorText = "Requested form is expired. You cannot answer this form anymore!";
                         break;
+                    case 400:
+                        this.errorText = "Bad request. Check your link to the form.";
+                        break;
+                    case 404:
+                        this.errorText = "Requested form was not found.";
+                        break;
+                    default:
+                        this.errorText = `Unhandled error - ${error}`;
+                        break; //dev only
+                }
+                this.dataFetched = false;
+            })
+        },
+        async getThisPrivateForm() {
+            let errorCode = -1;
+            await Form.getSpecificPrivateForm(this.token).then((res) => {
+                if (res.status === 200) {
+                    this.form = res.data;
+                    this.dataFetched = true;
+                } else {
+                    console.log(res.status)
+                    errorCode = res.status;
+                    throw new Error();
+                }
+            }).catch(error => {
+                this.errored = true;
+                switch (errorCode) {
+                    case 423:
+                        this.errorText = "Requested form is not available at this moment. Try it later.";
+                        break;
+                    case 410:
+                        this.errorText = "Requested form is expired. You cannot answer this form anymore!";
+                        break;
+                    case 400:
+                        this.errorText = "Bad request. Check your link to the form.";
+                        break;
                     case 404:
                         this.errorText = "Requested form was not found.";
                         break;
@@ -93,6 +152,9 @@ export default {
         },
         getSlug() {
             return this.$route.params['slug'] ?? '';
+        },
+        getToken() {
+            return this.$route.params['token'] ?? '';
         },
         sortElements() {
             this.form.form_elements.sort((a, b) => {
@@ -107,15 +169,29 @@ export default {
         },
         async submitForm() {
             this.loading = true;
-            await Form.postFormCompletion(this.formValues, this.slug).then((res) => {
-                if (res.status === 200) {
-                    alert("Answer has been proceeded successfully.");
-                    this.$router.push("/");
-                } else {
-                    alert(`Form completion is invalid (${res.data}).`);
-                    console.log(res.data);
-                }
-            })
+            if (this.slug) {
+                await Form.postFormCompletion(this.formValues, this.slug).then((res) => {
+                    if (res.status === 200) {
+                        alert("Answer has been proceeded successfully.");
+                        this.$router.push("/");
+                    } else {
+                        alert(`Form completion is invalid (${res.data}).`);
+                        console.log(res.data);
+                    }
+                })
+            }
+            else if (this.token) {
+                await Form.postPrivateFormCompletion(this.formValues, this.token).then((res) => {
+                    if (res.status === 200) {
+                        alert("Answer has been proceeded successfully.");
+                        this.$router.push("/");
+                    } else {
+                        alert(`Form completion is invalid (${res.data}).`);
+                        console.log(res.data);
+                    }
+                })
+            }
+
             this.loading = false;
         }
     },

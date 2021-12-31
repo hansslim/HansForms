@@ -3,36 +3,94 @@
         <div v-if="!loading">
             <FormulateForm @submit="submitCreateForm">
                 <div style="padding-bottom: 5vh">
-                    <FormulateInput
-                        type="text"
-                        v-model="form.header"
-                        label="Form header"
-                        :validation="[['required']]"
-                    />
-                    <FormulateInput
-                        v-model="form.description"
-                        label="Form description"
-                        type="textarea"
-                    />
-                    <hr>
-                    <FormulateInput
-                        v-model="form.start_time"
-                        label="Form publication start time"
-                        type="datetime-local"
-                        :validation="[['required']]"
-                    />
-                    <FormulateInput
-                        v-model="form.end_time"
-                        label="Form publication end time"
-                        type="datetime-local"
-                        :validation="[['required']]"
-                    />
-                    <hr>
-                    <FormulateInput
-                        v-model="form.has_private_token"
-                        label="Form with private access (WIP)"
-                        type="checkbox"
-                    />
+                    <div class=" d-flex justify-content-center align-items-center flex-wrap">
+                        <FormulateInput
+                            class="m-2"
+                            type="text"
+                            v-model="form.header"
+                            label="Form header"
+                            :validation="[['required']]"
+                            input-class="form-control"
+                        />
+                        <FormulateInput
+                            class="m-2"
+                            v-model="form.description"
+                            label="Form description"
+                            type="text"
+                            input-class="form-control"
+                        />
+                        <FormulateInput
+                            class="m-2"
+                            v-model="form.start_time"
+                            label="Form publication start time"
+                            type="datetime-local"
+                            :validation="[['required']]"
+                            input-class="form-control"
+                        />
+                        <FormulateInput
+                            class="m-2"
+                            v-model="form.end_time"
+                            label="Form publication end time"
+                            type="datetime-local"
+                            :validation="[['required']]"
+                            input-class="form-control"
+                        />
+                        <FormulateInput
+                            class="m-2"
+                            v-model="form.has_private_token"
+                            label="Form with private access "
+                            type="checkbox"
+                        />
+                    </div>
+
+                    <div v-if="form.has_private_token">
+                        <hr>
+                        <div class="h6">Form can be accessed and answered only via unique link with access
+                            token that will be sent on every email from below.
+                        </div>
+                        <div class="d-inline-flex">
+                            <div class="font-weight-bold pr-1">Invited emails</div>
+                            <div class="font-weight-normal pr-1" v-if="this.privateEmailsTextareaInputMode">
+                                    (Raw text input mode)
+                            </div>
+                            <div class="font-weight-normal pr-1" v-else>
+                                (Basic input mode)
+                            </div>
+                        </div>
+                        <a class="d-block mb-2" href="#" @click="handleInputModeChange">Change mode</a>
+                        <div v-if="!this.privateEmailsTextareaInputMode">
+                            <div style="max-height: 100px; overflow-y:auto">
+                                <FormulateInput
+                                    type="group"
+                                    name="emails"
+                                    :repeatable="true"
+                                    add-label="Add Email"
+                                    validation="required"
+                                    remove-position="after"
+                                    remove-label="Remove"
+                                    v-model="form.private_emails"
+                                    minimum="1"
+                                >
+                                    <div class="d-inline-flex m-1">
+                                        <FormulateInput
+                                            type="email"
+                                            name="email"
+                                            validation="required|email"
+                                        />
+                                    </div>
+                                </FormulateInput>
+                            </div>
+                        </div>
+                        <div v-else>
+                            (Web validation limited! Please, separate emails by enter. Invalid data will be ignored.)
+                            <FormulateInput
+                                type="textarea"
+                                name="emails"
+                                validation="required"
+                                v-model="form.private_emails"
+                            />
+                        </div>
+                    </div>
                     <hr>
                     <form-element v-for="item in this.form.items" :key="item.id" :obj="item"
                                   @itemChanged="handleItemsChanged"/>
@@ -49,6 +107,7 @@
                         <FormulateInput
                             type="submit"
                             label="Create this form"
+                            @click="debug"
                         />
                     </div>
                 </div>
@@ -80,13 +139,22 @@ export default {
                 start_time: "",
                 end_time: "",
                 has_private_token: false,
+                private_emails: [],
                 items: []
             },
-            loading: true
-
+            loading: true,
+            privateEmailsTextareaInputMode: false
         }
     },
     methods: {
+        debug() {
+            console.log(this.form)
+            this.submitCreateForm()
+        },
+        handleInputModeChange() {
+            this.form.private_emails = [];
+            this.privateEmailsTextareaInputMode = !this.privateEmailsTextareaInputMode;
+        },
         showAddItemModal() {
             this.$modal.hideAll();
             createFormChoicesStore.clearStore();
@@ -101,6 +169,7 @@ export default {
             this.form.items = createFormStore.getItems()
         },
         async submitCreateForm() {
+
             try {
                 this.loading = true;
 
@@ -113,8 +182,7 @@ export default {
 
                 if (min.getTime() && max.getTime()) {
                     if (parseInt(max.getTime()) <= (parseInt(min.getTime()))) throw new Error("Invalid date data");
-                }
-                else throw new Error("Invalid date data (max or min)");
+                } else throw new Error("Invalid date data (max or min)");
 
                 //question amount check
                 if (this.form && this.form.items.length >= 1) {
@@ -123,10 +191,9 @@ export default {
                             alert("Form creation was successful.")
                             this.$router.push("/");
                             createFormStore.clearStore();
-                            this.choices = [];
+                            //this.choices = [];
                             this.loading = false;
-                        }
-                        else throw new Error(res.data)
+                        } else throw new Error(res.data)
                     })
                 } else throw new Error("Form creation error (no questions)");
 
