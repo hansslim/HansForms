@@ -7,11 +7,13 @@ use App\Models\BooleanInputAnswer;
 use App\Models\DateInputAnswer;
 use App\Models\Form;
 use App\Models\FormCompletion;
+use App\Models\FormPrivateAccessToken;
 use App\Models\NumberInputAnswer;
 use App\Models\SelectInputAnswer;
 use App\Models\TextInputAnswer;
 use DateTime;
 use Exception;
+use http\Env\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -69,11 +71,18 @@ class FormCompletionController extends Controller
      * Store a newly created resource in storage.
      *
      * @param \Illuminate\Http\Request $request
+     * @param $slug
      * @return \Illuminate\Http\Response
+     * @throws Exception
      */
-    public function store(Request $request, $slug)
+    public function store(Request $request, $slug, $privateForm = false) : \Illuminate\Http\Response
     {
         $answeredForm = Form::where('slug', $slug)->first();
+        if (!$answeredForm) return response("Bad request (form doesn't exist)", 400);
+
+        if ($answeredForm->has_private_token) {
+            if (!$privateForm) return response("Bad request ()", 400);
+        }
 
         //answering not published/expired form validation
         $currentTime = time();
@@ -83,8 +92,6 @@ class FormCompletionController extends Controller
         if ($currentTime < strtotime($answeredForm->start_time)) {
             return response("Bad request (answered form has not been published yet)", 400);
         }
-
-        //todo: answer only with permissions
 
         function getCorrespondingValue($request, $type, $specificInputId): array
         {
@@ -264,11 +271,11 @@ class FormCompletionController extends Controller
                         }
                         default:
                         {
-                            if (preg_match('/(^[0-9]+[,|.][0-9]+)|(^[0-9]*$)/', $answer['value'])) {
+                            if (preg_match('/(^(\+|-)?[0-9]+[,|.][0-9]+)|(^(\+|-)?[0-9]*$)/', $answer['value'])) {
                                 if (is_numeric($answer['value'])) {
 
                                     if (!$value->inputElement->numberInput->can_be_decimal) {
-                                        if (!preg_match('/^[0-9]*$/', $answer['value'])) {
+                                        if (!preg_match('/^(\+|-)?[0-9]*$/', $answer['value'])) {
                                             return response("Bad request (validation was not successful [number-{$answer['id']} cannot be decimal])", 400);
                                         }
                                     }
@@ -463,7 +470,19 @@ class FormCompletionController extends Controller
     }
 
     public function privateStore(Request $request, $token) {
+        $formToken = FormPrivateAccessToken::where('token', $token)->first();
+        if (!$formToken) return response("Bad request (token is invalid)", 400);
+        if ($formToken->was_used) return response("Bad request (token has been already used)", 410);
+        $formSlug = (Form::where('id', $formToken->form_id)->without('formElements')->first())->slug;
 
+        $response = $this->store($request, $formSlug, true);
+        if ($response->getStatusCode() === 200) {
+            DB::transaction(function () use ($formToken) {
+                $formToken->was_used = true;
+                $formToken->save();
+            });
+        }
+        return $response;
     }
 
     public function publicIndex($slug) {

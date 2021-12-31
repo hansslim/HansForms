@@ -292,10 +292,10 @@ class FormController extends Controller
                         $validatedQuestion['can_be_decimal'] = $can_be_decimal;
 
                         if (array_key_exists('min', $item)) {
-                            if (intval($item['min'])) $min = intval($item['min']);
+                            if (floatval($item['min'])) $min = floatval($item['min']);
                         }
                         if (array_key_exists('max', $item)) {
-                            if (intval($item['max'])) $max = intval($item['max']);
+                            if (floatval($item['max'])) $max = floatval($item['max']);
                         }
                         if (array_key_exists('can_be_decimal', $item)) {
                             if (is_bool($item['can_be_decimal'])) $can_be_decimal = $item['can_be_decimal'];
@@ -813,7 +813,6 @@ class FormController extends Controller
         } else return response("Unauthorized.", 401);
     }
 
-
     /**
      * Update the specified resource in storage.
      *
@@ -821,8 +820,7 @@ class FormController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public
-    function update(Request $request, $id)
+    public function update(Request $request, $id)
     {
         //todo: refuse update when is start_time > server time
     }
@@ -833,8 +831,7 @@ class FormController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public
-    function destroy($slug)
+    public function destroy($slug)
     {
         if (!Auth::user()) return response("Unauthorized - log in to delete forms...", 401);
         else {

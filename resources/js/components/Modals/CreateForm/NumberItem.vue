@@ -5,12 +5,14 @@
             label="Minimal value"
             type="number"
             v-model="min"
+            :step="this.step"
         />
         <FormulateInput
             name="max"
             label="Maximal value"
             type="number"
             v-model="max"
+            :step="this.step"
         />
         <FormulateInput
             name="can_be_decimal"
@@ -18,6 +20,7 @@
             label="Can be decimal"
             label-position="before"
             v-model="can_be_decimal"
+            @input="handleCanBeDecimal"
         />
     </div>
 </template>
@@ -30,7 +33,8 @@ export default {
         return {
             min: "",
             max: "",
-            can_be_decimal: false
+            can_be_decimal: false,
+            step: "0",
         }
     },
     mounted() {
@@ -46,6 +50,12 @@ export default {
                     this.can_be_decimal = true;
                 }
             }
+        }
+    },
+    methods: {
+        handleCanBeDecimal() {
+            if (this.can_be_decimal) this.step = "any";
+            else this.step = "0";
         }
     }
 }

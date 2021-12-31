@@ -2371,10 +2371,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       if (this.propsObj.max) validation.push(['max', this.propsObj.max]);
 
       if (this.propsObj.can_be_decimal) {
-        validation.push(['matches', '/(^[0-9]+[,|.][0-9]+)|(^[0-9]*$)/']);
+        validation.push(['matches', '/(^(\\+|-)?[0-9]+[,|.][0-9]+)|(^(\\+|-)?[0-9]*$)/']);
         this.step = "any";
       } else {
-        validation.push(['matches', '/^[0-9]*$/']);
+        validation.push(['matches', '/^(\\+|-)?[0-9]*$/']);
         this.step = "0.0";
       }
 
@@ -3390,6 +3390,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "NumberItem",
   props: ['obj'],
@@ -3397,7 +3400,8 @@ __webpack_require__.r(__webpack_exports__);
     return {
       min: "",
       max: "",
-      can_be_decimal: false
+      can_be_decimal: false,
+      step: "0"
     };
   },
   mounted: function mounted() {
@@ -3415,6 +3419,11 @@ __webpack_require__.r(__webpack_exports__);
           this.can_be_decimal = true;
         }
       }
+    }
+  },
+  methods: {
+    handleCanBeDecimal: function handleCanBeDecimal() {
+      if (this.can_be_decimal) this.step = "any";else this.step = "0";
     }
   }
 });
@@ -5054,7 +5063,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                       break;
 
                     case 410:
-                      _this3.errorText = "Requested form is expired. You cannot answer this form anymore!";
+                      _this3.errorText = "Requested form or access token is expired. You cannot answer this form anymore!";
                       break;
 
                     case 400:
@@ -86130,7 +86139,12 @@ var render = function () {
     "div",
     [
       _c("FormulateInput", {
-        attrs: { name: "min", label: "Minimal value", type: "number" },
+        attrs: {
+          name: "min",
+          label: "Minimal value",
+          type: "number",
+          step: this.step,
+        },
         model: {
           value: _vm.min,
           callback: function ($$v) {
@@ -86141,7 +86155,12 @@ var render = function () {
       }),
       _vm._v(" "),
       _c("FormulateInput", {
-        attrs: { name: "max", label: "Maximal value", type: "number" },
+        attrs: {
+          name: "max",
+          label: "Maximal value",
+          type: "number",
+          step: this.step,
+        },
         model: {
           value: _vm.max,
           callback: function ($$v) {
@@ -86158,6 +86177,7 @@ var render = function () {
           label: "Can be decimal",
           "label-position": "before",
         },
+        on: { input: _vm.handleCanBeDecimal },
         model: {
           value: _vm.can_be_decimal,
           callback: function ($$v) {

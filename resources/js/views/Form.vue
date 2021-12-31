@@ -135,7 +135,7 @@ export default {
                         this.errorText = "Requested form is not available at this moment. Try it later.";
                         break;
                     case 410:
-                        this.errorText = "Requested form is expired. You cannot answer this form anymore!";
+                        this.errorText = "Requested form or access token is expired. You cannot answer this form anymore!";
                         break;
                     case 400:
                         this.errorText = "Bad request. Check your link to the form.";

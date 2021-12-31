@@ -22,6 +22,7 @@ class FormPrivateAccessToken extends Model
         'token',
         'email',
         'form_id',
+        'form'
     ];
 
     public function form() {
