@@ -89,7 +89,7 @@ class FormController extends Controller
         $formProps['private_emails'] = [];
 
         if (array_key_exists('has_private_token', $request->all())) {
-            if (is_bool($request->all()['has_private_token'])) $formProps['has_private_token'] = true;
+            if (is_bool($request->all()['has_private_token']) && $request->all()['has_private_token']) $formProps['has_private_token'] = true;
         }
 
         if ($formProps['has_private_token']) {

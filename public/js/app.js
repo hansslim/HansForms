@@ -4737,7 +4737,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
 
 
 
@@ -4763,10 +4762,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     };
   },
   methods: {
-    debug: function debug() {
-      console.log(this.form);
-      this.submitCreateForm();
-    },
     handleInputModeChange: function handleInputModeChange() {
       this.form.private_emails = [];
       this.privateEmailsTextareaInputMode = !this.privateEmailsTextareaInputMode;
@@ -87287,7 +87282,6 @@ var render = function () {
                     [
                       _c("FormulateInput", {
                         attrs: { type: "submit", label: "Create this form" },
-                        on: { click: _vm.debug },
                       }),
                     ],
                     1

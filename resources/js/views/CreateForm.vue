@@ -107,7 +107,6 @@
                         <FormulateInput
                             type="submit"
                             label="Create this form"
-                            @click="debug"
                         />
                     </div>
                 </div>
@@ -147,10 +146,6 @@ export default {
         }
     },
     methods: {
-        debug() {
-            console.log(this.form)
-            this.submitCreateForm()
-        },
         handleInputModeChange() {
             this.form.private_emails = [];
             this.privateEmailsTextareaInputMode = !this.privateEmailsTextareaInputMode;
