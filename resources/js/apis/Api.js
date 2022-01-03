@@ -3,7 +3,7 @@ import router from '../router';
 import store from '../store';
 
 const Api = axios.create({
-    baseURL: 'http://localhost:8000/api'
+    baseURL: process.env.MIX_API_BASE_URL
 });
 
 Api.interceptors.response.use(
