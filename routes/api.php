@@ -35,7 +35,7 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::put('/forms/{id}', [FormController::class, 'update']);
     Route::post('/forms', [FormController::class, 'store']);
     Route::delete('/forms/{id}', [FormController::class, 'destroy']);
-    Route::post('/form/duplicate/', [FormController::class, 'duplicateWithAuth']);
+    Route::post('/form/duplicate', [FormController::class, 'duplicateWithAuth']);
     Route::get('/form/results/{slug}', [FormCompletionController::class, 'index']);
     Route::get('/form/results/{slug}/download', [FormCompletionController::class, 'export']);
     Route::post('/form/results/{slug}/publish_results', [FormController::class, 'publishResults']);

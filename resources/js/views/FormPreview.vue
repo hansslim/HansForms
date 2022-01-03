@@ -180,9 +180,9 @@ export default {
                 }).then((res) => {
                     if (res.status === 200) {
                         if (res.headers.duplicatedformslug) {
-                            window.location =
+                            /*window.location =
                                 `${window.location}`.replace(new RegExp('/preview.*'), '') +
-                                "/preview/" + res.headers.duplicatedformslug;
+                                "/preview/" + res.headers.duplicatedformslug;*/
                         } else {
                             this.$router.push('/');
                         }

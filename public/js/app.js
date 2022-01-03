@@ -5518,7 +5518,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 }, _store__WEBPACK_IMPORTED_MODULE_5__.duplicateFormStore.getData())).then(function (res) {
                   if (res.status === 200) {
                     if (res.headers.duplicatedformslug) {
-                      window.location = "".concat(window.location).replace(new RegExp('/preview.*'), '') + "/preview/" + res.headers.duplicatedformslug;
+                      /*window.location =
+                          `${window.location}`.replace(new RegExp('/preview.*'), '') +
+                          "/preview/" + res.headers.duplicatedformslug;*/
                     } else {
                       _this4.$router.push('/');
                     } //not used because of redirection
