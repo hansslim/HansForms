@@ -53,16 +53,15 @@ export default {
     methods: {
         async handleLogin() {
             this.loading = true;
-            await User.login(this.user).then((res)=>{
+            await User.login(this.user).then((res) => {
                 if (res.status === 200) {
                     this.$store.dispatch('login', res.data);
                     this.$router.push('/');
-                }
-                else throw new Error();
-            }).catch((error)=>{
+                } else throw new Error();
+            }).catch((error) => {
                 console.log(error);
                 alert("Bad credentials")
-            }).finally(()=>{
+            }).finally(() => {
                 this.loading = false;
             });
         },

@@ -51,7 +51,7 @@
                         <div class="d-inline-flex">
                             <div class="font-weight-bold pr-1">Invited emails</div>
                             <div class="font-weight-normal pr-1" v-if="this.privateEmailsTextareaInputMode">
-                                    (Raw text input mode)
+                                (Raw text input mode)
                             </div>
                             <div class="font-weight-normal pr-1" v-else>
                                 (Basic input mode)
@@ -169,7 +169,6 @@ export default {
             this.form.items = createFormStore.getItems()
         },
         async submitCreateForm() {
-
             try {
                 this.loading = true;
 
@@ -206,7 +205,6 @@ export default {
         }
     },
     mounted() {
-
         this.loading = false;
     }
 }

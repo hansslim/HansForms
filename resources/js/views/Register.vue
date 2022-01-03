@@ -73,15 +73,14 @@ export default {
     methods: {
         async handleRegister() {
             this.loading = true
-            await User.register(this.user).then((res)=>{
+            await User.register(this.user).then((res) => {
                 if (res.status === 200) {
                     this.$router.push('/login');
-                }
-                else throw new Error();
-            }).catch((e)=>{
+                } else throw new Error();
+            }).catch((e) => {
                 console.log(e);
                 alert("Invalid data provided")
-            }).finally(()=>{
+            }).finally(() => {
                 this.loading = false;
             });
         }

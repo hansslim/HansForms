@@ -87140,7 +87140,7 @@ var render = function () {
                                 { staticClass: "font-weight-normal pr-1" },
                                 [
                                   _vm._v(
-                                    "\n                                (Raw text input mode)\n                        "
+                                    "\n                            (Raw text input mode)\n                        "
                                   ),
                                 ]
                               )
