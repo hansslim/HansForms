@@ -771,46 +771,56 @@ class FormController extends Controller
             $form = Form::where(['slug' => $slug, 'user_id' => $user->id])->first();
             if ($form) {
                 $correspondingIds = [];
+                $validatedQuestions = [];
+                $validatedHasPublicResults = null;
+
+                //get all corresponding ids for form
                 foreach ($form->formElements as $value) {
                     if ($value->inputElement) if ($value->inputElement->id) {
                         $correspondingIds[] = $value->inputElement->id;
                     }
                 }
 
-                $validatedHasPublicResults = null;
+                //validate has_public_results
                 if (array_key_exists("has_public_results", $request->all())) {
                     if ($request->all()["has_public_results"]) $validatedHasPublicResults = true;
                     else $validatedHasPublicResults = false;
                     unset($request->all()["has_public_results"]);
                 }
 
-                $validatedQuestions = ["true" => [], "false" => []];
-                foreach ($request->all() as $key => $value) {
-                    if (in_array($key, $correspondingIds)) {
-                        if ($value) $validatedQuestions["true"][] = $key;
-                        else $validatedQuestions["false"][] = $key;
-                    }
-                }
-
+                //if validate has_public_results -> set which ids are true or false
                 if ($validatedHasPublicResults) {
+                    $validatedQuestions = ["true" => [], "false" => []];
+                    foreach ($request->all() as $key => $value) {
+                        if (in_array($key, $correspondingIds)) {
+                            if ($value) $validatedQuestions["true"][] = $key;
+                            else $validatedQuestions["false"][] = $key;
+                        }
+                    }
+                    //check if at least one question is selected to be public (at this moment form results must be public)
                     if (count($validatedQuestions["true"]) <= 0)
                         return response("Bad request (at least one public question expected)", 400);
                 }
 
-                //dd($validatedQuestions);
                 try {
-                    DB::transaction(function () use ($form, $validatedHasPublicResults, $validatedQuestions) {
-                        if ($validatedHasPublicResults !== null) {
-                            $form->has_public_results = $validatedHasPublicResults;
-                            $form->save();
-                        }
+                    DB::transaction(function () use ($form, $validatedHasPublicResults, $validatedQuestions, $correspondingIds) {
+                        $form->has_public_results = $validatedHasPublicResults;
+                        $form->save();
 
-                        if (count($validatedQuestions['true']) > 0)
-                            InputElement::whereIn('id', $validatedQuestions['true'])
-                                ->update(['has_public_results' => true]);
-                        if (count($validatedQuestions['false']) > 0)
-                            InputElement::whereIn('id', $validatedQuestions['false'])
+                        //if form results are private -> all questions become private
+                        if (!$validatedHasPublicResults) {
+                            InputElement::whereIn('id', $correspondingIds)
                                 ->update(['has_public_results' => false]);
+                            return response("Form publication restrictions has been modified successfully (now private)", 200);
+                        }
+                        else {
+                            if (count($validatedQuestions['true']) > 0)
+                                InputElement::whereIn('id', $validatedQuestions['true'])
+                                    ->update(['has_public_results' => true]);
+                            if (count($validatedQuestions['false']) > 0)
+                                InputElement::whereIn('id', $validatedQuestions['false'])
+                                    ->update(['has_public_results' => false]);
+                        }
                     });
                 } catch (Exception $exception) {
                     dd($exception);

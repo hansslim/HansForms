@@ -4050,13 +4050,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
+                _this.handleFormInputChange(false);
+
                 if (_this.errored) {
-                  _context.next = 4;
+                  _context.next = 5;
                   break;
                 }
 
                 _this.loading = true;
-                _context.next = 4;
+                _context.next = 5;
                 return _apis_Form__WEBPACK_IMPORTED_MODULE_1__["default"].postPublishFormResults(_this.formValues, _this.$props['slug']).then(function (res) {
                   if (res.status === 200) {
                     _this.$modal.hide(_this.$parent.name);
@@ -4066,7 +4068,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   }
                 });
 
-              case 4:
+              case 5:
               case "end":
                 return _context.stop();
             }
@@ -4074,7 +4076,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee);
       }))();
     },
-    handleFormInputChange: function handleFormInputChange() {
+    handleFormInputChange: function handleFormInputChange(show) {
       this.trivialFormulateErrorHandler();
 
       if (this.formValues.has_public_results) {
@@ -4085,10 +4087,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         });
 
         if (trueCount < 2) {
-          this.trivialFormulateErrorHandler("You have to choose at least one question to have public results.");
+          if (!show) this.trivialFormulateErrorHandler("You have to choose at least one question to have public results.");
           this.errored = true;
         } else {
-          this.trivialFormulateErrorHandler();
+          if (!show) this.trivialFormulateErrorHandler();
           this.errored = false;
         }
       } else {
@@ -86685,7 +86687,7 @@ var render = function () {
               ),
             ]),
             _vm._v(" "),
-            this.$props["publicResults"]
+            this.$props["publicResults"] && this.formValues.has_public_results
               ? _c("div", [
                   _vm._v("\n            Public link: "),
                   _c("a", { attrs: { href: this.publicLink } }, [
