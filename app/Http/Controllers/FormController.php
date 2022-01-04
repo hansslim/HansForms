@@ -530,13 +530,13 @@ class FormController extends Controller
                 if ($formProps['has_private_token']) {
                     foreach ($formProps['private_emails'] as $validatedEmail) {
                         $token = Uuid::uuid4()->toString();
-                        $formPrivateAccessToken = FormPrivateAccessToken::create([
+                        FormPrivateAccessToken::create([
                             'token' => $token,
                             'email' => $validatedEmail,
                             'form_id' => $newForm->id,
                         ]);
 
-                        Mail::to($validatedEmail)->send(new FormInvitation($formPrivateAccessToken, $newForm));
+                        Mail::to($validatedEmail)->send(new FormInvitation($token, $newForm));
                     }
                 }
             });
@@ -740,7 +740,11 @@ class FormController extends Controller
     {
         if (Auth::user()) {
             $userId = Auth::user()->id;
-            $form = Form::where('slug', $slug)->first();
+            $form = Form::where('slug', $slug)->with('formPrivateAccessTokens')->first();
+            foreach ($form->formPrivateAccessTokens as $key => $value) {
+                unset($form->formPrivateAccessTokens[$key]->token);
+            }
+
             if ($form) {
                 if ($form->user_id != $userId) {
                     return response("Unauthorized - you don't own this form!", 401);

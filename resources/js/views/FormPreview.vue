@@ -15,7 +15,14 @@
                     <p v-if="this.hasPublicLink">Public link:
                         <router-link :to="/form/+getSlug()">{{ this.publicLink }}</router-link>
                     </p>
-                    <p v-else>Private form</p>
+                    <div v-else><p>Private form</p>
+                        <div>
+                            Invited people
+                            <div style="max-height: 100px; overflow-y:auto" class="border mb-3">
+                                <div class="text-left border-bottom pl-1" v-for="email in this.form.form_private_access_tokens" key="email.id">{{email.email}}<br></div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="d-flex justify-content-center">
                         <FormulateInput
                             class="btn"

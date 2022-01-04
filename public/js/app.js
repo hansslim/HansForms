@@ -5340,6 +5340,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -87434,7 +87441,39 @@ var render = function () {
                     ],
                     1
                   )
-                : _c("p", [_vm._v("Private form")]),
+                : _c("div", [
+                    _c("p", [_vm._v("Private form")]),
+                    _vm._v(" "),
+                    _c("div", [
+                      _vm._v(
+                        "\n                        Invited people\n                        "
+                      ),
+                      _c(
+                        "div",
+                        {
+                          staticClass: "border mb-3",
+                          staticStyle: {
+                            "max-height": "100px",
+                            "overflow-y": "auto",
+                          },
+                        },
+                        _vm._l(
+                          this.form.form_private_access_tokens,
+                          function (email) {
+                            return _c(
+                              "div",
+                              {
+                                key: "email.id",
+                                staticClass: "text-left border-bottom pl-1",
+                              },
+                              [_vm._v(_vm._s(email.email)), _c("br")]
+                            )
+                          }
+                        ),
+                        0
+                      ),
+                    ]),
+                  ]),
               _vm._v(" "),
               _c(
                 "div",
