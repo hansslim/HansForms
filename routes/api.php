@@ -33,7 +33,7 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::get('/form/authenticated/{slug}', [FormController::class, 'showWithAuth']);
     Route::get('/forms', [FormController::class, 'index']);
     Route::put('/forms/{id}', [FormController::class, 'update']);
-    Route::post('/forms', [FormController::class, 'store']);
+    Route::post('/forms/create', [FormController::class, 'store']);
     Route::delete('/forms/{id}', [FormController::class, 'destroy']);
     Route::post('/form/duplicate', [FormController::class, 'duplicateWithAuth']);
     Route::get('/form/results/{slug}', [FormCompletionController::class, 'index']);

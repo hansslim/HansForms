@@ -6535,7 +6535,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         while (1) {
           switch (_context7.prev = _context7.next) {
             case 0:
-              return _context7.abrupt("return", _Api__WEBPACK_IMPORTED_MODULE_1__["default"].post('/forms/', newForm));
+              return _context7.abrupt("return", _Api__WEBPACK_IMPORTED_MODULE_1__["default"].post('/forms/create', newForm));
 
             case 1:
             case "end":
@@ -6567,7 +6567,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         while (1) {
           switch (_context9.prev = _context9.next) {
             case 0:
-              return _context9.abrupt("return", _Api__WEBPACK_IMPORTED_MODULE_1__["default"].post('/form/duplicate/', props));
+              return _context9.abrupt("return", _Api__WEBPACK_IMPORTED_MODULE_1__["default"].post('/form/duplicate', props));
 
             case 1:
             case "end":

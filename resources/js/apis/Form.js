@@ -20,13 +20,13 @@ export default {
         return Api.post('/form/private_complete/' + token, formCompletion);
     },
     async postCreateForm(newForm) {
-        return Api.post('/forms/', newForm);
+        return Api.post('/forms/create', newForm);
     },
     async deleteForm(slug) {
         return Api.delete('/forms/' + slug);
     },
     async postDuplicateForm(props) {
-        return Api.post('/form/duplicate/', props)
+        return Api.post('/form/duplicate', props)
     },
     async getFormResults(slug) {
         return Api.get('/form/results/' + slug)
