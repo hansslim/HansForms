@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\FormInvitation;
 use App\Models\BooleanInput;
 use App\Models\DateInput;
 use App\Models\FormElement;
@@ -18,6 +19,7 @@ use Illuminate\Http\Request;
 use App\Models\Form;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Ramsey\Uuid\Uuid;
 
@@ -528,14 +530,17 @@ class FormController extends Controller
                 if ($formProps['has_private_token']) {
                     foreach ($formProps['private_emails'] as $validatedEmail) {
                         $token = Uuid::uuid4()->toString();
-                        FormPrivateAccessToken::create([
+                        $formPrivateAccessToken = FormPrivateAccessToken::create([
                             'token' => $token,
                             'email' => $validatedEmail,
                             'form_id' => $newForm->id,
                         ]);
+
+                        Mail::to($validatedEmail)->send(new FormInvitation($formPrivateAccessToken, $newForm));
                     }
                 }
             });
+
         } catch (Exception $exception) {
             dd($exception);
             //return response("{$exception->getMessage()}", 500);
@@ -602,7 +607,6 @@ class FormController extends Controller
         $userId = Auth::user()->id;
         if (!$userId) return response("Unauthorized.", 401);
 
-        //todo: check if form belongs to user!
         $form = null;
 
         if (array_key_exists('slug', $request->all())) {
