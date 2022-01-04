@@ -86,7 +86,6 @@ class FormController extends Controller
             }
         } else return response("Invalid data (missing start/end date).", 400);
 
-        //todo: validate and process these values
         $formProps['has_private_token'] = false;
         $formProps['private_emails'] = [];
 
@@ -608,7 +607,6 @@ class FormController extends Controller
         if (!$userId) return response("Unauthorized.", 401);
 
         $form = null;
-
         if (array_key_exists('slug', $request->all())) {
             if ($request->all()['slug']) {
                 $slug = strval($request->all()['slug']);
@@ -617,7 +615,14 @@ class FormController extends Controller
             } else return response("Missing slug", 400);
         } else return response("Missing slug", 400);
 
-        $formProps = ['name' => "", 'description' => "", "start_time" => "", "end_time" => ""];
+        $formProps = [
+            'name' => "",
+            'description' => "",
+            "start_time" => "",
+            "end_time" => "",
+            'has_private_token' => false,
+            'private_emails' => []
+        ];
 
         if (array_key_exists('name', $request->all())) {
             if ($request->all()['name']) $formProps['name'] = strval($request->all()['name']);
@@ -646,6 +651,35 @@ class FormController extends Controller
             }
         } else return response("Invalid data (missing start/end date) 1.", 400);
 
+
+        if (array_key_exists('has_private_token', $request->all())) {
+            if (is_bool($request->all()['has_private_token']) && $request->all()['has_private_token']) $formProps['has_private_token'] = true;
+        }
+
+        if ($formProps['has_private_token']) {
+            if (array_key_exists('private_emails', $request->all())) {
+                if ($request->all()['private_emails']){
+                    $dataToValidate['emails'] = explode("\n", $request->all()['private_emails']);
+
+                    $validator = Validator::make($dataToValidate, [
+                        'emails.*' => 'email|required|regex:/(.+)@(.+)\.(.+)/i',
+                    ]);
+
+                    if ($validator->fails()) {
+                        return response("Invalid data (invalid private emails - raw text input mode).", 400);
+                    }
+                    else {
+                        $formProps['private_emails'] = $dataToValidate['emails'];
+                    }
+                }
+                else {
+                    return response("Invalid data (missing array or formatted string of private emails).", 400);
+                }
+            }
+            else return response("Invalid data (missing array of private emails).", 400);
+        }
+
+
         $formSlug = Uuid::uuid4()->toString();
         try {
             DB::transaction(function () use ($form, $userId, $formProps, $formSlug) {
@@ -658,9 +692,8 @@ class FormController extends Controller
                     'description' => $formProps['description'],
                     'start_time' => $formProps['start_time'],
                     'end_time' => $formProps['end_time'],
+                    'has_private_token' => $formProps['has_private_token'],
                     //****************
-
-                    'has_private_token' => false, //todo: copy emails
                 ]);
 
                 foreach ($form->formElements as $item) {
@@ -726,7 +759,18 @@ class FormController extends Controller
                     }
                 }
 
+                if ($formProps['has_private_token']) {
+                    foreach ($formProps['private_emails'] as $validatedEmail) {
+                        $token = Uuid::uuid4()->toString();
+                        FormPrivateAccessToken::create([
+                            'token' => $token,
+                            'email' => $validatedEmail,
+                            'form_id' => $newForm->id,
+                        ]);
 
+                        Mail::to($validatedEmail)->send(new FormInvitation($token, $newForm));
+                    }
+                }
             });
         } catch (Exception $exception) {
             dd($exception);

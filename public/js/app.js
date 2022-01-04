@@ -4168,6 +4168,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "FormDuplicationModal",
@@ -4177,7 +4190,9 @@ __webpack_require__.r(__webpack_exports__);
       name: "",
       description: "",
       start_time: "",
-      end_time: ""
+      end_time: "",
+      private_emails: "",
+      has_private_token: false
     };
   },
   methods: {
@@ -4186,7 +4201,9 @@ __webpack_require__.r(__webpack_exports__);
         name: this.name,
         description: this.description,
         start_time: this.start_time,
-        end_time: this.end_time
+        end_time: this.end_time,
+        private_emails: this.private_emails,
+        has_private_token: this.has_private_token
       });
       var error = _store__WEBPACK_IMPORTED_MODULE_0__.duplicateFormStore.validateData();
 
@@ -4209,11 +4226,17 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   mounted: function mounted() {
+    console.log(this.$props['obj']);
+
     if (this.$props['obj']) {
       this.name = this.$props['obj'].name;
       this.description = this.$props['obj'].description;
       this.start_time = this.$props['obj'].start_time.replace(" ", "T");
       this.end_time = this.$props['obj'].end_time.replace(" ", "T");
+      this.has_private_token = this.$props['obj'].has_private_token;
+      this.private_emails = this.$props['obj'].private_emails.map(function (x) {
+        return x.email;
+      }).join("\n");
     } else console.log("error - empty obj");
   }
 });
@@ -5385,7 +5408,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   if (_this.dataFetched) {
                     if (_this.form.has_private_token) _this.hasPublicLink = false;
                     if (_this.hasPublicLink) _this.publicLink = "".concat(window.location).replace('/preview', '');
-                    console.log(_this.form);
 
                     _this.sortElements();
 
@@ -5556,7 +5578,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           name: this.form.name,
           description: this.form.description,
           start_time: this.form.start_time,
-          end_time: this.form.end_time
+          end_time: this.form.end_time,
+          has_private_token: this.form.has_private_token,
+          private_emails: this.form.form_private_access_tokens
         }
       }, {
         height: 'auto',
@@ -7155,12 +7179,16 @@ var duplicateFormStore = {
   description: "",
   start_time: "",
   end_time: "",
+  private_emails: "",
+  has_private_token: false,
   setData: function setData(obj) {
     if (obj) {
       this.name = obj.name;
       this.description = obj.description;
       this.start_time = obj.start_time;
       this.end_time = obj.end_time;
+      this.has_private_token = obj.has_private_token;
+      this.private_emails = obj.private_emails;
     }
   },
   getData: function getData() {
@@ -7168,7 +7196,9 @@ var duplicateFormStore = {
       name: this.name,
       description: this.description,
       start_time: this.start_time,
-      end_time: this.end_time
+      end_time: this.end_time,
+      private_emails: this.private_emails,
+      has_private_token: this.has_private_token
     };
   },
   validateData: function validateData() {
@@ -7182,6 +7212,15 @@ var duplicateFormStore = {
       if (parseInt(max.getTime()) <= parseInt(min.getTime())) return "Maximal date is lower than minimal date";
     } else return "Invalid date values";
 
+    if (!(this.has_private_token === true || this.has_private_token === false)) return "Invalid has private token value";
+    var hasInvalidEmail = false;
+    var emailRegex = new RegExp('(.+)@(.+)\\.(.+)', 'i');
+    this.private_emails.split('\n').forEach(function (x) {
+      if (!emailRegex.test(x)) {
+        hasInvalidEmail = true;
+      }
+    });
+    if (hasInvalidEmail) return "Invalid email values";
     return false;
   },
   clearData: function clearData() {
@@ -7189,9 +7228,11 @@ var duplicateFormStore = {
     this.description = "";
     this.start_time = "";
     this.end_time = "";
+    this.private_emails = "";
+    this.has_private_token = false;
   },
   isStoreEmpty: function isStoreEmpty() {
-    if (this.name === "" && this.description === "" && this.start_time === "" && this.end_time === "") return true;else return false;
+    if (this.name === "" && this.description === "" && this.start_time === "" && this.end_time === "" && this.private_emails === "" && this.has_private_token === false) return true;else return false;
   }
 };
 
@@ -86747,6 +86788,36 @@ var render = function () {
             },
           }),
           _vm._v(" "),
+          _c("FormulateInput", {
+            attrs: { label: "Form with private access ", type: "checkbox" },
+            model: {
+              value: _vm.has_private_token,
+              callback: function ($$v) {
+                _vm.has_private_token = $$v
+              },
+              expression: "has_private_token",
+            },
+          }),
+          _vm._v(" "),
+          _vm.has_private_token
+            ? _c("FormulateInput", {
+                attrs: {
+                  label:
+                    "Private emails (Web validation limited! Please, separate emails by enter. Invalid data will be ignored.)",
+                  type: "textarea",
+                  name: "emails",
+                  validation: "required",
+                },
+                model: {
+                  value: _vm.private_emails,
+                  callback: function ($$v) {
+                    _vm.private_emails = $$v
+                  },
+                  expression: "private_emails",
+                },
+              })
+            : _vm._e(),
+          _vm._v(" "),
           _c("FormulateErrors"),
           _vm._v(" "),
           _c("FormulateInput", {
@@ -87459,14 +87530,14 @@ var render = function () {
                         },
                         _vm._l(
                           this.form.form_private_access_tokens,
-                          function (email) {
+                          function (privateEmail) {
                             return _c(
                               "div",
                               {
-                                key: "email.id",
+                                key: privateEmail.id,
                                 staticClass: "text-left border-bottom pl-1",
                               },
-                              [_vm._v(_vm._s(email.email)), _c("br")]
+                              [_vm._v(_vm._s(privateEmail.email)), _c("br")]
                             )
                           }
                         ),

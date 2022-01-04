@@ -29,6 +29,19 @@
                 type="datetime-local"
                 :validation="[['required']]"
             />
+            <FormulateInput
+                v-model="has_private_token"
+                label="Form with private access "
+                type="checkbox"
+            />
+            <FormulateInput
+                v-if="has_private_token"
+                label="Private emails (Web validation limited! Please, separate emails by enter. Invalid data will be ignored.)"
+                type="textarea"
+                name="emails"
+                validation="required"
+                v-model="private_emails"
+            />
             <FormulateErrors/>
             <FormulateInput
                 type="submit"
@@ -50,6 +63,8 @@ export default {
             description: "",
             start_time: "",
             end_time: "",
+            private_emails: "",
+            has_private_token: false
         }
     },
     methods: {
@@ -59,6 +74,8 @@ export default {
                 description: this.description,
                 start_time: this.start_time,
                 end_time: this.end_time,
+                private_emails: this.private_emails,
+                has_private_token: this.has_private_token,
             })
 
             let error = duplicateFormStore.validateData();
@@ -80,11 +97,14 @@ export default {
         }
     },
     mounted() {
+        console.log(this.$props['obj'])
         if (this.$props['obj']) {
             this.name = this.$props['obj'].name;
             this.description = this.$props['obj'].description;
             this.start_time = this.$props['obj'].start_time.replace(" ", "T");
             this.end_time = this.$props['obj'].end_time.replace(" ", "T");
+            this.has_private_token = this.$props['obj'].has_private_token;
+            this.private_emails = this.$props['obj'].private_emails.map((x)=>x.email).join("\n");
         }
         else console.log("error - empty obj")
     }

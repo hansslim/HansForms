@@ -19,7 +19,7 @@
                         <div>
                             Invited people
                             <div style="max-height: 100px; overflow-y:auto" class="border mb-3">
-                                <div class="text-left border-bottom pl-1" v-for="email in this.form.form_private_access_tokens" key="email.id">{{email.email}}<br></div>
+                                <div class="text-left border-bottom pl-1" v-for="privateEmail in this.form.form_private_access_tokens" :key="privateEmail.id">{{privateEmail.email}}<br></div>
                             </div>
                         </div>
                     </div>
@@ -110,10 +110,7 @@ export default {
                 if (this.dataFetched) {
                     if (this.form.has_private_token) this.hasPublicLink = false;
                     if (this.hasPublicLink) this.publicLink = `${window.location}`.replace('/preview', '');
-                    console.log(this.form)
-
                     this.sortElements();
-
                     this.loading = false;
                 }
             } catch (error) {
@@ -212,6 +209,8 @@ export default {
                         description: this.form.description,
                         start_time: this.form.start_time,
                         end_time: this.form.end_time,
+                        has_private_token: this.form.has_private_token,
+                        private_emails: this.form.form_private_access_tokens
                     }
                 },
                 {height: 'auto', width: '60%', scrollable: true},
