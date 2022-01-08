@@ -13,3 +13,5 @@ npm-debug.log
 yarn-error.log
 /.idea
 /.vscode
+Notifications.js.LNK
+/public/js/app.js
