@@ -98,7 +98,7 @@ export const duplicateFormStore = {
                 hasInvalidEmail = true;
             }
         })
-        if (hasInvalidEmail) return "Invalid email values"
+        if (hasInvalidEmail && this.has_private_token) return "Invalid email values"
 
         return false;
     },
