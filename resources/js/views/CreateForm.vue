@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-if="!loading">
+        <div v-if="!loading" class="container">
             <FormulateForm @submit="submitCreateForm">
                 <div style="padding-bottom: 5vh">
                     <div class=" d-flex justify-content-center align-items-center flex-wrap">
@@ -71,7 +71,7 @@
                                     v-model="form.private_emails"
                                     minimum="1"
                                 >
-                                    <div class="d-inline-flex m-1">
+                                    <div class="d-inline-flex">
                                         <FormulateInput
                                             type="email"
                                             name="email"

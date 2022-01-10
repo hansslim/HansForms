@@ -87,6 +87,11 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style>
+.formulate-input-element--checkbox {
+    display: inline-block;
+}
+.formulate-input-element--radio {
+    display: inline-block;
+}
 </style>

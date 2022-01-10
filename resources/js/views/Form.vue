@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="container">
         <div v-if="!this.loading && !this.errored">
             <h1>{{ this.form.name }}</h1>
             <h3>{{ this.form.description }}</h3>

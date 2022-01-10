@@ -40,6 +40,8 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style>
+.formulate-input-element--radio {
+    display: inline-block;
+}
 </style>
