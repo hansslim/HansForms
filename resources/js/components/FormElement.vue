@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="m-2">
         <hr>
         <div v-if="inputType==='text'">
             <text-input
@@ -36,7 +36,6 @@
                 :isMandatory="isMandatory"
             />
         </div>
-        <hr>
     </div>
 
 </template>

@@ -1,14 +1,16 @@
 <template>
     <div class="container">
-        <div v-if="!this.loading && !this.errored">
+        <div v-if="!this.loading && !this.errored" class="card">
             <h1>{{ this.form.name }}</h1>
             <h3>{{ this.form.description }}</h3>
             <h4>Opened to {{ this.form.end_time }}</h4>
             <FormulateForm v-model="formValues" @submit="submitForm">
-                <form-element v-for="item in this.form.form_elements" :obj="item" :key="item.order"></form-element>
+                <form-element v-for="item in this.form.form_elements" :obj="item" :key="item.order"/>
                 <FormulateInput
                     type="submit"
                     name="Submit this form!"
+                    wrapper-class="text-center"
+                    input-class="form-control w-50 m-auto"
                 />
             </FormulateForm>
         </div>

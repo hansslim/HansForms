@@ -19,11 +19,15 @@
                         <router-link to="/create_form">here...</router-link>
                     </p>
 
-                    <form-card
-                        v-for="form in forms"
-                        :key="form.id"
-                        :obj="form"
-                    />
+                    <div class="container-fluid">
+                        <div v-for="forms in groupedForms" class="row row-eq-height">
+                            <form-card
+                                v-for="form in forms"
+                                :key="form.id"
+                                :obj="form"
+                            />
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -36,7 +40,6 @@
 <script>
 import Form from "../apis/Form";
 import FormCard from "../components/FormCard";
-
 
 export default {
     name: "Home",
@@ -59,6 +62,9 @@ export default {
             if (this.$store.getters['user']) {
                 return this.$store.getters['user'].name;
             } else return "";
+        },
+        groupedForms() {
+            return _.chunk(this.forms, 3)
         }
     },
     methods: {
@@ -71,8 +77,7 @@ export default {
                     const getForms = await Form.getAllForms();
                     if (getForms && getForms.status === 200) {
                         this.forms = getForms.data;
-                    }
-                    else throw new Error(getForms.status.toString())
+                    } else throw new Error(getForms.status.toString())
                 } catch (e) {
                     console.log(e);
                 }

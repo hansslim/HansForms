@@ -2595,6 +2595,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "FormPreview",
   props: ['obj'],
@@ -2623,7 +2625,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Elements_NumberInput__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Elements/NumberInput */ "./resources/js/components/Elements/NumberInput.vue");
 /* harmony import */ var _Elements_BooleanInput__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Elements/BooleanInput */ "./resources/js/components/Elements/BooleanInput.vue");
 /* harmony import */ var _Elements_DateInput__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Elements/DateInput */ "./resources/js/components/Elements/DateInput.vue");
-//
 //
 //
 //
@@ -4958,6 +4959,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -5290,6 +5293,14 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -5919,6 +5930,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -5961,6 +5976,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       if (this.$store.getters['user']) {
         return this.$store.getters['user'].name;
       } else return "";
+    },
+    groupedForms: function groupedForms() {
+      return _.chunk(this.forms, 3);
     }
   },
   methods: {
@@ -85597,28 +85615,27 @@ var render = function () {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    {
-      staticStyle: {
-        border: "solid black 1px",
-        "border-radius": "5px",
-        padding: "10px",
-        margin: "5px",
-      },
-    },
+    { staticClass: "col-sm m-1 shadow-sm card d-flex justify-content-center" },
     [
-      _c("router-link", { attrs: { to: _vm.formLink } }, [
-        _c("h2", [_vm._v(_vm._s(this.$props["obj"].name))]),
-        _vm._v(" "),
-        _c("h4", [_vm._v(_vm._s(this.$props["obj"].description))]),
-        _vm._v(
-          "\n        Visible from " +
-            _vm._s(this.$props["obj"].start_time) +
-            " to " +
-            _vm._s(this.$props["obj"].end_time)
-        ),
-        _c("br"),
-        _vm._v("\n        " + _vm._s("Show more...") + "\n    "),
-      ]),
+      _c(
+        "router-link",
+        { staticClass: "text-decoration-none", attrs: { to: _vm.formLink } },
+        [
+          _c("div", { staticClass: "p-2" }, [
+            _c("h1", [_vm._v(_vm._s(this.$props["obj"].name))]),
+            _vm._v(" "),
+            _c("h4", [_vm._v(_vm._s(this.$props["obj"].description))]),
+            _vm._v(
+              "\n            Visible from " +
+                _vm._s(this.$props["obj"].start_time) +
+                " to " +
+                _vm._s(this.$props["obj"].end_time)
+            ),
+            _c("br"),
+            _vm._v("\n            " + _vm._s("Show more...") + "\n        "),
+          ]),
+        ]
+      ),
     ],
     1
   )
@@ -85646,7 +85663,7 @@ var render = function () {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
+  return _c("div", { staticClass: "m-2" }, [
     _c("hr"),
     _vm._v(" "),
     _vm.inputType === "text"
@@ -85728,8 +85745,6 @@ var render = function () {
           1
         )
       : _vm._e(),
-    _vm._v(" "),
-    _c("hr"),
   ])
 }
 var staticRenderFns = []
@@ -87559,6 +87574,7 @@ var render = function () {
     !this.loading && !this.errored
       ? _c(
           "div",
+          { staticClass: "card" },
           [
             _c("h1", [_vm._v(_vm._s(this.form.name))]),
             _vm._v(" "),
@@ -87587,7 +87603,12 @@ var render = function () {
                 }),
                 _vm._v(" "),
                 _c("FormulateInput", {
-                  attrs: { type: "submit", name: "Submit this form!" },
+                  attrs: {
+                    type: "submit",
+                    name: "Submit this form!",
+                    "wrapper-class": "text-center",
+                    "input-class": "form-control w-50 m-auto",
+                  },
                 }),
               ],
               2
@@ -87641,12 +87662,14 @@ var render = function () {
   var _c = _vm._self._c || _h
   return _c("div", [
     !this.loading && !this.errored
-      ? _c("div", { staticClass: "container" }, [
-          _c("div", { staticClass: "row" }, [
-            _c("div", { staticClass: "col" }, [
+      ? _c("div", { staticClass: "container-fluid" }, [
+          _c("div", { staticClass: "row m-1" }, [
+            _c("div", { staticClass: "col shadow-sm bg-white pt-3" }, [
               _c("h1", [_vm._v(_vm._s(this.form.name))]),
               _vm._v(" "),
               _c("h3", [_vm._v(_vm._s(this.form.description))]),
+              _vm._v(" "),
+              _c("hr"),
               _vm._v(" "),
               _c("h5", [_vm._v("Opened from " + _vm._s(this.form.start_time))]),
               _vm._v(" "),
@@ -87658,51 +87681,57 @@ var render = function () {
                 ? _c("h4", [_vm._v("Opened to fill in.")])
                 : _c("h4", [_vm._v("Waiting for publication.")]),
               _vm._v(" "),
+              _c("hr"),
+              _vm._v(" "),
               this.hasPublicLink
                 ? _c(
                     "p",
+                    { staticClass: "font-weight-bold" },
                     [
-                      _vm._v("Public link:\n                    "),
+                      _vm._v("Public link"),
+                      _c("br"),
+                      _vm._v(" "),
                       _c(
                         "router-link",
-                        { attrs: { to: /form/ + _vm.getSlug() } },
+                        {
+                          staticClass: "font-weight-normal",
+                          attrs: { to: /form/ + _vm.getSlug() },
+                        },
                         [_vm._v(_vm._s(this.publicLink))]
                       ),
                     ],
                     1
                   )
                 : _c("div", [
-                    _c("p", [_vm._v("Private form")]),
+                    _vm._m(0),
                     _vm._v(" "),
-                    _c("div", [
-                      _vm._v(
-                        "\n                        Invited people\n                        "
+                    _c(
+                      "div",
+                      {
+                        staticClass: "border mb-3 overflow-auto",
+                        staticStyle: { "max-height": "100px" },
+                      },
+                      _vm._l(
+                        this.form.form_private_access_tokens,
+                        function (privateEmail) {
+                          return _c(
+                            "div",
+                            {
+                              key: privateEmail.id,
+                              staticClass: "text-left border-bottom pl-1",
+                            },
+                            [
+                              _vm._v(
+                                "\n                            " +
+                                  _vm._s(privateEmail.email)
+                              ),
+                              _c("br"),
+                            ]
+                          )
+                        }
                       ),
-                      _c(
-                        "div",
-                        {
-                          staticClass: "border mb-3",
-                          staticStyle: {
-                            "max-height": "100px",
-                            "overflow-y": "auto",
-                          },
-                        },
-                        _vm._l(
-                          this.form.form_private_access_tokens,
-                          function (privateEmail) {
-                            return _c(
-                              "div",
-                              {
-                                key: privateEmail.id,
-                                staticClass: "text-left border-bottom pl-1",
-                              },
-                              [_vm._v(_vm._s(privateEmail.email)), _c("br")]
-                            )
-                          }
-                        ),
-                        0
-                      ),
-                    ]),
+                      0
+                    ),
                   ]),
               _vm._v(" "),
               _c(
@@ -87743,18 +87772,19 @@ var render = function () {
               _c("br"),
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: "col" }, [
-              _c("h2", [_vm._v("Interactive preview")]),
+            _c("div", { staticClass: "col shadow-sm bg-white pt-3" }, [
+              _c("h1", [_vm._v("Interactive preview")]),
               _vm._v(" "),
               _c("p", [_vm._v("This is how it is shown to users.")]),
               _vm._v(" "),
               _c(
                 "div",
-                { staticStyle: { border: "black solid 2px" } },
                 [
                   _c(
                     "FormulateForm",
                     {
+                      staticClass: "overflow-auto",
+                      staticStyle: { "max-height": "75vh" },
                       model: {
                         value: _vm.formValues,
                         callback: function ($$v) {
@@ -87798,7 +87828,17 @@ var render = function () {
       : _vm._e(),
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function () {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", [
+      _c("div", { staticClass: "font-weight-bold" }, [_vm._v("Private form")]),
+      _vm._v("\n                        Invited people\n                    "),
+    ])
+  },
+]
 render._withStripped = true
 
 
@@ -87967,39 +88007,45 @@ var render = function () {
                     1
                   ),
                 ])
-              : _c(
-                  "div",
-                  [
-                    _c("h1", [
-                      _vm._v("Welcome, " + _vm._s(_vm.loggedUserName) + "."),
-                    ]),
-                    _vm._v(" "),
-                    _c("hr"),
-                    _vm._v(" "),
-                    _vm.notEmpty
-                      ? _c(
-                          "p",
-                          [
-                            _vm._v("Create new forms\n                    "),
-                            _c(
-                              "router-link",
-                              { attrs: { to: "/create_form" } },
-                              [_vm._v("here...")]
-                            ),
-                          ],
-                          1
-                        )
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _vm._l(_vm.forms, function (form) {
-                      return _c("form-card", {
-                        key: form.id,
-                        attrs: { obj: form },
-                      })
+              : _c("div", [
+                  _c("h1", [
+                    _vm._v("Welcome, " + _vm._s(_vm.loggedUserName) + "."),
+                  ]),
+                  _vm._v(" "),
+                  _c("hr"),
+                  _vm._v(" "),
+                  _vm.notEmpty
+                    ? _c(
+                        "p",
+                        [
+                          _vm._v("Create new forms\n                    "),
+                          _c("router-link", { attrs: { to: "/create_form" } }, [
+                            _vm._v("here..."),
+                          ]),
+                        ],
+                        1
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "container-fluid" },
+                    _vm._l(_vm.groupedForms, function (forms) {
+                      return _c(
+                        "div",
+                        { staticClass: "row row-eq-height" },
+                        _vm._l(forms, function (form) {
+                          return _c("form-card", {
+                            key: form.id,
+                            attrs: { obj: form },
+                          })
+                        }),
+                        1
+                      )
                     }),
-                  ],
-                  2
-                ),
+                    0
+                  ),
+                ]),
           ]),
         ])
       : _c("div", [_vm._v("\n        loading\n    ")]),

@@ -1,10 +1,12 @@
 <template>
-    <div style="border: solid black 1px; border-radius: 5px ;padding: 10px; margin: 5px">
-        <router-link :to="formLink">
-            <h2>{{this.$props['obj'].name}}</h2>
-            <h4>{{this.$props['obj'].description}}</h4>
-            Visible from {{this.$props['obj'].start_time}} to {{this.$props['obj'].end_time}}<br>
-            {{"Show more..."}}
+    <div class="col-sm m-1 shadow-sm card d-flex justify-content-center">
+        <router-link :to="formLink" class="text-decoration-none">
+            <div class="p-2">
+                <h1>{{this.$props['obj'].name}}</h1>
+                <h4>{{this.$props['obj'].description}}</h4>
+                Visible from {{this.$props['obj'].start_time}} to {{this.$props['obj'].end_time}}<br>
+                {{"Show more..."}}
+            </div>
         </router-link>
     </div>
 </template>

@@ -1,10 +1,12 @@
 <template>
     <div>
-        <div v-if="!this.loading && !this.errored" class="container">
-            <div class="row">
-                <div class="col">
+        <div v-if="!this.loading && !this.errored" class="container-fluid">
+            <div class="row m-1">
+                <div class="col shadow-sm bg-white pt-3">
                     <h1>{{ this.form.name }}</h1>
                     <h3>{{ this.form.description }}</h3>
+
+                    <hr>
                     <h5>Opened from {{ this.form.start_time }}</h5>
                     <h5>Closing at {{ this.form.end_time }}</h5>
 
@@ -12,17 +14,23 @@
                     <h4 v-else-if="this.form.is_opened">Opened to fill in.</h4>
                     <h4 v-else>Waiting for publication.</h4>
 
-                    <p v-if="this.hasPublicLink">Public link:
-                        <router-link :to="/form/+getSlug()">{{ this.publicLink }}</router-link>
+                    <hr>
+                    <p v-if="this.hasPublicLink" class="font-weight-bold">Public link<br>
+                        <router-link :to="/form/+getSlug()" class="font-weight-normal">{{ this.publicLink }}</router-link>
                     </p>
-                    <div v-else><p>Private form</p>
+                    <div v-else>
                         <div>
+                            <div class="font-weight-bold">Private form</div>
                             Invited people
-                            <div style="max-height: 100px; overflow-y:auto" class="border mb-3">
-                                <div class="text-left border-bottom pl-1" v-for="privateEmail in this.form.form_private_access_tokens" :key="privateEmail.id">{{privateEmail.email}}<br></div>
+                        </div>
+                        <div style="max-height: 100px;" class="border mb-3 overflow-auto">
+                            <div class="text-left border-bottom pl-1"
+                                 v-for="privateEmail in this.form.form_private_access_tokens" :key="privateEmail.id">
+                                {{ privateEmail.email }}<br>
                             </div>
                         </div>
                     </div>
+
                     <div class="d-flex justify-content-center">
                         <FormulateInput
                             class="btn"
@@ -53,24 +61,24 @@
                     </div>
                     <br>
                 </div>
-                <div class="col">
-                    <h2>Interactive preview</h2>
+                <div class="col shadow-sm bg-white pt-3">
+                    <h1>Interactive preview</h1>
                     <p>This is how it is shown to users.</p>
-                    <div style="border: black solid 2px">
-                        <FormulateForm v-model="formValues">
-                            <form-element v-for="item in this.form.form_elements" :obj="item"
-                                          :key="item.order"></form-element>
+                    <div>
+                        <FormulateForm v-model="formValues" style="max-height: 75vh" class="overflow-auto">
+                            <form-element
+                                v-for="item in this.form.form_elements"
+                                :obj="item"
+                                :key="item.order"
+                            />
                         </FormulateForm>
                     </div>
                 </div>
             </div>
-
         </div>
-
         <div v-if="this.loading">
             {{ "loading" }}
         </div>
-
         <div v-if="this.errored">
             <h1>{{ this.errorText }}</h1>
             <router-link to="/"><h3>Go home</h3></router-link>
@@ -220,7 +228,7 @@ export default {
         handleUpdate() {
         },
         handleResults() {
-            this.$router.push("/form/results/"+this.getSlug());
+            this.$router.push("/form/results/" + this.getSlug());
         }
     },
 }
