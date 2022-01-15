@@ -44,7 +44,7 @@
             </FormulateForm>
         </div>
         <div v-else>
-            loading
+            <loading/>
         </div>
 
     </div>
@@ -77,8 +77,9 @@ export default {
                 this.loading = true;
                 await Form.postPublishFormResults(this.formValues, this.$props['slug']).then((res) => {
                     if (res.status === 200) {
-                        this.$modal.hide(this.$parent.name)
+                        this.$toasted.success('Form results publication changed successfully.')
                         this.loading = false;
+                        this.$modal.hide(this.$parent.name)
                         window.location.reload()
                     }
                 });

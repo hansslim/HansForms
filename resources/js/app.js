@@ -1,3 +1,5 @@
+import Loading from "./components/Loading";
+
 require('./bootstrap');
 
 import Vue from "vue";
@@ -6,6 +8,7 @@ import router from "./router";
 import store from "./store";
 import VueFormulate from '@braid/vue-formulate'
 import VModal from 'vue-js-modal'
+import Toasted from 'vue-toasted';
 
 Vue.use(VueFormulate, {
     useInputDecorators: false,
@@ -24,6 +27,10 @@ Vue.use(VueFormulate, {
     },
 });
 Vue.use(VModal, { dynamicDefault: { height: 'auto', width: '60%', adaptive: true, scrollable: true } })
+Vue.use(Toasted, {
+    duration: 5000, position: 'top-center'
+});
+Vue.component('loading', Loading)
 
 Vue.config.productionTip = false;
 

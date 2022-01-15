@@ -46,7 +46,7 @@
                 />
             </FormulateForm>
         </div>
-        <div v-else>loading</div>
+        <div v-else><loading/></div>
     </div>
 </template>
 

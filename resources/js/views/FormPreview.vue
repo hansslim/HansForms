@@ -16,7 +16,10 @@
 
                     <hr>
                     <p v-if="this.hasPublicLink" class="font-weight-bold">Public link<br>
-                        <router-link :to="/form/+getSlug()" class="font-weight-normal">{{ this.publicLink }}</router-link>
+                        <router-link :to="/form/+getSlug()" class="font-weight-normal">{{
+                                this.publicLink
+                            }}
+                        </router-link>
                     </p>
                     <div v-else>
                         <div>
@@ -77,7 +80,7 @@
             </div>
         </div>
         <div v-if="this.loading">
-            {{ "loading" }}
+            <loading/>
         </div>
         <div v-if="this.errored">
             <h1>{{ this.errorText }}</h1>
@@ -122,7 +125,6 @@ export default {
                     this.loading = false;
                 }
             } catch (error) {
-                console.log(error.message)
                 this.errored = true;
                 this.errorText = `Unhandled error - ${error}`;
             } finally {
@@ -177,9 +179,14 @@ export default {
         async handleDelete() {
             if (confirm("Are you sure that you want to delete this form?")) {
                 this.loading = true;
-                await Form.deleteForm(this.getSlug()).then(() => {
-                    this.$router.push("/");
-                    this.loading = false;
+                await Form.deleteForm(this.getSlug()).then((res) => {
+                    if (res.status === 200) {
+                        this.$router.push("/");
+                        this.loading = false;
+                        this.$toasted.success(`Form was deleted successfully.`);
+                    } else {
+                        this.$toasted.error(`Form deletion was not successful. Try it again.`);
+                    }
                 });
             }
         },
@@ -191,6 +198,7 @@ export default {
                     ...duplicateFormStore.getData()
                 }).then((res) => {
                     if (res.status === 200) {
+                        this.$toasted.success('Form duplication was successful.')
                         if (res.headers.duplicatedformslug) {
                             window.location =
                                 `${window.location}`.replace(new RegExp('/preview.*'), '') +
@@ -202,7 +210,7 @@ export default {
                         //this.loading = false;
                     } else throw new Error(res.data.toString());
                 }).catch((error) => {
-                    alert("Form duplication was not successful.")
+                    this.$toasted.error(`Form duplication was not successful. (${error})`);
                     this.loading = false;
                 })
             }

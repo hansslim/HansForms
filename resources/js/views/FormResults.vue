@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-if="this.loading">{{ "loading" }}</div>
+        <div v-if="this.loading"><loading/></div>
         <div v-if="!this.loading">
             <h1>Results</h1>
             <h2 v-if="!this.loading && !this.errored">{{this.formResults.name}}</h2>
@@ -155,8 +155,10 @@ export default {
             this.$router.go(-1);
         },
         async handleDownload() {
+            this.loading = true;
             await Form.getFormResultsDownload(this.getSlug()).then(response => {
                 if (response.status === 200) {
+                    this.$toasted.success("File started downloading successfully.")
                     const url = window.URL.createObjectURL(new Blob([response.data], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));
                     const link = document.createElement('a');
                     link.href = url;
@@ -166,7 +168,10 @@ export default {
                     link.remove();
                 }
                 else throw new Error("Can't download file.")
-            }).catch(console.error)
+            }).catch(()=>{
+                this.$toasted.error("Can't download file. Try it later.")
+            })
+            this.loading = false;
         },
         handleChangeView() {
             this.detailedSummaryView = !this.detailedSummaryView;

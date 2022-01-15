@@ -113,7 +113,7 @@
             </FormulateForm>
         </div>
         <div v-else>
-            <p>loading</p>
+            <loading/>
         </div>
 
     </div>
@@ -182,18 +182,17 @@ export default {
                 if (this.form && this.form.items.length >= 1) {
                     await Form.postCreateForm(this.form).then((res) => {
                         if (res.status === 200) {
-                            alert("Form creation was successful.")
+                            this.$toasted.success(`Form creation was successful.`);
                             this.$router.push("/");
                             createFormStore.clearStore();
                             //this.choices = [];
                             this.loading = false;
-                        } else throw new Error(res.data)
+                        } else throw new Error(res.data.toString())
                     })
                 } else throw new Error("Form creation error (no questions)");
 
             } catch (error) {
-                console.log(error);
-                alert(`Form creation wasn't successful.`)
+                this.$toasted.error(`Form creation wasn't successful. (${error})`);
                 this.loading = false;
             }
 

@@ -32,7 +32,7 @@
             </div>
         </div>
         <div v-else>
-            loading
+            <loading/>
         </div>
     </div>
 </template>

@@ -15,7 +15,7 @@
             </FormulateForm>
         </div>
         <div v-if="this.loading">
-            {{ "loading" }}
+            <loading/>
         </div>
         <div v-if="this.errored">
             <h1>{{ this.errorText }}</h1>
@@ -174,22 +174,26 @@ export default {
             if (this.slug) {
                 await Form.postFormCompletion(this.formValues, this.slug).then((res) => {
                     if (res.status === 200) {
-                        alert("Answer has been proceeded successfully.");
+                        this.$toasted.success(`Answer has been proceeded successfully.`);
+                        //alert("Answer has been proceeded successfully.");
                         this.$router.push("/");
                     } else {
-                        alert(`Form completion is invalid (${res.data}).`);
-                        console.log(res.data);
+                        this.$toasted.error(`Form completion is invalid (${res.data}).`);
+                        //alert(`Form completion is invalid (${res.data}).`);
+                        //console.log(res.data);
                     }
                 })
             }
             else if (this.token) {
                 await Form.postPrivateFormCompletion(this.formValues, this.token).then((res) => {
                     if (res.status === 200) {
-                        alert("Answer has been proceeded successfully.");
+                        this.$toasted.success(`Answer has been proceeded successfully.`);
+                        //alert("Answer has been proceeded successfully.");
                         this.$router.push("/");
                     } else {
-                        alert(`Form completion is invalid (${res.data}).`);
-                        console.log(res.data);
+                        this.$toasted.error(`Form completion is invalid (${res.data}).`);
+                        //alert(`Form completion is invalid (${res.data}).`);
+                        //console.log(res.data);
                     }
                 })
             }
