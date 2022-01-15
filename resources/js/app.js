@@ -28,7 +28,7 @@ Vue.use(VueFormulate, {
 });
 Vue.use(VModal, { dynamicDefault: { height: 'auto', width: '60%', adaptive: true, scrollable: true } })
 Vue.use(Toasted, {
-    duration: 5000, position: 'top-center'
+    duration: 3000, position: 'top-center'
 });
 Vue.component('loading', Loading)
 

@@ -76,10 +76,12 @@ export default {
             await User.register(this.user).then((res) => {
                 if (res.status === 200) {
                     this.$router.push('/login');
+                    this.$toasted.success("User registered successfully.");
                 } else throw new Error();
             }).catch((e) => {
                 console.log(e);
-                alert("Invalid data provided")
+                this.$toasted.error("Invalid data provided");
+                //alert("Invalid data provided")
             }).finally(() => {
                 this.loading = false;
             });

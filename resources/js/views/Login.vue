@@ -57,10 +57,12 @@ export default {
                 if (res.status === 200) {
                     this.$store.dispatch('login', res.data);
                     this.$router.push('/');
+                    this.$toasted.success("User logged successfully.");
                 } else throw new Error();
             }).catch((error) => {
                 console.log(error);
-                alert("Bad credentials")
+                this.$toasted.error("Bad credentials provided. Try it again.");
+                //alert("Bad credentials")
             }).finally(() => {
                 this.loading = false;
             });

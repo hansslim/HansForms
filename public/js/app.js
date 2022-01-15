@@ -6184,10 +6184,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     _this.$store.dispatch('login', res.data);
 
                     _this.$router.push('/');
+
+                    _this.$toasted.success("User logged successfully.");
                   } else throw new Error();
                 })["catch"](function (error) {
                   console.log(error);
-                  alert("Bad credentials");
+
+                  _this.$toasted.error("Bad credentials provided. Try it again."); //alert("Bad credentials")
+
                 })["finally"](function () {
                   _this.loading = false;
                 });
@@ -6421,10 +6425,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 return _apis_User__WEBPACK_IMPORTED_MODULE_1__["default"].register(_this.user).then(function (res) {
                   if (res.status === 200) {
                     _this.$router.push('/login');
+
+                    _this.$toasted.success("User registered successfully.");
                   } else throw new Error();
                 })["catch"](function (e) {
                   console.log(e);
-                  alert("Invalid data provided");
+
+                  _this.$toasted.error("Invalid data provided"); //alert("Invalid data provided")
+
                 })["finally"](function () {
                   _this.loading = false;
                 });
@@ -6879,7 +6887,7 @@ vue__WEBPACK_IMPORTED_MODULE_7__["default"].use((vue_js_modal__WEBPACK_IMPORTED_
   }
 });
 vue__WEBPACK_IMPORTED_MODULE_7__["default"].use((vue_toasted__WEBPACK_IMPORTED_MODULE_6___default()), {
-  duration: 5000,
+  duration: 3000,
   position: 'top-center'
 });
 vue__WEBPACK_IMPORTED_MODULE_7__["default"].component('loading', _components_Loading__WEBPACK_IMPORTED_MODULE_0__["default"]);
