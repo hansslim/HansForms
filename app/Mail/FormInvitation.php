@@ -37,7 +37,7 @@ class FormInvitation extends Mailable
             'formName' => $this->form->name,
             'startTime' => date_format($this->form->start_time,"d.m.Y H:i:s"),
             'endTime' => date_format($this->form->end_time,"d.m.Y H:i:s"),
-            'privateLink' => env('PRIVATE_FORM_BASE_URL').'/private_form/'.$this->formPrivateAccessToken
+            'privateLink' => env('PRIVATE_FORM_BASE_URL', 'http://example.com').'/private_form/'.$this->formPrivateAccessToken
         ]);
     }
 }
