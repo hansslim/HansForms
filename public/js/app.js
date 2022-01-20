@@ -4905,7 +4905,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _this2 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
-        var min, max;
+        var min, max, formElementsError;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
@@ -4952,12 +4952,22 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 throw new Error("Invalid date data (max or min)");
 
               case 14:
-                if (!(_this2.form && _this2.form.items.length >= 1)) {
-                  _context.next = 19;
+                formElementsError = _this2.validateFormElements();
+
+                if (!formElementsError.errored) {
+                  _context.next = 17;
                   break;
                 }
 
-                _context.next = 17;
+                throw new Error(formElementsError.message);
+
+              case 17:
+                if (!(_this2.form && _this2.form.items.length >= 1)) {
+                  _context.next = 22;
+                  break;
+                }
+
+                _context.next = 20;
                 return _apis_Form__WEBPACK_IMPORTED_MODULE_3__["default"].postCreateForm(_this2.form).then(function (res) {
                   if (res.status === 200) {
                     _this2.$toasted.success("Form creation was successful.");
@@ -4971,32 +4981,67 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   } else throw new Error(res.data.toString());
                 });
 
-              case 17:
-                _context.next = 20;
-                break;
-
-              case 19:
-                throw new Error("Form creation error (no questions)");
-
               case 20:
-                _context.next = 26;
+                _context.next = 23;
                 break;
 
               case 22:
-                _context.prev = 22;
+                throw new Error("Form creation error (no questions)");
+
+              case 23:
+                _context.next = 29;
+                break;
+
+              case 25:
+                _context.prev = 25;
                 _context.t0 = _context["catch"](0);
 
                 _this2.$toasted.error("Form creation wasn't successful. (".concat(_context.t0, ")"));
 
                 _this2.loading = false;
 
-              case 26:
+              case 29:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[0, 22]]);
+        }, _callee, null, [[0, 25]]);
       }))();
+    },
+    validateFormElements: function validateFormElements() {
+      var response = {
+        errored: false,
+        message: null
+      };
+      var elements = this.form.items.map(function (x) {
+        if (x.type === 'new_page') return 0;else return 1;
+      });
+
+      if (elements[0] === 0) {
+        response.errored = true;
+        response.message = "New page element is not allowed on the start of the form";
+        return response;
+      }
+
+      if (elements[elements.length - 1] === 0) {
+        response.errored = true;
+        response.message = "New page element is not allowed on the end of the form";
+        return response;
+      }
+
+      var newPageBefore = false;
+      elements.forEach(function (x) {
+        if (x === 0) {
+          if (newPageBefore) {
+            response.errored = true;
+            response.message = "New page elements are next to each other somewhere in the form";
+            return response;
+          } else newPageBefore = true;
+        } else if (x === 1) {
+          newPageBefore = false;
+        }
+      });
+      return response;
     }
   },
   mounted: function mounted() {
@@ -87883,7 +87928,7 @@ var render = function () {
                       this.form.items.length === 0
                         ? _c("div", { staticClass: "text-muted" }, [
                             _vm._v(
-                              "\n                        There will be the form rendered.\n                    "
+                              "\n                        There will be the form shown.\n                    "
                             ),
                           ])
                         : _vm._e(),

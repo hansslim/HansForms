@@ -117,7 +117,7 @@
                             v-if="!this.form.header && !this.form.description && this.form.items.length === 0"
                             class="text-muted"
                         >
-                            There will be the form rendered.
+                            There will be the form shown.
                         </div>
                         <h1>{{this.form.header}}</h1>
                         <h4>{{this.form.description}}</h4>
@@ -221,6 +221,11 @@ export default {
                     if (parseInt(max.getTime()) <= (parseInt(min.getTime()))) throw new Error("Invalid date data");
                 } else throw new Error("Invalid date data (max or min)");
 
+                const formElementsError = this.validateFormElements();
+                if (formElementsError.errored) {
+                    throw new Error(formElementsError.message)
+                }
+
                 //question amount check
                 if (this.form && this.form.items.length >= 1) {
                     await Form.postCreateForm(this.form).then((res) => {
@@ -239,6 +244,45 @@ export default {
                 this.loading = false;
             }
 
+        },
+        validateFormElements() {
+            let response = {
+                errored: false,
+                message: null
+            }
+
+            const elements = this.form.items.map((x)=>{
+                if (x.type === 'new_page') return 0;
+                else return 1;
+            })
+
+            if (elements[0] === 0) {
+                response.errored = true;
+                response.message = "New page element is not allowed on the start of the form"
+                return response;
+            }
+            if (elements[elements.length-1] === 0) {
+                response.errored = true;
+                response.message = "New page element is not allowed on the end of the form"
+                return response;
+            }
+
+            let newPageBefore = false;
+            elements.forEach((x)=>{
+                if (x === 0) {
+                    if (newPageBefore) {
+                        response.errored = true;
+                        response.message = "New page elements are next to each other somewhere in the form"
+                        return response;
+                    }
+                    else newPageBefore = true;
+                }
+                else if (x === 1) {
+                    newPageBefore = false;
+                }
+            })
+
+            return response;
         }
     },
     mounted() {

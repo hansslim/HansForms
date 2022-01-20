@@ -450,6 +450,30 @@ class FormController extends Controller
 
         if (!$atLeastOneMandatory) return response("Invalid form (expected at least one mandatory question).", 400);
 
+        //new pages validation
+        //*no new page at start
+        //*no 2 or more new pages together
+        //*no new page at end
+        //*right format: q,q,np,q,np,q,q,q,q,np
+        $validatedElements = array_map(function ($x) {
+            if ($x['type'] === 'new_page') return 0;
+            else return 1;
+        }, $validatedQuestions);
+
+        if ($validatedElements[0] === 0) return response("Invalid form (new page element on the start is not allowed).", 400);
+        if ($validatedElements[count($validatedElements)-1] === 0) return response("Invalid form (new page element on the end is not allowed).", 400);
+
+        $newPageBefore = false;
+        foreach ($validatedElements as $value) {
+            if ($value === 0) {
+                if ($newPageBefore) return response("Invalid form (new page elements are next to each other).", 400);
+                else $newPageBefore = true;
+            }
+            else if ($value === 1) {
+                $newPageBefore = false;
+            }
+        }
+
         //return response($validatedQuestions, 400);
         try {
             DB::transaction(function () use ($validatedQuestions, $userId, $formProps) {
