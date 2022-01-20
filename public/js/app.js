@@ -2667,6 +2667,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 
@@ -2769,6 +2772,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "FormElementControl",
@@ -2789,6 +2801,9 @@ __webpack_require__.r(__webpack_exports__);
           _this.$emit('itemChanged');
         }
       });
+    },
+    deleteNewPage: function deleteNewPage() {
+      this.$emit('removeNewPage', this.$props['obj']);
     }
   }
 });
@@ -4666,6 +4681,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_FormElementControl__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/FormElementControl */ "./resources/js/components/FormElementControl.vue");
 /* harmony import */ var _apis_Form__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../apis/Form */ "./resources/js/apis/Form.js");
 /* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../store */ "./resources/js/store/index.js");
+/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! uuid */ "./node_modules/uuid/dist/esm-browser/v4.js");
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -4793,6 +4809,37 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 
@@ -4821,6 +4868,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     handleInputModeChange: function handleInputModeChange() {
       this.form.private_emails = [];
       this.privateEmailsTextareaInputMode = !this.privateEmailsTextareaInputMode;
+    },
+    addNewPage: function addNewPage() {
+      _store__WEBPACK_IMPORTED_MODULE_4__.createFormStore.addItem({
+        type: "new_page",
+        id: (0,uuid__WEBPACK_IMPORTED_MODULE_5__["default"])(),
+        order: -1
+      });
+      this.handleItemsChanged();
+    },
+    handleRemoveNewPage: function handleRemoveNewPage(item) {
+      _store__WEBPACK_IMPORTED_MODULE_4__.createFormStore.deleteItem(item);
+      this.handleItemsChanged();
     },
     showAddItemModal: function showAddItemModal() {
       var _this = this;
@@ -6875,7 +6934,7 @@ vue__WEBPACK_IMPORTED_MODULE_7__["default"].use(_braid_vue_formulate__WEBPACK_IM
     },
     inputHasErrors: 'is-invalid',
     help: 'form-text text-muted',
-    errors: 'list-unstyled text-danger'
+    errors: 'list-unstyled text-danger m-0'
   }
 });
 vue__WEBPACK_IMPORTED_MODULE_7__["default"].use((vue_js_modal__WEBPACK_IMPORTED_MODULE_5___default()), {
@@ -85894,6 +85953,10 @@ var render = function () {
           1
         )
       : _vm._e(),
+    _vm._v(" "),
+    _vm.inputType === "new_page"
+      ? _c("div", [_c("h3", [_vm._v("New page")])])
+      : _vm._e(),
   ])
 }
 var staticRenderFns = []
@@ -85919,153 +85982,212 @@ var render = function () {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return this.$props["obj"]
-    ? _c("div", { on: { click: _vm.showUpdateModal } }, [
-        _c("p", [_vm._v(_vm._s(this.$props["obj"].header))]),
-        _vm._v(" "),
-        this.$props["obj"].type === "text"
-          ? _c("div", [
-              _c("input", {
-                attrs: {
-                  type: "text",
-                  disabled: "",
-                  placeholder: "Text input",
-                },
-              }),
-            ])
-          : _vm._e(),
-        _vm._v(" "),
-        this.$props["obj"].type === "number"
-          ? _c("div", [
-              _c("input", {
-                attrs: {
-                  type: "number",
-                  disabled: "",
-                  placeholder: "Number input",
-                },
-              }),
-            ])
-          : _vm._e(),
-        _vm._v(" "),
-        this.$props["obj"].type === "date"
-          ? _c("div", [
-              _c("input", {
-                attrs: {
-                  type: "text",
-                  disabled: "",
-                  placeholder: "Date input",
-                },
-              }),
-            ])
-          : _vm._e(),
-        _vm._v(" "),
-        this.$props["obj"].type === "boolean"
-          ? _c("div", [
-              this.$props["obj"].is_mandatory
-                ? _c("div", [
-                    _c("input", {
-                      attrs: { type: "radio", checked: "", disabled: "" },
-                    }),
-                    _vm._v("Yes\n            "),
-                    _c("input", { attrs: { type: "radio", disabled: "" } }),
-                    _vm._v("No\n        "),
-                  ])
-                : _c("div", [
-                    _c("input", {
-                      attrs: { type: "radio", checked: "", disabled: "" },
-                    }),
-                    _vm._v("Yes\n            "),
-                    _c("input", { attrs: { type: "radio", disabled: "" } }),
-                    _vm._v("No\n            "),
-                    _c("input", { attrs: { type: "radio", disabled: "" } }),
-                    _vm._v("I don't want to answer.\n        "),
-                  ]),
-            ])
-          : _vm._e(),
-        _vm._v(" "),
-        this.$props["obj"].type === "select"
-          ? _c("div", [
-              this.$props["obj"].has_hidden_label
-                ? _c("div", [
-                    this.$props["obj"].is_multiselect
-                      ? _c(
-                          "div",
-                          _vm._l(this.$props["obj"].choices, function (choice) {
-                            return _c("div", [
-                              _c("p", [
-                                _c("input", {
-                                  attrs: { type: "checkbox", disabled: "" },
-                                }),
-                                _vm._v(
-                                  " " +
-                                    _vm._s(choice.text) +
-                                    " (" +
-                                    _vm._s(choice.hidden_label) +
-                                    ")"
+  return _c("div", [
+    this.$props["obj"]
+      ? _c("div", [
+          this.$props["obj"].type !== "new_page"
+            ? _c("div", { on: { click: _vm.showUpdateModal } }, [
+                _c("p", [_vm._v(_vm._s(this.$props["obj"].header))]),
+                _vm._v(" "),
+                this.$props["obj"].type === "text"
+                  ? _c("div", [
+                      _c("input", {
+                        attrs: {
+                          type: "text",
+                          disabled: "",
+                          placeholder: "Text input",
+                        },
+                      }),
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                this.$props["obj"].type === "number"
+                  ? _c("div", [
+                      _c("input", {
+                        attrs: {
+                          type: "number",
+                          disabled: "",
+                          placeholder: "Number input",
+                        },
+                      }),
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                this.$props["obj"].type === "date"
+                  ? _c("div", [
+                      _c("input", {
+                        attrs: {
+                          type: "text",
+                          disabled: "",
+                          placeholder: "Date input",
+                        },
+                      }),
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                this.$props["obj"].type === "boolean"
+                  ? _c("div", [
+                      this.$props["obj"].is_mandatory
+                        ? _c("div", [
+                            _c("input", {
+                              attrs: {
+                                type: "radio",
+                                checked: "",
+                                disabled: "",
+                              },
+                            }),
+                            _vm._v("Yes\n                    "),
+                            _c("input", {
+                              attrs: { type: "radio", disabled: "" },
+                            }),
+                            _vm._v("No\n                "),
+                          ])
+                        : _c("div", [
+                            _c("input", {
+                              attrs: {
+                                type: "radio",
+                                checked: "",
+                                disabled: "",
+                              },
+                            }),
+                            _vm._v("Yes\n                    "),
+                            _c("input", {
+                              attrs: { type: "radio", disabled: "" },
+                            }),
+                            _vm._v("No\n                    "),
+                            _c("input", {
+                              attrs: { type: "radio", disabled: "" },
+                            }),
+                            _vm._v("I don't want to answer.\n                "),
+                          ]),
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                this.$props["obj"].type === "select"
+                  ? _c("div", [
+                      this.$props["obj"].has_hidden_label
+                        ? _c("div", [
+                            this.$props["obj"].is_multiselect
+                              ? _c(
+                                  "div",
+                                  _vm._l(
+                                    this.$props["obj"].choices,
+                                    function (choice) {
+                                      return _c("div", [
+                                        _c("p", [
+                                          _c("input", {
+                                            attrs: {
+                                              type: "checkbox",
+                                              disabled: "",
+                                            },
+                                          }),
+                                          _vm._v(
+                                            " " +
+                                              _vm._s(choice.text) +
+                                              " (" +
+                                              _vm._s(choice.hidden_label) +
+                                              ")"
+                                          ),
+                                        ]),
+                                      ])
+                                    }
+                                  ),
+                                  0
+                                )
+                              : _c(
+                                  "div",
+                                  _vm._l(
+                                    this.$props["obj"].choices,
+                                    function (choice) {
+                                      return _c("div", [
+                                        _c("p", [
+                                          _c("input", {
+                                            attrs: {
+                                              type: "radio",
+                                              disabled: "",
+                                            },
+                                          }),
+                                          _vm._v(
+                                            " " +
+                                              _vm._s(choice.text) +
+                                              " (" +
+                                              _vm._s(choice.hidden_label) +
+                                              ")"
+                                          ),
+                                        ]),
+                                      ])
+                                    }
+                                  ),
+                                  0
                                 ),
-                              ]),
-                            ])
-                          }),
-                          0
-                        )
-                      : _c(
-                          "div",
-                          _vm._l(this.$props["obj"].choices, function (choice) {
-                            return _c("div", [
-                              _c("p", [
-                                _c("input", {
-                                  attrs: { type: "radio", disabled: "" },
-                                }),
-                                _vm._v(
-                                  " " +
-                                    _vm._s(choice.text) +
-                                    " (" +
-                                    _vm._s(choice.hidden_label) +
-                                    ")"
+                          ])
+                        : _c("div", [
+                            this.$props["obj"].is_multiselect
+                              ? _c(
+                                  "div",
+                                  _vm._l(
+                                    this.$props["obj"].choices,
+                                    function (choice) {
+                                      return _c("div", [
+                                        _c("p", [
+                                          _c("input", {
+                                            attrs: {
+                                              type: "checkbox",
+                                              disabled: "",
+                                            },
+                                          }),
+                                          _vm._v(" " + _vm._s(choice.text)),
+                                        ]),
+                                      ])
+                                    }
+                                  ),
+                                  0
+                                )
+                              : _c(
+                                  "div",
+                                  _vm._l(
+                                    this.$props["obj"].choices,
+                                    function (choice) {
+                                      return _c("div", [
+                                        _c("p", [
+                                          _c("input", {
+                                            attrs: {
+                                              type: "radio",
+                                              disabled: "",
+                                            },
+                                          }),
+                                          _vm._v(" " + _vm._s(choice.text)),
+                                        ]),
+                                      ])
+                                    }
+                                  ),
+                                  0
                                 ),
-                              ]),
-                            ])
-                          }),
-                          0
-                        ),
-                  ])
-                : _c("div", [
-                    this.$props["obj"].is_multiselect
-                      ? _c(
-                          "div",
-                          _vm._l(this.$props["obj"].choices, function (choice) {
-                            return _c("div", [
-                              _c("p", [
-                                _c("input", {
-                                  attrs: { type: "checkbox", disabled: "" },
-                                }),
-                                _vm._v(" " + _vm._s(choice.text)),
-                              ]),
-                            ])
-                          }),
-                          0
-                        )
-                      : _c(
-                          "div",
-                          _vm._l(this.$props["obj"].choices, function (choice) {
-                            return _c("div", [
-                              _c("p", [
-                                _c("input", {
-                                  attrs: { type: "radio", disabled: "" },
-                                }),
-                                _vm._v(" " + _vm._s(choice.text)),
-                              ]),
-                            ])
-                          }),
-                          0
-                        ),
-                  ]),
-            ])
-          : _vm._e(),
-        _vm._v(" "),
-        _c("hr"),
-      ])
-    : _vm._e()
+                          ]),
+                    ])
+                  : _vm._e(),
+              ])
+            : _c(
+                "div",
+                {
+                  staticClass:
+                    "d-inline-flex justify-content-center align-items-center",
+                },
+                [
+                  _c("h3", { staticClass: "mr-2" }, [_vm._v("New page")]),
+                  _vm._v(" "),
+                  _c(
+                    "a",
+                    { attrs: { href: "#" }, on: { click: _vm.deleteNewPage } },
+                    [_vm._v("Remove")]
+                  ),
+                ]
+              ),
+          _vm._v(" "),
+          _c("hr"),
+        ])
+      : _vm._e(),
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -87468,22 +87590,62 @@ var render = function () {
     !_vm.loading
       ? _c(
           "div",
-          { staticClass: "container" },
+          { staticClass: "container-fluid flex-wrap" },
           [
             _c("FormulateForm", { on: { submit: _vm.submitCreateForm } }, [
               _c(
                 "div",
-                { staticStyle: { "padding-bottom": "5vh" } },
+                {
+                  staticClass: "container-fluid row m-auto",
+                  staticStyle: { "padding-bottom": "7vh" },
+                },
                 [
                   _c(
                     "div",
                     {
                       staticClass:
-                        " d-flex justify-content-center align-items-center flex-wrap",
+                        "col-md shadow-sm bg-white p-2 overflow-auto",
+                      staticStyle: {
+                        "max-height": "70vh",
+                        "overflow-x": "hidden !important",
+                      },
                     },
                     [
+                      _c("h1", { staticClass: "mt-1" }, [
+                        _vm._v("New form..."),
+                      ]),
+                      _vm._v(" "),
+                      _c("hr"),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "m-2 row" },
+                        [
+                          _c("FormulateInput", {
+                            staticClass: "col",
+                            attrs: {
+                              "input-class": "btn btn-primary w-100",
+                              type: "button",
+                              label: "Add new question...",
+                            },
+                            on: { click: _vm.showAddItemModal },
+                          }),
+                          _vm._v(" "),
+                          _c("FormulateInput", {
+                            staticClass: "col",
+                            attrs: {
+                              "input-class": "btn btn-primary w-100",
+                              type: "button",
+                              label: "Add new page",
+                            },
+                            on: { click: _vm.addNewPage },
+                          }),
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
                       _c("FormulateInput", {
-                        staticClass: "m-2",
+                        staticClass: "col m-0",
                         attrs: {
                           type: "text",
                           label: "Form header",
@@ -87500,7 +87662,7 @@ var render = function () {
                       }),
                       _vm._v(" "),
                       _c("FormulateInput", {
-                        staticClass: "m-2",
+                        staticClass: "col m-0",
                         attrs: {
                           label: "Form description",
                           type: "text",
@@ -87515,127 +87677,178 @@ var render = function () {
                         },
                       }),
                       _vm._v(" "),
-                      _c("FormulateInput", {
-                        staticClass: "m-2",
-                        attrs: {
-                          label: "Form publication start time",
-                          type: "datetime-local",
-                          validation: [["required"]],
-                          "input-class": "form-control",
-                        },
-                        model: {
-                          value: _vm.form.start_time,
-                          callback: function ($$v) {
-                            _vm.$set(_vm.form, "start_time", $$v)
-                          },
-                          expression: "form.start_time",
-                        },
-                      }),
-                      _vm._v(" "),
-                      _c("FormulateInput", {
-                        staticClass: "m-2",
-                        attrs: {
-                          label: "Form publication end time",
-                          type: "datetime-local",
-                          validation: [["required"]],
-                          "input-class": "form-control",
-                        },
-                        model: {
-                          value: _vm.form.end_time,
-                          callback: function ($$v) {
-                            _vm.$set(_vm.form, "end_time", $$v)
-                          },
-                          expression: "form.end_time",
-                        },
-                      }),
-                      _vm._v(" "),
-                      _c("FormulateInput", {
-                        staticClass: "m-2",
-                        attrs: {
-                          label: "Form with private access ",
-                          type: "checkbox",
-                        },
-                        model: {
-                          value: _vm.form.has_private_token,
-                          callback: function ($$v) {
-                            _vm.$set(_vm.form, "has_private_token", $$v)
-                          },
-                          expression: "form.has_private_token",
-                        },
-                      }),
-                    ],
-                    1
-                  ),
-                  _vm._v(" "),
-                  _vm.form.has_private_token
-                    ? _c("div", [
-                        _c("hr"),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "h6" }, [
-                          _vm._v(
-                            "Form can be accessed and answered only via unique link with access\n                        token that will be sent on every email from below.\n                    "
-                          ),
-                        ]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "d-inline-flex" }, [
-                          _c("div", { staticClass: "font-weight-bold pr-1" }, [
-                            _vm._v("Invited emails"),
-                          ]),
+                      _c(
+                        "div",
+                        { staticClass: "row mt-1" },
+                        [
+                          _c("FormulateInput", {
+                            staticClass: "col m-0",
+                            attrs: {
+                              label: "Form publication start time",
+                              type: "datetime-local",
+                              validation: [["required"]],
+                              "input-class": "form-control",
+                            },
+                            model: {
+                              value: _vm.form.start_time,
+                              callback: function ($$v) {
+                                _vm.$set(_vm.form, "start_time", $$v)
+                              },
+                              expression: "form.start_time",
+                            },
+                          }),
                           _vm._v(" "),
-                          this.privateEmailsTextareaInputMode
-                            ? _c(
-                                "div",
-                                { staticClass: "font-weight-normal pr-1" },
-                                [
-                                  _vm._v(
-                                    "\n                            (Raw text input mode)\n                        "
-                                  ),
-                                ]
-                              )
-                            : _c(
-                                "div",
-                                { staticClass: "font-weight-normal pr-1" },
-                                [
-                                  _vm._v(
-                                    "\n                            (Basic input mode)\n                        "
-                                  ),
-                                ]
+                          _c("FormulateInput", {
+                            staticClass: "col m-0",
+                            attrs: {
+                              label: "Form publication end time",
+                              type: "datetime-local",
+                              validation: [["required"]],
+                              "input-class": "form-control",
+                            },
+                            model: {
+                              value: _vm.form.end_time,
+                              callback: function ($$v) {
+                                _vm.$set(_vm.form, "end_time", $$v)
+                              },
+                              expression: "form.end_time",
+                            },
+                          }),
+                          _vm._v(" "),
+                          _c("FormulateInput", {
+                            staticClass: "col m-0 align-self-center",
+                            attrs: {
+                              label: "Form with private access ",
+                              type: "checkbox",
+                            },
+                            model: {
+                              value: _vm.form.has_private_token,
+                              callback: function ($$v) {
+                                _vm.$set(_vm.form, "has_private_token", $$v)
+                              },
+                              expression: "form.has_private_token",
+                            },
+                          }),
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _vm.form.has_private_token
+                        ? _c("div", [
+                            _c("hr"),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "h6" }, [
+                              _vm._v(
+                                "Form can be accessed and answered only via unique link with access\n                            token that will be sent on every email from below.\n                        "
                               ),
-                        ]),
-                        _vm._v(" "),
-                        _c(
-                          "a",
-                          {
-                            staticClass: "d-block mb-2",
-                            attrs: { href: "#" },
-                            on: { click: _vm.handleInputModeChange },
-                          },
-                          [_vm._v("Change mode")]
-                        ),
-                        _vm._v(" "),
-                        !this.privateEmailsTextareaInputMode
-                          ? _c("div", [
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "d-inline-flex" }, [
                               _c(
                                 "div",
-                                {
-                                  staticStyle: {
-                                    "max-height": "100px",
-                                    "overflow-y": "auto",
-                                  },
-                                },
-                                [
+                                { staticClass: "font-weight-bold pr-1" },
+                                [_vm._v("Invited emails")]
+                              ),
+                              _vm._v(" "),
+                              this.privateEmailsTextareaInputMode
+                                ? _c(
+                                    "div",
+                                    { staticClass: "font-weight-normal pr-1" },
+                                    [
+                                      _vm._v(
+                                        "\n                                (Raw text input mode)\n                            "
+                                      ),
+                                    ]
+                                  )
+                                : _c(
+                                    "div",
+                                    { staticClass: "font-weight-normal pr-1" },
+                                    [
+                                      _vm._v(
+                                        "\n                                (Basic input mode)\n                            "
+                                      ),
+                                    ]
+                                  ),
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "a",
+                              {
+                                staticClass: "d-block mb-2",
+                                attrs: { href: "#" },
+                                on: { click: _vm.handleInputModeChange },
+                              },
+                              [_vm._v("Change mode")]
+                            ),
+                            _vm._v(" "),
+                            !this.privateEmailsTextareaInputMode
+                              ? _c("div", [
                                   _c(
-                                    "FormulateInput",
+                                    "div",
                                     {
+                                      staticStyle: {
+                                        "max-height": "100px",
+                                        "overflow-y": "auto",
+                                      },
+                                    },
+                                    [
+                                      _c(
+                                        "FormulateInput",
+                                        {
+                                          attrs: {
+                                            type: "group",
+                                            name: "emails",
+                                            repeatable: true,
+                                            "add-label": "Add Email",
+                                            validation: "required",
+                                            "remove-position": "after",
+                                            "remove-label": "Remove",
+                                            minimum: "1",
+                                          },
+                                          model: {
+                                            value: _vm.form.private_emails,
+                                            callback: function ($$v) {
+                                              _vm.$set(
+                                                _vm.form,
+                                                "private_emails",
+                                                $$v
+                                              )
+                                            },
+                                            expression: "form.private_emails",
+                                          },
+                                        },
+                                        [
+                                          _c(
+                                            "div",
+                                            { staticClass: "d-inline-flex" },
+                                            [
+                                              _c("FormulateInput", {
+                                                attrs: {
+                                                  type: "email",
+                                                  name: "email",
+                                                  validation: "required|email",
+                                                },
+                                              }),
+                                            ],
+                                            1
+                                          ),
+                                        ]
+                                      ),
+                                    ],
+                                    1
+                                  ),
+                                ])
+                              : _c(
+                                  "div",
+                                  [
+                                    _vm._v(
+                                      "\n                            (Web validation limited! Please, separate emails by enter. Invalid data will be ignored.)\n                            "
+                                    ),
+                                    _c("FormulateInput", {
                                       attrs: {
-                                        type: "group",
+                                        type: "textarea",
                                         name: "emails",
-                                        repeatable: true,
-                                        "add-label": "Add Email",
                                         validation: "required",
-                                        "remove-position": "after",
-                                        "remove-label": "Remove",
-                                        minimum: "1",
                                       },
                                       model: {
                                         value: _vm.form.private_emails,
@@ -87648,65 +87861,56 @@ var render = function () {
                                         },
                                         expression: "form.private_emails",
                                       },
-                                    },
-                                    [
-                                      _c(
-                                        "div",
-                                        { staticClass: "d-inline-flex" },
-                                        [
-                                          _c("FormulateInput", {
-                                            attrs: {
-                                              type: "email",
-                                              name: "email",
-                                              validation: "required|email",
-                                            },
-                                          }),
-                                        ],
-                                        1
-                                      ),
-                                    ]
-                                  ),
-                                ],
-                                1
-                              ),
-                            ])
-                          : _c(
-                              "div",
-                              [
-                                _vm._v(
-                                  "\n                        (Web validation limited! Please, separate emails by enter. Invalid data will be ignored.)\n                        "
+                                    }),
+                                  ],
+                                  1
                                 ),
-                                _c("FormulateInput", {
-                                  attrs: {
-                                    type: "textarea",
-                                    name: "emails",
-                                    validation: "required",
-                                  },
-                                  model: {
-                                    value: _vm.form.private_emails,
-                                    callback: function ($$v) {
-                                      _vm.$set(_vm.form, "private_emails", $$v)
-                                    },
-                                    expression: "form.private_emails",
-                                  },
-                                }),
-                              ],
-                              1
+                          ])
+                        : _vm._e(),
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass: "col-md mt-2 overflow-auto",
+                      staticStyle: { "max-height": "70vh" },
+                    },
+                    [
+                      !this.form.header &&
+                      !this.form.description &&
+                      this.form.items.length === 0
+                        ? _c("div", { staticClass: "text-muted" }, [
+                            _vm._v(
+                              "\n                        There will be the form rendered.\n                    "
                             ),
-                      ])
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _c("hr"),
-                  _vm._v(" "),
-                  _vm._l(this.form.items, function (item) {
-                    return _c("form-element", {
-                      key: item.id,
-                      attrs: { obj: item },
-                      on: { itemChanged: _vm.handleItemsChanged },
-                    })
-                  }),
-                ],
-                2
+                          ])
+                        : _vm._e(),
+                      _vm._v(" "),
+                      _c("h1", [_vm._v(_vm._s(this.form.header))]),
+                      _vm._v(" "),
+                      _c("h4", [_vm._v(_vm._s(this.form.description))]),
+                      _vm._v(" "),
+                      this.form.header || this.form.description
+                        ? _c("hr")
+                        : _vm._e(),
+                      _vm._v(" "),
+                      _vm._l(this.form.items, function (item) {
+                        return _c("form-element", {
+                          key: item.id,
+                          staticClass: "row justify-content-center",
+                          attrs: { obj: item },
+                          on: {
+                            itemChanged: _vm.handleItemsChanged,
+                            removeNewPage: _vm.handleRemoveNewPage,
+                          },
+                        })
+                      }),
+                    ],
+                    2
+                  ),
+                ]
               ),
               _vm._v(" "),
               _c(
@@ -87717,18 +87921,6 @@ var render = function () {
                   staticStyle: { "z-index": "0" },
                 },
                 [
-                  _c(
-                    "div",
-                    { staticClass: "m-2" },
-                    [
-                      _c("FormulateInput", {
-                        attrs: { type: "button", label: "Add new question..." },
-                        on: { click: _vm.showAddItemModal },
-                      }),
-                    ],
-                    1
-                  ),
-                  _vm._v(" "),
                   _c(
                     "div",
                     { staticClass: "m-2" },

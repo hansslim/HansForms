@@ -36,6 +36,9 @@
                 :isMandatory="isMandatory"
             />
         </div>
+        <div v-if="inputType==='new_page'">
+            <h3>New page</h3>
+        </div>
     </div>
 
 </template>

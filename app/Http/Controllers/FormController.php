@@ -165,28 +165,37 @@ class FormController extends Controller
             $validatedQuestion = [];
             //main props: header, is_mandatory, order, type
             try {
-                if (!$item) return response("Invalid data (expected array of questions).", 400);
+                if (!$item) return response("Invalid data (invalid item).", 400);
 
-                if (
-                    !array_key_exists('type', $item) ||
-                    !array_key_exists('header', $item) ||
-                    !array_key_exists('is_mandatory', $item) ||
-                    !array_key_exists('order', $item)
-                ) return response("Invalid data (missing required values).", 400);
+                if (array_key_exists('type', $item)) {
+                    if (!is_string($item['type'])) return response("Invalid type value type.", 400);
 
-                if (!is_string($item['type'])) return response("Invalid type value type.", 400);
+                    if ($item['type'] !== "new_page") {
+                        if (
+                            !array_key_exists('header', $item) ||
+                            !array_key_exists('is_mandatory', $item)
+                        ) return response("Invalid data (missing required question values).", 400);
 
-                if (!is_string($item['header'])) return response("Invalid header value type.", 400);
+                        if (!is_string($item['header'])) return response("Invalid header value type.", 400);
 
-                if (!is_bool($item['is_mandatory'])) return response("Invalid is_mandatory value type.", 400);
+                        if (!is_bool($item['is_mandatory'])) return response("Invalid is_mandatory value type.", 400);
+                    }
 
-                if (!is_int($item['order'])) return response("Invalid order value type.", 400);
+                    if (array_key_exists('order', $item)) {
+                        if (!is_int($item['order'])) return response("Invalid order value type.", 400);
 
+                        if ($item['order'] !== $questionOrder) {
+                            return response("Invalid order value.", 400);
+                        } else $questionOrder++;
 
-                if ($item['order'] !== $questionOrder) {
-                    //dd("order error", $item['order'], $questionOrder, $request->all()['items'], $request->all()); //debugging only
-                    return response("Invalid order value.", 400);
-                } else $questionOrder++;
+                    } else return response("Invalid data (missing order value).", 400);
+
+                    if ($item['type'] === "new_page") {
+                        $newPage = ['type' => "new_page", "order" => $item['order']];
+                        $validatedQuestions[] = $newPage;
+                        continue;
+                    }
+                } else return response("Invalid data (missing valid type of item).", 400);
 
                 //validated
                 $validatedQuestion['type'] = $item['type'];
@@ -198,7 +207,8 @@ class FormController extends Controller
                     $atLeastOneMandatory = true;
                 }
             } catch (Exception $exception) {
-                return response("Unhandled input error (in basic values).", 400);
+                return response($exception, 400);
+                //return response("Unhandled input error (in basic values).", 400);
             }
             //check type
             switch ($item['type']) {
@@ -440,6 +450,7 @@ class FormController extends Controller
 
         if (!$atLeastOneMandatory) return response("Invalid form (expected at least one mandatory question).", 400);
 
+        //return response($validatedQuestions, 400);
         try {
             DB::transaction(function () use ($validatedQuestions, $userId, $formProps) {
                 $formSlug = Uuid::uuid4()->toString();
@@ -458,7 +469,7 @@ class FormController extends Controller
                         'order' => $item['order'],
                         'form_id' => $newForm->id
                     ]);
-                    if ($item !== "new_page") { //todo: rewrite and add new pages creation
+                    if ($item['type'] !== "new_page") { //todo: rewrite and add new pages creation
                         $newInputElement = InputElement::create([
                             'header' => $item['header'],
                             'is_mandatory' => $item['is_mandatory'],
@@ -523,6 +534,9 @@ class FormController extends Controller
                                 break;
                             }
                         }
+                    }
+                    else {
+                        NewPage::create(['form_element_id'=>$newFormElement->id]);
                     }
                 }
 
