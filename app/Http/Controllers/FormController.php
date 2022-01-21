@@ -53,7 +53,7 @@ class FormController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $updateSlug = null)
     {
         $userId = -1;
         if (!Auth::user()) return response("Unauthorized - log in to create forms...", 401);
@@ -70,7 +70,10 @@ class FormController extends Controller
             $startDate = str_replace("T", " ", $request->all()['start_time']);
             $endDate = str_replace("T", " ", $request->all()['end_time']);
 
-            if ($this->validateDate($startDate, 'Y-m-d H:i') && $this->validateDate($endDate, 'Y-m-d H:i')) {
+            if (
+                ($this->validateDate($startDate, 'Y-m-d H:i') && $this->validateDate($endDate, 'Y-m-d H:i')) ||
+                ($this->validateDate($startDate, 'Y-m-d H:i:s') && $this->validateDate($endDate, 'Y-m-d H:i:s'))
+            ) {
                 if (new DateTime($request->all()['start_time']) < new DateTime($request->all()['end_time'])) {
                     $currentTime = time();
                     $formEndTime = strtotime($endDate);
@@ -81,7 +84,8 @@ class FormController extends Controller
                     $formProps['start_time'] = new DateTime($request->all()['start_time']);
                     $formProps['end_time'] = new DateTime($request->all()['end_time']);
                 } else return response("Invalid data (start is higher than end).", 400);
-            } else {
+            }
+            else {
                 return response("Invalid data (invalid start/end date).", 400);
             }
         } else return response("Invalid data (missing start/end date).", 400);
@@ -473,11 +477,11 @@ class FormController extends Controller
                 $newPageBefore = false;
             }
         }
-
-        //return response($validatedQuestions, 400);
         try {
-            DB::transaction(function () use ($validatedQuestions, $userId, $formProps) {
-                $formSlug = Uuid::uuid4()->toString();
+            DB::transaction(function () use ($validatedQuestions, $userId, $formProps, $updateSlug) {
+                $formSlug = null;
+                if ($updateSlug) $formSlug = $updateSlug;
+                else $formSlug = Uuid::uuid4()->toString();
                 $newForm = Form::create([
                     'user_id' => $userId,
                     'slug' => $formSlug,
@@ -673,6 +677,7 @@ class FormController extends Controller
         if (array_key_exists('start_time', $request->all()) && array_key_exists('end_time', $request->all())) {
             $startDate = date('Y-m-d H:i:s', strtotime(str_replace("T", " ", $request->all()['start_time'])));
             $endDate = date('Y-m-d H:i:s', strtotime(str_replace("T", " ", $request->all()['end_time'])));
+
             if ($this->validateDate($startDate) && $this->validateDate($endDate)) {
                 if (new DateTime($request->all()['start_time']) < new DateTime($request->all()['end_time'])) {
                     $currentTime = time();
@@ -930,9 +935,29 @@ class FormController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $slug)
     {
-        //todo: refuse update when is start_time > server time
+        $user = Auth::user();
+        if (!$user) return response("Unauthorized - log in to update your forms...", 401);
+        $form = Form::where(["slug" => $slug, "user_id" => $user->id])->first();
+        if ($form) {
+            $currentTime = time();
+            $formStartTime = strtotime($form->start_time);
+            if ($formStartTime <= $currentTime) return response("Requested form has been already published - it cannot be updated anymore.", 400);
+
+            DB::transaction(function () use ($request, $slug){
+                $workSlug = Uuid::uuid4()->toString();
+                $storeResponse = $this->store($request, $workSlug);
+                if ($storeResponse->status() === 200) {
+                    $this->destroy($slug);
+                    $updatedForm = Form::where("slug", $workSlug)->first();
+                    $updatedForm->update(["slug" => $slug]);
+                }
+                else return $storeResponse;
+            });
+            return response("Form was updated successfully", 200);
+
+        } else return response("Requested form (update) was not found", 404);
     }
 
     /**

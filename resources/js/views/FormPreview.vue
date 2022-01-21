@@ -234,6 +234,7 @@ export default {
             )
         },
         handleUpdate() {
+            this.$router.push("/update_form/" + this.getSlug());
         },
         handleResults() {
             this.$router.push("/form/results/" + this.getSlug());

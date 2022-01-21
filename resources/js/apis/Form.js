@@ -39,5 +39,8 @@ export default {
     },
     async postPublishFormResults(data, slug) {
         return Api.post('/form/results/' + slug + "/publish_results", data)
-    }
+    },
+    async putUpdateForm(updatedForm, slug) {
+        return Api.put('/forms/update/' + slug, updatedForm);
+    },
 };

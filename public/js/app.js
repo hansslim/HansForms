@@ -5759,7 +5759,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }
       });
     },
-    handleUpdate: function handleUpdate() {},
+    handleUpdate: function handleUpdate() {
+      this.$router.push("/update_form/" + this.getSlug());
+    },
     handleResults: function handleResults() {
       this.$router.push("/form/results/" + this.getSlug());
     }
@@ -6802,7 +6804,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     handleItemsChanged: function handleItemsChanged() {
       this.form.items = _store__WEBPACK_IMPORTED_MODULE_4__.createFormStore.getItems();
     },
-    submitCreateForm: function submitCreateForm() {
+    submitUpdateForm: function submitUpdateForm() {
       var _this2 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
@@ -6816,62 +6818,63 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
                 min = new Date(_this2.form.start_time);
                 max = new Date(_this2.form.end_time);
+                console.log(min);
 
                 if (min instanceof Date && !isNaN(min.valueOf())) {
-                  _context.next = 6;
+                  _context.next = 7;
                   break;
                 }
 
                 throw new Error("Invalid date data (min)");
 
-              case 6:
+              case 7:
                 if (max instanceof Date && !isNaN(max.valueOf())) {
-                  _context.next = 8;
+                  _context.next = 9;
                   break;
                 }
 
                 throw new Error("Invalid date data (max)");
 
-              case 8:
+              case 9:
                 if (!(min.getTime() && max.getTime())) {
-                  _context.next = 13;
+                  _context.next = 14;
                   break;
                 }
 
                 if (!(parseInt(max.getTime()) <= parseInt(min.getTime()))) {
-                  _context.next = 11;
+                  _context.next = 12;
                   break;
                 }
 
                 throw new Error("Invalid date data");
 
-              case 11:
-                _context.next = 14;
+              case 12:
+                _context.next = 15;
                 break;
 
-              case 13:
+              case 14:
                 throw new Error("Invalid date data (max or min)");
 
-              case 14:
+              case 15:
                 formElementsError = _this2.validateFormElements();
 
                 if (!formElementsError.errored) {
-                  _context.next = 17;
+                  _context.next = 18;
                   break;
                 }
 
                 throw new Error(formElementsError.message);
 
-              case 17:
+              case 18:
                 if (!(_this2.form && _this2.form.items.length >= 1)) {
-                  _context.next = 22;
+                  _context.next = 23;
                   break;
                 }
 
-                _context.next = 20;
-                return _apis_Form__WEBPACK_IMPORTED_MODULE_3__["default"].postCreateForm(_this2.form).then(function (res) {
+                _context.next = 21;
+                return _apis_Form__WEBPACK_IMPORTED_MODULE_3__["default"].putUpdateForm(_this2.form, _this2.$route.params['slug']).then(function (res) {
                   if (res.status === 200) {
-                    _this2.$toasted.success("Form creation was successful.");
+                    _this2.$toasted.success("Form update was successful.");
 
                     _this2.$router.push("/");
 
@@ -6882,31 +6885,31 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   } else throw new Error(res.data.toString());
                 });
 
-              case 20:
-                _context.next = 23;
+              case 21:
+                _context.next = 24;
                 break;
-
-              case 22:
-                throw new Error("Form creation error (no questions)");
 
               case 23:
-                _context.next = 29;
+                throw new Error("Form update error (no questions)");
+
+              case 24:
+                _context.next = 30;
                 break;
 
-              case 25:
-                _context.prev = 25;
+              case 26:
+                _context.prev = 26;
                 _context.t0 = _context["catch"](0);
 
-                _this2.$toasted.error("Form creation wasn't successful. (".concat(_context.t0, ")"));
+                _this2.$toasted.error("Form update wasn't successful. (".concat(_context.t0, ")"));
 
                 _this2.loading = false;
 
-              case 29:
+              case 30:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[0, 25]]);
+        }, _callee, null, [[0, 26]]);
       }))();
     },
     validateFormElements: function validateFormElements() {
@@ -7391,6 +7394,22 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           }
         }
       }, _callee13);
+    }))();
+  },
+  putUpdateForm: function putUpdateForm(updatedForm, slug) {
+    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee14() {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee14$(_context14) {
+        while (1) {
+          switch (_context14.prev = _context14.next) {
+            case 0:
+              return _context14.abrupt("return", _Api__WEBPACK_IMPORTED_MODULE_1__["default"].put('/forms/update/' + slug, updatedForm));
+
+            case 1:
+            case "end":
+              return _context14.stop();
+          }
+        }
+      }, _callee14);
     }))();
   }
 });
@@ -89394,7 +89413,7 @@ var render = function () {
               ? _c("div", { staticClass: "container" }, [
                   _c("h1", [_vm._v(_vm._s(this.errorText))]),
                 ])
-              : _c("FormulateForm", { on: { submit: _vm.submitCreateForm } }, [
+              : _c("FormulateForm", { on: { submit: _vm.submitUpdateForm } }, [
                   _c(
                     "div",
                     {

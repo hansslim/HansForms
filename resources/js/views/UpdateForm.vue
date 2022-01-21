@@ -2,7 +2,7 @@
     <div>
         <div v-if="!loading" class="container-fluid flex-wrap">
             <div v-if="errored" class="container"><h1>{{ this.errorText }}</h1></div>
-            <FormulateForm v-else @submit="submitCreateForm">
+            <FormulateForm v-else @submit="submitUpdateForm">
                 <div style="padding-bottom: 7vh" class="container-fluid row m-auto">
                     <div class="col-md shadow-sm bg-white p-2 overflow-auto"
                          style="max-height: 70vh; overflow-x: hidden !important;"
@@ -209,13 +209,14 @@ export default {
         handleItemsChanged() {
             this.form.items = createFormStore.getItems()
         },
-        async submitCreateForm() {
+        async submitUpdateForm() {
             try {
                 this.loading = true;
 
                 //date type and interval validation
                 const min = new Date(this.form.start_time);
                 const max = new Date(this.form.end_time);
+                console.log(min)
 
                 if (!(min instanceof Date && !isNaN(min.valueOf()))) throw new Error("Invalid date data (min)");
                 if (!(max instanceof Date && !isNaN(max.valueOf()))) throw new Error("Invalid date data (max)");
@@ -231,19 +232,19 @@ export default {
 
                 //question amount check
                 if (this.form && this.form.items.length >= 1) {
-                    await Form.postCreateForm(this.form).then((res) => {
+                    await Form.putUpdateForm(this.form, this.$route.params['slug']).then((res) => {
                         if (res.status === 200) {
-                            this.$toasted.success(`Form creation was successful.`);
+                            this.$toasted.success(`Form update was successful.`);
                             this.$router.push("/");
                             createFormStore.clearStore();
                             //this.choices = [];
                             this.loading = false;
                         } else throw new Error(res.data.toString())
                     })
-                } else throw new Error("Form creation error (no questions)");
+                } else throw new Error("Form update error (no questions)");
 
             } catch (error) {
-                this.$toasted.error(`Form creation wasn't successful. (${error})`);
+                this.$toasted.error(`Form update wasn't successful. (${error})`);
                 this.loading = false;
             }
 

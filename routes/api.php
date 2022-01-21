@@ -31,10 +31,10 @@ Route::get('/form/public_results/{slug}', [FormCompletionController::class, 'pub
 //require user privileges
 Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::get('/form/authenticated/{slug}', [FormController::class, 'showWithAuth']);
-    Route::get('/forms', [FormController::class, 'index']);
-    Route::put('/forms/{id}', [FormController::class, 'update']);
+    Route::get('/forms/', [FormController::class, 'index']);
+    Route::put('/forms/update/{slug}', [FormController::class, 'update']);
     Route::post('/forms/create', [FormController::class, 'store']);
-    Route::delete('/forms/{id}', [FormController::class, 'destroy']);
+    Route::delete('/forms/{id}', [FormController::class, 'destroy']); //todo: check {id}
     Route::post('/form/duplicate', [FormController::class, 'duplicateWithAuth']);
     Route::get('/form/results/{slug}', [FormCompletionController::class, 'index']);
     Route::get('/form/results/{slug}/download', [FormCompletionController::class, 'export']);
