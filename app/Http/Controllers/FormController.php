@@ -53,7 +53,7 @@ class FormController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $updateSlug = null)
+    public function store(Request $request, $updateSlug = null, $updateHasPrivateToken = null)
     {
         $userId = -1;
         if (!Auth::user()) return response("Unauthorized - log in to create forms...", 401);
@@ -84,8 +84,7 @@ class FormController extends Controller
                     $formProps['start_time'] = new DateTime($request->all()['start_time']);
                     $formProps['end_time'] = new DateTime($request->all()['end_time']);
                 } else return response("Invalid data (start is higher than end).", 400);
-            }
-            else {
+            } else {
                 return response("Invalid data (invalid start/end date).", 400);
             }
         } else return response("Invalid data (missing start/end date).", 400);
@@ -108,15 +107,13 @@ class FormController extends Controller
 
                     if ($validator->fails()) {
                         return response("Invalid data (invalid private emails - basic input mode).", 400);
-                    }
-                    else {
+                    } else {
                         $formProps['private_emails'] = array_map(function ($validatorEmail) {
                             return $validatorEmail['email'];
                         }, $validator->validated()['private_emails']);
                     }
-                }
-                //raw text input mode
-                else if ($request->all()['private_emails']){
+                } //raw text input mode
+                else if ($request->all()['private_emails']) {
                     $dataToValidate['emails'] = explode("\n", $request->all()['private_emails']);
 
                     $validator = Validator::make($dataToValidate, [
@@ -125,18 +122,14 @@ class FormController extends Controller
 
                     if ($validator->fails()) {
                         return response("Invalid data (invalid private emails - raw text input mode).", 400);
-                    }
-                    else {
+                    } else {
                         $formProps['private_emails'] = $dataToValidate['emails'];
                     }
-                }
-                else {
+                } else {
                     return response("Invalid data (missing array or formatted string of private emails).", 400);
                 }
-            }
-            else return response("Invalid data (missing array of private emails).", 400);
+            } else return response("Invalid data (missing array of private emails).", 400);
         }
-
 
         if (!$request->all()) return response("Invalid data (expected data).", 400);
 
@@ -465,23 +458,26 @@ class FormController extends Controller
         }, $validatedQuestions);
 
         if ($validatedElements[0] === 0) return response("Invalid form (new page element on the start is not allowed).", 400);
-        if ($validatedElements[count($validatedElements)-1] === 0) return response("Invalid form (new page element on the end is not allowed).", 400);
+        if ($validatedElements[count($validatedElements) - 1] === 0) return response("Invalid form (new page element on the end is not allowed).", 400);
 
         $newPageBefore = false;
         foreach ($validatedElements as $value) {
             if ($value === 0) {
                 if ($newPageBefore) return response("Invalid form (new page elements are next to each other).", 400);
                 else $newPageBefore = true;
-            }
-            else if ($value === 1) {
+            } else if ($value === 1) {
                 $newPageBefore = false;
             }
         }
         try {
-            DB::transaction(function () use ($validatedQuestions, $userId, $formProps, $updateSlug) {
+            DB::transaction(function () use ($validatedQuestions, $userId, $formProps, $updateSlug, $updateHasPrivateToken) {
                 $formSlug = null;
                 if ($updateSlug) $formSlug = $updateSlug;
                 else $formSlug = Uuid::uuid4()->toString();
+
+                if ($updateHasPrivateToken === false) $formProps['has_private_token'] = false;
+                if ($updateHasPrivateToken === true) $formProps['has_private_token'] = true;
+
                 $newForm = Form::create([
                     'user_id' => $userId,
                     'slug' => $formSlug,
@@ -497,7 +493,7 @@ class FormController extends Controller
                         'order' => $item['order'],
                         'form_id' => $newForm->id
                     ]);
-                    if ($item['type'] !== "new_page") { //todo: rewrite and add new pages creation
+                    if ($item['type'] !== "new_page") {
                         $newInputElement = InputElement::create([
                             'header' => $item['header'],
                             'is_mandatory' => $item['is_mandatory'],
@@ -562,24 +558,27 @@ class FormController extends Controller
                                 break;
                             }
                         }
-                    }
-                    else {
-                        NewPage::create(['form_element_id'=>$newFormElement->id]);
+                    } else {
+                        NewPage::create(['form_element_id' => $newFormElement->id]);
                     }
                 }
 
-                if ($formProps['has_private_token']) {
-                    foreach ($formProps['private_emails'] as $validatedEmail) {
-                        $token = Uuid::uuid4()->toString();
-                        FormPrivateAccessToken::create([
-                            'token' => $token,
-                            'email' => $validatedEmail,
-                            'form_id' => $newForm->id,
-                        ]);
+                //update form purpose
+                if ($updateHasPrivateToken === null) {
+                    if ($formProps['has_private_token']) {
+                        foreach ($formProps['private_emails'] as $validatedEmail) {
+                            $token = Uuid::uuid4()->toString();
+                            FormPrivateAccessToken::create([
+                                'token' => $token,
+                                'email' => $validatedEmail,
+                                'form_id' => $newForm->id,
+                            ]);
 
-                        Mail::to($validatedEmail)->send(new FormInvitation($token, $newForm));
+                            Mail::to($validatedEmail)->send(new FormInvitation($token, $newForm));
+                        }
                     }
                 }
+
             });
 
         } catch (Exception $exception) {
@@ -616,7 +615,8 @@ class FormController extends Controller
         } else return response('Not Found', 404);
     }
 
-    public function privateShow($token) {
+    public function privateShow($token)
+    {
         $privateAccessToken = FormPrivateAccessToken::where('token', $token)->first();
         //todo: try to rewrite using show method above
         if ($privateAccessToken) {
@@ -636,8 +636,7 @@ class FormController extends Controller
                     }
 
                     return $form;
-                }
-                else return response('Bad request', 400);
+                } else return response('Bad request', 400);
             }
 
         } else return response('Not found', 404);
@@ -701,7 +700,7 @@ class FormController extends Controller
 
         if ($formProps['has_private_token']) {
             if (array_key_exists('private_emails', $request->all())) {
-                if ($request->all()['private_emails']){
+                if ($request->all()['private_emails']) {
                     $dataToValidate['emails'] = explode("\n", $request->all()['private_emails']);
 
                     $validator = Validator::make($dataToValidate, [
@@ -710,16 +709,13 @@ class FormController extends Controller
 
                     if ($validator->fails()) {
                         return response("Invalid data (invalid private emails - raw text input mode).", 400);
-                    }
-                    else {
+                    } else {
                         $formProps['private_emails'] = $dataToValidate['emails'];
                     }
-                }
-                else {
+                } else {
                     return response("Invalid data (missing array or formatted string of private emails).", 400);
                 }
-            }
-            else return response("Invalid data (missing array of private emails).", 400);
+            } else return response("Invalid data (missing array of private emails).", 400);
         }
 
 
@@ -909,8 +905,7 @@ class FormController extends Controller
                             InputElement::whereIn('id', $correspondingIds)
                                 ->update(['has_public_results' => false]);
                             return response("Form publication restrictions has been modified successfully (now private)", 200);
-                        }
-                        else {
+                        } else {
                             if (count($validatedQuestions['true']) > 0)
                                 InputElement::whereIn('id', $validatedQuestions['true'])
                                     ->update(['has_public_results' => true]);
@@ -945,18 +940,31 @@ class FormController extends Controller
             $formStartTime = strtotime($form->start_time);
             if ($formStartTime <= $currentTime) return response("Requested form has been already published - it cannot be updated anymore.", 400);
 
-            DB::transaction(function () use ($request, $slug){
-                $workSlug = Uuid::uuid4()->toString();
-                $storeResponse = $this->store($request, $workSlug);
+            DB::transaction(function () use ($request, $slug, $form) {
+                $temporarySlug = Uuid::uuid4()->toString();
+                $storeResponse = $this->store($request, $temporarySlug, $form->has_private_token);
                 if ($storeResponse->status() === 200) {
-                    $this->destroy($slug);
-                    $updatedForm = Form::where("slug", $workSlug)->first();
-                    $updatedForm->update(["slug" => $slug]);
-                }
-                else return $storeResponse;
+                    if ($form->has_private_token) {
+                        $privateTokens = FormPrivateAccessToken::where(["form_id" => $form->id])->get();
+                        $this->destroy($slug);
+                        $updatedForm = Form::where("slug", $temporarySlug)->first();
+                        $updatedForm->update(["slug" => $slug]);
+                        foreach ($privateTokens as $token) {
+                            FormPrivateAccessToken::create([
+                                'was_used' => $token->was_used,
+                                'token' => $token->token,
+                                'email' => $token->email,
+                                'form_id' => $updatedForm->id,
+                            ]);
+                        }
+                    } else {
+                        $this->destroy($slug);
+                        $updatedForm = Form::where("slug", $temporarySlug)->first();
+                        $updatedForm->update(["slug" => $slug]);
+                    }
+                } else return $storeResponse;
+                return response("Form was updated successfully", 200);
             });
-            return response("Form was updated successfully", 200);
-
         } else return response("Requested form (update) was not found", 404);
     }
 
