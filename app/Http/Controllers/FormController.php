@@ -823,14 +823,16 @@ class FormController extends Controller
         if (Auth::user()) {
             $userId = Auth::user()->id;
             $form = Form::where('slug', $slug)->with('formPrivateAccessTokens')->first();
-            foreach ($form->formPrivateAccessTokens as $key => $value) {
-                unset($form->formPrivateAccessTokens[$key]->token);
-            }
 
             if ($form) {
                 if ($form->user_id != $userId) {
                     return response("Unauthorized - you don't own this form!", 401);
                 }
+
+                foreach ($form->formPrivateAccessTokens as $key => $value) {
+                    unset($form->formPrivateAccessTokens[$key]->token);
+                }
+
                 $currentTime = time();
                 $formEndTime = strtotime($form->end_time);
                 $formStartTime = strtotime($form->start_time);
