@@ -5045,6 +5045,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     }
   },
   mounted: function mounted() {
+    this.loading = true;
+    _store__WEBPACK_IMPORTED_MODULE_4__.createFormStore.clearStore();
     this.loading = false;
   }
 });
@@ -6554,6 +6556,537 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/views/UpdateForm.vue?vue&type=script&lang=js&":
+/*!************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/views/UpdateForm.vue?vue&type=script&lang=js& ***!
+  \************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _components_Modals_CreateForm_ItemModal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/Modals/CreateForm/ItemModal */ "./resources/js/components/Modals/CreateForm/ItemModal.vue");
+/* harmony import */ var _components_FormElementControl__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/FormElementControl */ "./resources/js/components/FormElementControl.vue");
+/* harmony import */ var _apis_Form__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../apis/Form */ "./resources/js/apis/Form.js");
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../store */ "./resources/js/store/index.js");
+/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! uuid */ "./node_modules/uuid/dist/esm-browser/v4.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  name: "UpdateForm",
+  components: {
+    'form-element': _components_FormElementControl__WEBPACK_IMPORTED_MODULE_2__["default"]
+  },
+  data: function data() {
+    return {
+      form: {
+        header: "",
+        description: "",
+        start_time: "",
+        end_time: "",
+        items: []
+      },
+      privateEmailsTextareaInputMode: false,
+      loading: true,
+      errored: false,
+      errorText: "Bad request"
+    };
+  },
+  methods: {
+    handleInputModeChange: function handleInputModeChange() {
+      this.form.private_emails = [];
+      this.privateEmailsTextareaInputMode = !this.privateEmailsTextareaInputMode;
+    },
+    addNewPage: function addNewPage() {
+      _store__WEBPACK_IMPORTED_MODULE_4__.createFormStore.addItem({
+        type: "new_page",
+        id: (0,uuid__WEBPACK_IMPORTED_MODULE_5__["default"])(),
+        order: -1
+      });
+      this.handleItemsChanged();
+    },
+    handleRemoveNewPage: function handleRemoveNewPage(item) {
+      _store__WEBPACK_IMPORTED_MODULE_4__.createFormStore.deleteItem(item);
+      this.handleItemsChanged();
+    },
+    showAddItemModal: function showAddItemModal() {
+      var _this = this;
+
+      this.$modal.hideAll();
+      _store__WEBPACK_IMPORTED_MODULE_4__.createFormChoicesStore.clearStore();
+      this.$modal.show(_components_Modals_CreateForm_ItemModal__WEBPACK_IMPORTED_MODULE_1__["default"], {
+        purpose: "add"
+      }, {
+        height: 'auto',
+        width: '60%',
+        scrollable: true
+      }, {
+        'before-close': function beforeClose(event) {
+          return _this.handleItemsChanged();
+        }
+      });
+    },
+    handleItemsChanged: function handleItemsChanged() {
+      this.form.items = _store__WEBPACK_IMPORTED_MODULE_4__.createFormStore.getItems();
+    },
+    submitCreateForm: function submitCreateForm() {
+      var _this2 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
+        var min, max, formElementsError;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.prev = 0;
+                _this2.loading = true; //date type and interval validation
+
+                min = new Date(_this2.form.start_time);
+                max = new Date(_this2.form.end_time);
+
+                if (min instanceof Date && !isNaN(min.valueOf())) {
+                  _context.next = 6;
+                  break;
+                }
+
+                throw new Error("Invalid date data (min)");
+
+              case 6:
+                if (max instanceof Date && !isNaN(max.valueOf())) {
+                  _context.next = 8;
+                  break;
+                }
+
+                throw new Error("Invalid date data (max)");
+
+              case 8:
+                if (!(min.getTime() && max.getTime())) {
+                  _context.next = 13;
+                  break;
+                }
+
+                if (!(parseInt(max.getTime()) <= parseInt(min.getTime()))) {
+                  _context.next = 11;
+                  break;
+                }
+
+                throw new Error("Invalid date data");
+
+              case 11:
+                _context.next = 14;
+                break;
+
+              case 13:
+                throw new Error("Invalid date data (max or min)");
+
+              case 14:
+                formElementsError = _this2.validateFormElements();
+
+                if (!formElementsError.errored) {
+                  _context.next = 17;
+                  break;
+                }
+
+                throw new Error(formElementsError.message);
+
+              case 17:
+                if (!(_this2.form && _this2.form.items.length >= 1)) {
+                  _context.next = 22;
+                  break;
+                }
+
+                _context.next = 20;
+                return _apis_Form__WEBPACK_IMPORTED_MODULE_3__["default"].postCreateForm(_this2.form).then(function (res) {
+                  if (res.status === 200) {
+                    _this2.$toasted.success("Form creation was successful.");
+
+                    _this2.$router.push("/");
+
+                    _store__WEBPACK_IMPORTED_MODULE_4__.createFormStore.clearStore(); //this.choices = [];
+
+                    //this.choices = [];
+                    _this2.loading = false;
+                  } else throw new Error(res.data.toString());
+                });
+
+              case 20:
+                _context.next = 23;
+                break;
+
+              case 22:
+                throw new Error("Form creation error (no questions)");
+
+              case 23:
+                _context.next = 29;
+                break;
+
+              case 25:
+                _context.prev = 25;
+                _context.t0 = _context["catch"](0);
+
+                _this2.$toasted.error("Form creation wasn't successful. (".concat(_context.t0, ")"));
+
+                _this2.loading = false;
+
+              case 29:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, null, [[0, 25]]);
+      }))();
+    },
+    validateFormElements: function validateFormElements() {
+      var response = {
+        errored: false,
+        message: null
+      };
+      var elements = this.form.items.map(function (x) {
+        if (x.type === 'new_page') return 0;else return 1;
+      });
+
+      if (elements[0] === 0) {
+        response.errored = true;
+        response.message = "New page element is not allowed on the start of the form";
+        return response;
+      }
+
+      if (elements[elements.length - 1] === 0) {
+        response.errored = true;
+        response.message = "New page element is not allowed on the end of the form";
+        return response;
+      }
+
+      var newPageBefore = false;
+      elements.forEach(function (x) {
+        if (x === 0) {
+          if (newPageBefore) {
+            response.errored = true;
+            response.message = "New page elements are next to each other somewhere in the form";
+            return response;
+          } else newPageBefore = true;
+        } else if (x === 1) {
+          newPageBefore = false;
+        }
+      });
+      return response;
+    },
+    getRequestedForm: function getRequestedForm() {
+      var _this3 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
+        var errorCode;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                errorCode = -1;
+                _context2.next = 3;
+                return _apis_Form__WEBPACK_IMPORTED_MODULE_3__["default"].getSpecificFormWithAuth(_this3.$route.params['slug']).then(function (res) {
+                  if (res.status === 200) {
+                    if (res.data) {
+                      if (res.data.was_already_published) {
+                        errorCode = -2;
+                        throw new Error();
+                      } else {
+                        var data = res.data;
+                        _this3.form.header = data.name;
+                        _this3.form.description = data.description;
+                        _this3.form.start_time = data.start_time.replace(" ", "T");
+                        _this3.form.end_time = data.end_time.replace(" ", "T");
+                        data.form_elements.forEach(function (item) {
+                          var element = {
+                            type: "",
+                            id: -1,
+                            order: 0
+                          };
+                          element.order = item.order;
+
+                          if (item.input_element) {
+                            element.is_mandatory = item.input_element.is_mandatory;
+                            element.header = item.input_element.header;
+
+                            if (item.input_element.boolean_input) {
+                              element = _objectSpread(_objectSpread({}, element), item.input_element.boolean_input);
+                              element.type = "boolean";
+                            } else if (item.input_element.number_input) {
+                              element = _objectSpread(_objectSpread({}, element), item.input_element.number_input);
+                              element.type = "number";
+                            } else if (item.input_element.text_input) {
+                              element = _objectSpread(_objectSpread({}, element), item.input_element.text_input);
+                              element.type = "text";
+                            } else if (item.input_element.date_input) {
+                              element = _objectSpread(_objectSpread({}, element), item.input_element.date_input);
+                              element.type = "date";
+                            } else if (item.input_element.select_input) {
+                              var choices = item.input_element.select_input.select_input_choices;
+
+                              if (item.input_element.select_input.has_hidden_label) {
+                                choices = choices.map(function (x) {
+                                  x.hidden_label = "".concat(x.hidden_label);
+                                  return x;
+                                });
+                              }
+
+                              element = _objectSpread(_objectSpread(_objectSpread({}, element), item.input_element.select_input), {}, {
+                                choices: choices
+                              });
+                              element.type = "select";
+                            }
+                          } else if (item.new_page) {
+                            element.type = "new_page";
+                            element.id = item.new_page.id;
+                          }
+
+                          Object.keys(element).forEach(function (k) {
+                            return element[k] == null && delete element[k];
+                          });
+                          _store__WEBPACK_IMPORTED_MODULE_4__.createFormStore.addItem(element);
+                        });
+                        _this3.form.items = _store__WEBPACK_IMPORTED_MODULE_4__.createFormStore.getItems();
+                      }
+                    }
+                  } else {
+                    errorCode = res.status;
+                    throw new Error();
+                  }
+                })["catch"](function (error) {
+                  _this3.errored = true;
+                  console.log(error);
+
+                  switch (errorCode) {
+                    case -2:
+                      _this3.errorText = "Form has been published. You cannot change this form.";
+                      break;
+
+                    case 400:
+                      _this3.errorText = "Bad request. Check your link to the form.";
+                      break;
+
+                    case 404:
+                      _this3.errorText = "Requested form was not found.";
+                      break;
+
+                    case 401:
+                      _this3.errorText = "Unauthorized.";
+                      break;
+
+                    default:
+                      _this3.errorText = "Unhandled error - ".concat(error);
+                      break;
+                    //dev only
+                  }
+                })["finally"](function () {
+                  _this3.loading = false;
+                });
+
+              case 3:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }))();
+    }
+  },
+  mounted: function mounted() {
+    var _this4 = this;
+
+    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              _this4.loading = true;
+              _store__WEBPACK_IMPORTED_MODULE_4__.createFormStore.clearStore();
+              _context3.next = 4;
+              return _this4.getRequestedForm();
+
+            case 4:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3);
+    }))();
+  }
+});
+
+/***/ }),
+
 /***/ "./resources/js/apis/Api.js":
 /*!**********************************!*\
   !*** ./resources/js/apis/Api.js ***!
@@ -7099,8 +7632,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
-/* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm.js");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
+/* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm.js");
 /* harmony import */ var _views_Home_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../views/Home.vue */ "./resources/js/views/Home.vue");
 /* harmony import */ var _views_About_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../views/About.vue */ "./resources/js/views/About.vue");
 /* harmony import */ var _views_Login_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../views/Login.vue */ "./resources/js/views/Login.vue");
@@ -7112,6 +7645,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _views_CreateForm__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../views/CreateForm */ "./resources/js/views/CreateForm.vue");
 /* harmony import */ var _views_FormPreview__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../views/FormPreview */ "./resources/js/views/FormPreview.vue");
 /* harmony import */ var _views_FormResults__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../views/FormResults */ "./resources/js/views/FormResults.vue");
+/* harmony import */ var _views_UpdateForm__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../views/UpdateForm */ "./resources/js/views/UpdateForm.vue");
 /* provided dependency */ var process = __webpack_require__(/*! process/browser.js */ "./node_modules/process/browser.js");
 
 
@@ -7126,7 +7660,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-vue__WEBPACK_IMPORTED_MODULE_11__["default"].use(vue_router__WEBPACK_IMPORTED_MODULE_12__["default"]);
+
+vue__WEBPACK_IMPORTED_MODULE_12__["default"].use(vue_router__WEBPACK_IMPORTED_MODULE_13__["default"]);
 var routes = [{
   path: "/",
   name: "Home",
@@ -7190,11 +7725,18 @@ var routes = [{
     requiresAuth: true
   }
 }, {
+  path: "/update_form/:slug",
+  name: "UpdateForm",
+  component: _views_UpdateForm__WEBPACK_IMPORTED_MODULE_11__["default"],
+  meta: {
+    requiresAuth: true
+  }
+}, {
   path: "*",
   name: "NotFound",
   component: _views_NotFound__WEBPACK_IMPORTED_MODULE_7__["default"]
 }];
-var router = new vue_router__WEBPACK_IMPORTED_MODULE_12__["default"]({
+var router = new vue_router__WEBPACK_IMPORTED_MODULE_13__["default"]({
   mode: "history",
   base: process.env.BASE_URL,
   routes: routes
@@ -7388,7 +7930,7 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_2__["default"].Store({
   },
   plugins: [new vuex_persist__WEBPACK_IMPORTED_MODULE_3__["default"]().plugin]
 });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (store); //store for create form page
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (store); //store for create (and update) form page
 
 var createFormStore = new _MyStoreClass__WEBPACK_IMPORTED_MODULE_0__["default"]();
 var createFormChoicesStore = new _MyStoreClass__WEBPACK_IMPORTED_MODULE_0__["default"](); //store for duplicate form modal
@@ -84391,6 +84933,45 @@ component.options.__file = "resources/js/views/Register.vue"
 
 /***/ }),
 
+/***/ "./resources/js/views/UpdateForm.vue":
+/*!*******************************************!*\
+  !*** ./resources/js/views/UpdateForm.vue ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _UpdateForm_vue_vue_type_template_id_76238d0c_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./UpdateForm.vue?vue&type=template&id=76238d0c&scoped=true& */ "./resources/js/views/UpdateForm.vue?vue&type=template&id=76238d0c&scoped=true&");
+/* harmony import */ var _UpdateForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./UpdateForm.vue?vue&type=script&lang=js& */ "./resources/js/views/UpdateForm.vue?vue&type=script&lang=js&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _UpdateForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _UpdateForm_vue_vue_type_template_id_76238d0c_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render,
+  _UpdateForm_vue_vue_type_template_id_76238d0c_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  "76238d0c",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/views/UpdateForm.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
 /***/ "./resources/js/App.vue?vue&type=script&lang=js&":
 /*!*******************************************************!*\
   !*** ./resources/js/App.vue?vue&type=script&lang=js& ***!
@@ -84964,6 +85545,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Register_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Register.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/views/Register.vue?vue&type=script&lang=js&");
  /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Register_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/views/UpdateForm.vue?vue&type=script&lang=js&":
+/*!********************************************************************!*\
+  !*** ./resources/js/views/UpdateForm.vue?vue&type=script&lang=js& ***!
+  \********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_UpdateForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./UpdateForm.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/views/UpdateForm.vue?vue&type=script&lang=js&");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_UpdateForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
@@ -85597,6 +86194,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Register_vue_vue_type_template_id_3563ad7c_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Register_vue_vue_type_template_id_3563ad7c_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Register.vue?vue&type=template&id=3563ad7c&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/views/Register.vue?vue&type=template&id=3563ad7c&scoped=true&");
+
+
+/***/ }),
+
+/***/ "./resources/js/views/UpdateForm.vue?vue&type=template&id=76238d0c&scoped=true&":
+/*!**************************************************************************************!*\
+  !*** ./resources/js/views/UpdateForm.vue?vue&type=template&id=76238d0c&scoped=true& ***!
+  \**************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_UpdateForm_vue_vue_type_template_id_76238d0c_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_UpdateForm_vue_vue_type_template_id_76238d0c_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_UpdateForm_vue_vue_type_template_id_76238d0c_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./UpdateForm.vue?vue&type=template&id=76238d0c&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/views/UpdateForm.vue?vue&type=template&id=76238d0c&scoped=true&");
 
 
 /***/ }),
@@ -88741,6 +89355,240 @@ var render = function () {
               ],
               1
             ),
+          ],
+          1
+        )
+      : _c("div", [_c("loading")], 1),
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/views/UpdateForm.vue?vue&type=template&id=76238d0c&scoped=true&":
+/*!*****************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/views/UpdateForm.vue?vue&type=template&id=76238d0c&scoped=true& ***!
+  \*****************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render),
+/* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function () {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    !_vm.loading
+      ? _c(
+          "div",
+          { staticClass: "container-fluid flex-wrap" },
+          [
+            _vm.errored
+              ? _c("div", { staticClass: "container" }, [
+                  _c("h1", [_vm._v(_vm._s(this.errorText))]),
+                ])
+              : _c("FormulateForm", { on: { submit: _vm.submitCreateForm } }, [
+                  _c(
+                    "div",
+                    {
+                      staticClass: "container-fluid row m-auto",
+                      staticStyle: { "padding-bottom": "7vh" },
+                    },
+                    [
+                      _c(
+                        "div",
+                        {
+                          staticClass:
+                            "col-md shadow-sm bg-white p-2 overflow-auto",
+                          staticStyle: {
+                            "max-height": "70vh",
+                            "overflow-x": "hidden !important",
+                          },
+                        },
+                        [
+                          _c("h1", { staticClass: "mt-1" }, [
+                            _vm._v("Update form..."),
+                          ]),
+                          _vm._v(" "),
+                          _c("hr"),
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            { staticClass: "m-2 row" },
+                            [
+                              _c("FormulateInput", {
+                                staticClass: "col",
+                                attrs: {
+                                  "input-class": "btn btn-primary w-100",
+                                  type: "button",
+                                  label: "Add new question...",
+                                },
+                                on: { click: _vm.showAddItemModal },
+                              }),
+                              _vm._v(" "),
+                              _c("FormulateInput", {
+                                staticClass: "col",
+                                attrs: {
+                                  "input-class": "btn btn-primary w-100",
+                                  type: "button",
+                                  label: "Add new page",
+                                },
+                                on: { click: _vm.addNewPage },
+                              }),
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c("FormulateInput", {
+                            staticClass: "col m-0",
+                            attrs: {
+                              type: "text",
+                              label: "Form header",
+                              validation: [["required"]],
+                              "input-class": "form-control",
+                            },
+                            model: {
+                              value: _vm.form.header,
+                              callback: function ($$v) {
+                                _vm.$set(_vm.form, "header", $$v)
+                              },
+                              expression: "form.header",
+                            },
+                          }),
+                          _vm._v(" "),
+                          _c("FormulateInput", {
+                            staticClass: "col m-0",
+                            attrs: {
+                              label: "Form description",
+                              type: "text",
+                              "input-class": "form-control",
+                            },
+                            model: {
+                              value: _vm.form.description,
+                              callback: function ($$v) {
+                                _vm.$set(_vm.form, "description", $$v)
+                              },
+                              expression: "form.description",
+                            },
+                          }),
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            { staticClass: "row mt-1" },
+                            [
+                              _c("FormulateInput", {
+                                staticClass: "col m-0",
+                                attrs: {
+                                  label: "Form publication start time",
+                                  type: "datetime-local",
+                                  validation: [["required"]],
+                                  "input-class": "form-control",
+                                },
+                                model: {
+                                  value: _vm.form.start_time,
+                                  callback: function ($$v) {
+                                    _vm.$set(_vm.form, "start_time", $$v)
+                                  },
+                                  expression: "form.start_time",
+                                },
+                              }),
+                              _vm._v(" "),
+                              _c("FormulateInput", {
+                                staticClass: "col m-0",
+                                attrs: {
+                                  label: "Form publication end time",
+                                  type: "datetime-local",
+                                  validation: [["required"]],
+                                  "input-class": "form-control",
+                                },
+                                model: {
+                                  value: _vm.form.end_time,
+                                  callback: function ($$v) {
+                                    _vm.$set(_vm.form, "end_time", $$v)
+                                  },
+                                  expression: "form.end_time",
+                                },
+                              }),
+                            ],
+                            1
+                          ),
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        {
+                          staticClass: "col-md mt-2 overflow-auto",
+                          staticStyle: { "max-height": "70vh" },
+                        },
+                        [
+                          !this.form.header &&
+                          !this.form.description &&
+                          this.form.items.length === 0
+                            ? _c("div", { staticClass: "text-muted" }, [
+                                _vm._v(
+                                  "\n                        There will be the form shown.\n                    "
+                                ),
+                              ])
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _c("h1", [_vm._v(_vm._s(this.form.header))]),
+                          _vm._v(" "),
+                          _c("h4", [_vm._v(_vm._s(this.form.description))]),
+                          _vm._v(" "),
+                          this.form.header || this.form.description
+                            ? _c("hr")
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _vm._l(this.form.items, function (item) {
+                            return _c("form-element", {
+                              key: item.id,
+                              staticClass: "row justify-content-center",
+                              attrs: { obj: item },
+                              on: {
+                                itemChanged: _vm.handleItemsChanged,
+                                removeNewPage: _vm.handleRemoveNewPage,
+                              },
+                            })
+                          }),
+                        ],
+                        2
+                      ),
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass:
+                        "d-flex justify-content-center fixed-bottom bg-info",
+                      staticStyle: { "z-index": "0" },
+                    },
+                    [
+                      _c(
+                        "div",
+                        { staticClass: "m-2" },
+                        [
+                          _c("FormulateInput", {
+                            attrs: {
+                              type: "submit",
+                              label: "Update this form",
+                            },
+                          }),
+                        ],
+                        1
+                      ),
+                    ]
+                  ),
+                ]),
           ],
           1
         )

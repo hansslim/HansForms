@@ -43,7 +43,7 @@ const store = new Vuex.Store({
 });
 export default store;
 
-//store for create form page
+//store for create (and update) form page
 export const createFormStore = new MyStore();
 export const createFormChoicesStore = new MyStore();
 

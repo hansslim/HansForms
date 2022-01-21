@@ -286,6 +286,8 @@ export default {
         }
     },
     mounted() {
+        this.loading = true;
+        createFormStore.clearStore();
         this.loading = false;
     }
 }

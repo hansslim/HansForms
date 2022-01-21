@@ -12,6 +12,7 @@ import NotFound from "../views/NotFound";
 import CreateForm from "../views/CreateForm";
 import FormPreview from "../views/FormPreview";
 import FormResults from "../views/FormResults";
+import UpdateForm from "../views/UpdateForm";
 
 Vue.use(VueRouter);
 
@@ -75,6 +76,12 @@ const routes = [
         path: "/create_form",
         name: "CreateForm",
         component: CreateForm,
+        meta: {requiresAuth: true}
+    },
+    {
+        path: "/update_form/:slug",
+        name: "UpdateForm",
+        component: UpdateForm,
         meta: {requiresAuth: true}
     },
     {
