@@ -71,8 +71,8 @@ class FormController extends Controller
             $endDate = str_replace("T", " ", $request->all()['end_time']);
 
             if (
-                ($this->validateDate($startDate, 'Y-m-d H:i') && $this->validateDate($endDate, 'Y-m-d H:i')) ||
-                ($this->validateDate($startDate, 'Y-m-d H:i:s') && $this->validateDate($endDate, 'Y-m-d H:i:s'))
+                ($this->validateDate($startDate, 'Y-m-d H:i') || $this->validateDate($startDate)) &&
+                ($this->validateDate($endDate, 'Y-m-d H:i') || $this->validateDate($endDate))
             ) {
                 if (new DateTime($request->all()['start_time']) < new DateTime($request->all()['end_time'])) {
                     $currentTime = time();
@@ -940,7 +940,8 @@ class FormController extends Controller
             $formStartTime = strtotime($form->start_time);
             if ($formStartTime <= $currentTime) return response("Requested form has been already published - it cannot be updated anymore.", 400);
 
-            DB::transaction(function () use ($request, $slug, $form) {
+            DB::beginTransaction();
+            try {
                 $temporarySlug = Uuid::uuid4()->toString();
                 $storeResponse = $this->store($request, $temporarySlug, $form->has_private_token);
                 if ($storeResponse->status() === 200) {
@@ -962,9 +963,19 @@ class FormController extends Controller
                         $updatedForm = Form::where("slug", $temporarySlug)->first();
                         $updatedForm->update(["slug" => $slug]);
                     }
-                } else return $storeResponse;
-                return response("Form was updated successfully", 200);
-            });
+                } else {
+                    return $storeResponse;
+                    throw new Exception("Bad request");
+                }
+
+                DB::commit();
+            } catch (Exception $e) {
+                DB::rollback();
+            }
+
+
+            return response("Form was updated successfully", 200);
+
         } else return response("Requested form (update) was not found", 404);
     }
 
