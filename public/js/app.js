@@ -4164,6 +4164,247 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Modals/FormReview/FormAccessibilityModal.vue?vue&type=script&lang=js&":
+/*!***********************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Modals/FormReview/FormAccessibilityModal.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _apis_Form__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../apis/Form */ "./resources/js/apis/Form.js");
+/* harmony import */ var _Loading_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../Loading.vue */ "./resources/js/components/Loading.vue");
+
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  components: {
+    Loading: _Loading_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
+  },
+  name: "FormAccessibilityModal",
+  props: ["has_private_token", "emails", "slug"],
+  data: function data() {
+    return {
+      loading: true,
+      newHasPrivateToken: false,
+      formValues: {
+        newInvitedEmails: "",
+        emailsToInvalidate: ""
+      }
+    };
+  },
+  mounted: function mounted() {
+    this.loading = false;
+  },
+  methods: {
+    handleSubmit: function handleSubmit() {
+      var _this = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
+        var _ref, emailsToInvalidateDestructed, request, emailValidation;
+
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _this.loading = true;
+
+                _this.trivialFormulateErrorHandler();
+
+                _ref = _toConsumableArray(_this.formValues.emailsToInvalidate), emailsToInvalidateDestructed = _ref[0];
+                request = _objectSpread(_objectSpread({}, _this.formValues), {}, {
+                  emailsToInvalidate: emailsToInvalidateDestructed
+                });
+                emailValidation = _this.validateNewEmails(request.newInvitedEmails);
+
+                if (emailValidation) {
+                  _context.next = 10;
+                  break;
+                }
+
+                _context.next = 8;
+                return _apis_Form__WEBPACK_IMPORTED_MODULE_1__["default"].putUpdateAccessForm(request, _this.$props["slug"]).then(function (res) {
+                  try {
+                    if (res.status === 200) {
+                      _this.$toasted.success("Changing accessibility was successful.");
+
+                      setTimeout(function () {
+                        _this.$modal.hide(_this.$parent.name);
+
+                        window.location.reload();
+                        _this.loading = false;
+                      }, 1000);
+                    } else {
+                      throw new Error(res.statusText);
+                    }
+                  } catch (error) {
+                    _this.$toasted.error("Changing accessibility failed (Error: ".concat(error, ")"));
+
+                    _this.loading = false;
+                  }
+                });
+
+              case 8:
+                _context.next = 12;
+                break;
+
+              case 10:
+                _this.trivialFormulateErrorHandler(emailValidation);
+
+                _this.loading = false;
+
+              case 12:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }))();
+    },
+    validateNewEmails: function validateNewEmails(emails) {
+      if (!emails) return false;
+      var hasInvalidEmail = false;
+      var emailRegex = new RegExp("(.+)@(.+)\\.(.+)", "i");
+      emails.split("\n").forEach(function (x) {
+        if (!emailRegex.test(x)) {
+          hasInvalidEmail = true;
+        }
+      });
+      if (hasInvalidEmail) return "Invalid email values";else return false;
+    },
+    trivialFormulateErrorHandler: function trivialFormulateErrorHandler() {
+      var error = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+      if (error) {
+        this.$formulate.handle({
+          formErrors: [error.toString()]
+        }, "modalForm");
+      } else {
+        this.$formulate.handle({
+          formErrors: []
+        }, "modalForm");
+      }
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Modals/FormReview/FormDuplicationModal.vue?vue&type=script&lang=js&":
 /*!*********************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Modals/FormReview/FormDuplicationModal.vue?vue&type=script&lang=js& ***!
@@ -5426,6 +5667,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_Modals_CreateForm_ItemModal__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/Modals/CreateForm/ItemModal */ "./resources/js/components/Modals/CreateForm/ItemModal.vue");
 /* harmony import */ var _components_Modals_FormReview_FormDuplicationModal__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/Modals/FormReview/FormDuplicationModal */ "./resources/js/components/Modals/FormReview/FormDuplicationModal.vue");
 /* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../store */ "./resources/js/store/index.js");
+/* harmony import */ var _components_Modals_FormResults_FormResultsPublicationModal__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../components/Modals/FormResults/FormResultsPublicationModal */ "./resources/js/components/Modals/FormResults/FormResultsPublicationModal.vue");
+/* harmony import */ var _components_Modals_FormReview_FormAccessibilityModal__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../components/Modals/FormReview/FormAccessibilityModal */ "./resources/js/components/Modals/FormReview/FormAccessibilityModal.vue");
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
@@ -5529,6 +5772,22 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
 
 
 
@@ -5541,7 +5800,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   data: function data() {
     return {
-      slug: '',
+      slug: "",
       form: {},
       formValues: {},
       loading: true,
@@ -5566,7 +5825,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 try {
                   if (_this.dataFetched) {
                     if (_this.form.has_private_token) _this.hasPublicLink = false;
-                    if (_this.hasPublicLink) _this.publicLink = "".concat(window.location).replace('/preview', '');
+                    if (_this.hasPublicLink) _this.publicLink = "".concat(window.location).replace("/preview", "");
 
                     _this.sortElements();
 
@@ -5641,7 +5900,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     getSlug: function getSlug() {
       var _this$$route$params$s;
 
-      return (_this$$route$params$s = this.$route.params['slug']) !== null && _this$$route$params$s !== void 0 ? _this$$route$params$s : '';
+      return (_this$$route$params$s = this.$route.params["slug"]) !== null && _this$$route$params$s !== void 0 ? _this$$route$params$s : "";
     },
     sortElements: function sortElements() {
       this.form.form_elements.sort(function (a, b) {
@@ -5710,12 +5969,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   slug: _this4.getSlug()
                 }, _store__WEBPACK_IMPORTED_MODULE_5__.duplicateFormStore.getData())).then(function (res) {
                   if (res.status === 200) {
-                    _this4.$toasted.success('Form duplication was successful.');
+                    _this4.$toasted.success("Form duplication was successful.");
 
                     if (res.headers.duplicatedformslug) {
-                      window.location = "".concat(window.location).replace(new RegExp('/preview.*'), '') + "/preview/" + res.headers.duplicatedformslug;
+                      window.location = "".concat(window.location).replace(new RegExp("/preview.*"), "") + "/preview/" + res.headers.duplicatedformslug;
                     } else {
-                      _this4.$router.push('/');
+                      _this4.$router.push("/");
                     } //not used because of redirection
                     //this.loading = false;
 
@@ -5750,11 +6009,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           private_emails: this.form.form_private_access_tokens
         }
       }, {
-        height: 'auto',
-        width: '60%',
+        height: "auto",
+        width: "60%",
         scrollable: true
       }, {
-        'before-close': function beforeClose(event) {
+        "before-close": function beforeClose(event) {
           return _this5.handleDuplicateModalData();
         }
       });
@@ -5764,6 +6023,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     handleResults: function handleResults() {
       this.$router.push("/form/results/" + this.getSlug());
+    },
+    handleAccessibility: function handleAccessibility() {
+      this.$modal.show(_components_Modals_FormReview_FormAccessibilityModal__WEBPACK_IMPORTED_MODULE_7__["default"], {
+        has_private_token: this.form.has_private_token,
+        emails: this.form.form_private_access_tokens,
+        slug: this.getSlug()
+      }, {
+        height: "auto",
+        width: "60%",
+        scrollable: true
+      }, {
+        /*'before-close': event => this.handleItemsChanged()*/
+      });
     }
   }
 });
@@ -7410,6 +7682,22 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           }
         }
       }, _callee14);
+    }))();
+  },
+  putUpdateAccessForm: function putUpdateAccessForm(data, slug) {
+    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee15() {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee15$(_context15) {
+        while (1) {
+          switch (_context15.prev = _context15.next) {
+            case 0:
+              return _context15.abrupt("return", _Api__WEBPACK_IMPORTED_MODULE_1__["default"].put('/forms/update_access/' + slug, data));
+
+            case 1:
+            case "end":
+              return _context15.stop();
+          }
+        }
+      }, _callee15);
     }))();
   }
 });
@@ -84293,6 +84581,45 @@ component.options.__file = "resources/js/components/Modals/FormResults/FormResul
 
 /***/ }),
 
+/***/ "./resources/js/components/Modals/FormReview/FormAccessibilityModal.vue":
+/*!******************************************************************************!*\
+  !*** ./resources/js/components/Modals/FormReview/FormAccessibilityModal.vue ***!
+  \******************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _FormAccessibilityModal_vue_vue_type_template_id_5f9bd698_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./FormAccessibilityModal.vue?vue&type=template&id=5f9bd698&scoped=true& */ "./resources/js/components/Modals/FormReview/FormAccessibilityModal.vue?vue&type=template&id=5f9bd698&scoped=true&");
+/* harmony import */ var _FormAccessibilityModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./FormAccessibilityModal.vue?vue&type=script&lang=js& */ "./resources/js/components/Modals/FormReview/FormAccessibilityModal.vue?vue&type=script&lang=js&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _FormAccessibilityModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _FormAccessibilityModal_vue_vue_type_template_id_5f9bd698_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render,
+  _FormAccessibilityModal_vue_vue_type_template_id_5f9bd698_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  "5f9bd698",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/Modals/FormReview/FormAccessibilityModal.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
 /***/ "./resources/js/components/Modals/FormReview/FormDuplicationModal.vue":
 /*!****************************************************************************!*\
   !*** ./resources/js/components/Modals/FormReview/FormDuplicationModal.vue ***!
@@ -85311,6 +85638,22 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/Modals/FormReview/FormAccessibilityModal.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************************************!*\
+  !*** ./resources/js/components/Modals/FormReview/FormAccessibilityModal.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_FormAccessibilityModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./FormAccessibilityModal.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Modals/FormReview/FormAccessibilityModal.vue?vue&type=script&lang=js&");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_FormAccessibilityModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
 /***/ "./resources/js/components/Modals/FormReview/FormDuplicationModal.vue?vue&type=script&lang=js&":
 /*!*****************************************************************************************************!*\
   !*** ./resources/js/components/Modals/FormReview/FormDuplicationModal.vue?vue&type=script&lang=js& ***!
@@ -85958,6 +86301,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_FormResultsPublicationModal_vue_vue_type_template_id_7081ab58_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_FormResultsPublicationModal_vue_vue_type_template_id_7081ab58_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./FormResultsPublicationModal.vue?vue&type=template&id=7081ab58&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Modals/FormResults/FormResultsPublicationModal.vue?vue&type=template&id=7081ab58&scoped=true&");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/Modals/FormReview/FormAccessibilityModal.vue?vue&type=template&id=5f9bd698&scoped=true&":
+/*!*************************************************************************************************************************!*\
+  !*** ./resources/js/components/Modals/FormReview/FormAccessibilityModal.vue?vue&type=template&id=5f9bd698&scoped=true& ***!
+  \*************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_FormAccessibilityModal_vue_vue_type_template_id_5f9bd698_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_FormAccessibilityModal_vue_vue_type_template_id_5f9bd698_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_FormAccessibilityModal_vue_vue_type_template_id_5f9bd698_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./FormAccessibilityModal.vue?vue&type=template&id=5f9bd698&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Modals/FormReview/FormAccessibilityModal.vue?vue&type=template&id=5f9bd698&scoped=true&");
 
 
 /***/ }),
@@ -87875,6 +88235,176 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Modals/FormReview/FormAccessibilityModal.vue?vue&type=template&id=5f9bd698&scoped=true&":
+/*!****************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Modals/FormReview/FormAccessibilityModal.vue?vue&type=template&id=5f9bd698&scoped=true& ***!
+  \****************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render),
+/* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function () {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "container p-2" }, [
+    _c("h1", [_vm._v("Accessibility")]),
+    _vm._v(" "),
+    !this.loading
+      ? _c("div", [
+          _c("h3", [
+            _vm._v(
+              "\n      Current state:\n      " +
+                _vm._s(
+                  this.$props["has_private_token"] === true
+                    ? "Private"
+                    : "Public"
+                ) +
+                "\n    "
+            ),
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            [
+              _c(
+                "FormulateForm",
+                {
+                  attrs: { name: "modalForm" },
+                  on: { submit: _vm.handleSubmit },
+                  model: {
+                    value: _vm.formValues,
+                    callback: function ($$v) {
+                      _vm.formValues = $$v
+                    },
+                    expression: "formValues",
+                  },
+                },
+                [
+                  this.$props["has_private_token"] &&
+                  _vm.formValues.has_private_token
+                    ? _c(
+                        "div",
+                        [
+                          _c("hr"),
+                          _vm._v(" "),
+                          _c("h4", [_vm._v("Invited emails")]),
+                          _vm._v(" "),
+                          _c("p", { staticClass: "m-0" }, [
+                            _vm._v("Mark to invalidate"),
+                          ]),
+                          _vm._v(" "),
+                          _c(
+                            "FormulateInput",
+                            {
+                              staticClass: "overflow-auto",
+                              staticStyle: { "max-height": "40vh" },
+                              attrs: {
+                                type: "group",
+                                name: "emailsToInvalidate",
+                              },
+                            },
+                            _vm._l(this.$props["emails"], function (item) {
+                              return _c("FormulateInput", {
+                                key: item.id,
+                                staticClass: "form-check form-switch",
+                                attrs: {
+                                  label: item.email,
+                                  name: "" + item.id,
+                                  type: "checkbox",
+                                  value: "false",
+                                  "element-class": "form-check-input",
+                                  "label-class": "form-check-label",
+                                },
+                              })
+                            }),
+                            1
+                          ),
+                        ],
+                        1
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _c("hr"),
+                  _vm._v(" "),
+                  _c("FormulateInput", {
+                    staticClass: "form-check form-switch",
+                    attrs: {
+                      label:
+                        "Private form (access only with invitation on email)",
+                      name: "has_private_token",
+                      type: "checkbox",
+                      checked: this.$props["has_private_token"],
+                      value: this.$props["has_private_token"],
+                      "element-class": "form-check-input",
+                      "label-class": "form-check-label",
+                    },
+                  }),
+                  _vm._v(" "),
+                  this.$props["has_private_token"] &&
+                  !_vm.formValues.has_private_token
+                    ? _c("div", { staticClass: "font-italic" }, [
+                        _vm._v(
+                          "\n          All tokens will be invalidated and removed! The form will become\n          public.\n        "
+                        ),
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  !this.$props["has_private_token"] &&
+                  _vm.formValues.has_private_token
+                    ? _c("div", { staticClass: "font-italic" }, [
+                        _vm._v(
+                          "\n          After this, the form will be accessible only through invitation!\n          Write down invited emails below.\n        "
+                        ),
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.formValues.has_private_token
+                    ? _c(
+                        "div",
+                        [
+                          _c("h3", { staticClass: "mt-2" }, [
+                            _vm._v("Invite emails..."),
+                          ]),
+                          _vm._v(" "),
+                          _c("FormulateInput", {
+                            attrs: {
+                              type: "textarea",
+                              name: "newInvitedEmails",
+                              placeholder: "Insert emails...",
+                            },
+                          }),
+                        ],
+                        1
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _c("FormulateErrors"),
+                  _vm._v(" "),
+                  _c("FormulateInput", {
+                    attrs: { label: "Change accessibility", type: "submit" },
+                  }),
+                ],
+                1
+              ),
+            ],
+            1
+          ),
+        ])
+      : _c("div", [_c("loading")], 1),
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Modals/FormReview/FormDuplicationModal.vue?vue&type=template&id=3454ccf8&scoped=true&":
 /*!**************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Modals/FormReview/FormDuplicationModal.vue?vue&type=template&id=3454ccf8&scoped=true& ***!
@@ -88757,7 +89287,7 @@ var render = function () {
                     "p",
                     { staticClass: "font-weight-bold" },
                     [
-                      _vm._v("Public link"),
+                      _vm._v("\n                    Public link"),
                       _c("br"),
                       _vm._v(" "),
                       _c(
@@ -88826,8 +89356,16 @@ var render = function () {
                   !this.form.was_already_published
                     ? _c("FormulateInput", {
                         staticClass: "btn",
-                        attrs: { label: "Change", type: "button" },
+                        attrs: { label: "Edit", type: "button" },
                         on: { click: _vm.handleUpdate },
+                      })
+                    : _vm._e(),
+                  _vm._v(" "),
+                  !this.form.is_expired
+                    ? _c("FormulateInput", {
+                        staticClass: "btn",
+                        attrs: { label: "Accessibility...", type: "button" },
+                        on: { click: _vm.handleAccessibility },
                       })
                     : _vm._e(),
                   _vm._v(" "),

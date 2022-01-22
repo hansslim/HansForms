@@ -31,7 +31,7 @@ Route::get('/form/public_results/{slug}', [FormCompletionController::class, 'pub
 //require user privileges
 Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::get('/form/authenticated/{slug}', [FormController::class, 'showWithAuth']);
-    Route::get('/forms/', [FormController::class, 'index']);
+    Route::get('/forms', [FormController::class, 'index']);
     Route::put('/forms/update/{slug}', [FormController::class, 'update']);
     Route::post('/forms/create', [FormController::class, 'store']);
     Route::delete('/forms/{id}', [FormController::class, 'destroy']); //todo: check {id}
@@ -39,6 +39,7 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::get('/form/results/{slug}', [FormCompletionController::class, 'index']);
     Route::get('/form/results/{slug}/download', [FormCompletionController::class, 'export']);
     Route::post('/form/results/{slug}/publish_results', [FormController::class, 'publishResults']);
+    Route::put('/forms/update_access/{slug}', [FormController::class, 'updateAccess']);
 
     Route::post('/logout', [UserController::class, 'logout']);
 });

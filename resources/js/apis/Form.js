@@ -43,4 +43,7 @@ export default {
     async putUpdateForm(updatedForm, slug) {
         return Api.put('/forms/update/' + slug, updatedForm);
     },
+    async putUpdateAccessForm(data, slug) {
+        return Api.put('/forms/update_access/' + slug, data);
+    },
 };

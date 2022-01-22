@@ -979,6 +979,11 @@ class FormController extends Controller
         } else return response("Requested form (update) was not found", 404);
     }
 
+
+    public function updateAccess(Request $request, $slug)
+    {
+        return response($request, 200);
+    }
     /**
      * Remove the specified resource from storage.
      *
