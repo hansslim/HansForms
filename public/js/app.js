@@ -4181,12 +4181,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Loading_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../Loading.vue */ "./resources/js/components/Loading.vue");
 
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -4199,10 +4193,31 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToAr
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -4316,7 +4331,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _this = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
-        var _ref, emailsToInvalidateDestructed, request, emailValidation;
+        var formValuesBackup, emailValidation, request, _ref, emailsToInvalidateDestructed;
 
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
           while (1) {
@@ -4326,49 +4341,58 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
                 _this.trivialFormulateErrorHandler();
 
-                _ref = _toConsumableArray(_this.formValues.emailsToInvalidate), emailsToInvalidateDestructed = _ref[0];
-                request = _objectSpread(_objectSpread({}, _this.formValues), {}, {
-                  emailsToInvalidate: emailsToInvalidateDestructed
-                });
-                emailValidation = _this.validateNewEmails(request.newInvitedEmails);
+                formValuesBackup = _objectSpread({}, _this.formValues);
+                emailValidation = false;
+                request = _objectSpread({}, _this.formValues);
+
+                if (_this.formValues.has_private_token) {
+                  _ref = _toConsumableArray(_this.formValues.emailsToInvalidate), emailsToInvalidateDestructed = _ref[0];
+                  request = _objectSpread(_objectSpread({}, _this.formValues), {}, {
+                    emailsToInvalidate: emailsToInvalidateDestructed
+                  });
+                  emailValidation = _this.validateNewEmails(request.newInvitedEmails);
+                }
+
+                console.log(_this.formValues);
 
                 if (emailValidation) {
-                  _context.next = 10;
+                  _context.next = 12;
                   break;
                 }
 
-                _context.next = 8;
+                _context.next = 10;
                 return _apis_Form__WEBPACK_IMPORTED_MODULE_1__["default"].putUpdateAccessForm(request, _this.$props["slug"]).then(function (res) {
-                  try {
-                    if (res.status === 200) {
-                      _this.$toasted.success("Changing accessibility was successful.");
-
-                      setTimeout(function () {
-                        _this.$modal.hide(_this.$parent.name);
-
-                        window.location.reload();
-                        _this.loading = false;
-                      }, 1000);
-                    } else {
-                      throw new Error(res.statusText);
-                    }
-                  } catch (error) {
-                    _this.$toasted.error("Changing accessibility failed (Error: ".concat(error, ")"));
+                  if (res.status === 200) {
+                    _this.$toasted.success("Changing accessibility was successful.");
 
                     _this.loading = false;
+                    setTimeout(function () {
+                      //this.$modal.hide(this.$parent.name)
+                      //window.location.reload()
+                      _this.loading = false;
+                    }, 1000);
+                  } else {
+                    throw new Error(res.statusText);
                   }
+                })["catch"](function (error) {
+                  _this.$toasted.error("Changing accessibility failed (".concat(error, ")"));
+
+                  _this.loading = false; //to recover input data in modal on error
+
+                  //to recover input data in modal on error
+                  _this.formValues = formValuesBackup;
                 });
 
-              case 8:
-                _context.next = 12;
+              case 10:
+                _context.next = 14;
                 break;
 
-              case 10:
+              case 12:
                 _this.trivialFormulateErrorHandler(emailValidation);
 
                 _this.loading = false;
 
-              case 12:
+              case 14:
               case "end":
                 return _context.stop();
             }
@@ -4377,7 +4401,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }))();
     },
     validateNewEmails: function validateNewEmails(emails) {
-      if (!emails) return false;
+      if (emails.length === 0) return false;
       var hasInvalidEmail = false;
       var emailRegex = new RegExp("(.+)@(.+)\\.(.+)", "i");
       emails.split("\n").forEach(function (x) {
@@ -5664,11 +5688,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _apis_Form__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../apis/Form */ "./resources/js/apis/Form.js");
 /* harmony import */ var _components_FormElement__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/FormElement */ "./resources/js/components/FormElement.vue");
-/* harmony import */ var _components_Modals_CreateForm_ItemModal__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/Modals/CreateForm/ItemModal */ "./resources/js/components/Modals/CreateForm/ItemModal.vue");
-/* harmony import */ var _components_Modals_FormReview_FormDuplicationModal__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/Modals/FormReview/FormDuplicationModal */ "./resources/js/components/Modals/FormReview/FormDuplicationModal.vue");
-/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../store */ "./resources/js/store/index.js");
-/* harmony import */ var _components_Modals_FormResults_FormResultsPublicationModal__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../components/Modals/FormResults/FormResultsPublicationModal */ "./resources/js/components/Modals/FormResults/FormResultsPublicationModal.vue");
-/* harmony import */ var _components_Modals_FormReview_FormAccessibilityModal__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../components/Modals/FormReview/FormAccessibilityModal */ "./resources/js/components/Modals/FormReview/FormAccessibilityModal.vue");
+/* harmony import */ var _components_Modals_FormReview_FormDuplicationModal__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/Modals/FormReview/FormDuplicationModal */ "./resources/js/components/Modals/FormReview/FormDuplicationModal.vue");
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../store */ "./resources/js/store/index.js");
+/* harmony import */ var _components_Modals_FormReview_FormAccessibilityModal__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/Modals/FormReview/FormAccessibilityModal */ "./resources/js/components/Modals/FormReview/FormAccessibilityModal.vue");
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
@@ -5786,8 +5808,22 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-
-
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -5958,7 +5994,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
-                if (_store__WEBPACK_IMPORTED_MODULE_5__.duplicateFormStore.isStoreEmpty()) {
+                if (_store__WEBPACK_IMPORTED_MODULE_4__.duplicateFormStore.isStoreEmpty()) {
                   _context4.next = 4;
                   break;
                 }
@@ -5967,7 +6003,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 _context4.next = 4;
                 return _apis_Form__WEBPACK_IMPORTED_MODULE_1__["default"].postDuplicateForm(_objectSpread({
                   slug: _this4.getSlug()
-                }, _store__WEBPACK_IMPORTED_MODULE_5__.duplicateFormStore.getData())).then(function (res) {
+                }, _store__WEBPACK_IMPORTED_MODULE_4__.duplicateFormStore.getData())).then(function (res) {
                   if (res.status === 200) {
                     _this4.$toasted.success("Form duplication was successful.");
 
@@ -5986,7 +6022,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 });
 
               case 4:
-                _store__WEBPACK_IMPORTED_MODULE_5__.duplicateFormStore.clearData();
+                _store__WEBPACK_IMPORTED_MODULE_4__.duplicateFormStore.clearData();
 
               case 5:
               case "end":
@@ -5999,7 +6035,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     handleDuplicate: function handleDuplicate() {
       var _this5 = this;
 
-      this.$modal.show(_components_Modals_FormReview_FormDuplicationModal__WEBPACK_IMPORTED_MODULE_4__["default"], {
+      this.$modal.show(_components_Modals_FormReview_FormDuplicationModal__WEBPACK_IMPORTED_MODULE_3__["default"], {
         obj: {
           name: this.form.name,
           description: this.form.description,
@@ -6025,7 +6061,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.$router.push("/form/results/" + this.getSlug());
     },
     handleAccessibility: function handleAccessibility() {
-      this.$modal.show(_components_Modals_FormReview_FormAccessibilityModal__WEBPACK_IMPORTED_MODULE_7__["default"], {
+      this.$modal.show(_components_Modals_FormReview_FormAccessibilityModal__WEBPACK_IMPORTED_MODULE_5__["default"], {
         has_private_token: this.form.has_private_token,
         emails: this.form.form_private_access_tokens,
         slug: this.getSlug()
@@ -88258,13 +88294,13 @@ var render = function () {
       ? _c("div", [
           _c("h3", [
             _vm._v(
-              "\n      Current state:\n      " +
+              "\n            Current state:\n            " +
                 _vm._s(
                   this.$props["has_private_token"] === true
                     ? "Private"
                     : "Public"
                 ) +
-                "\n    "
+                "\n        "
             ),
           ]),
           _vm._v(" "),
@@ -88287,46 +88323,53 @@ var render = function () {
                 [
                   this.$props["has_private_token"] &&
                   _vm.formValues.has_private_token
-                    ? _c(
-                        "div",
-                        [
-                          _c("hr"),
-                          _vm._v(" "),
-                          _c("h4", [_vm._v("Invited emails")]),
-                          _vm._v(" "),
-                          _c("p", { staticClass: "m-0" }, [
-                            _vm._v("Mark to invalidate"),
-                          ]),
-                          _vm._v(" "),
-                          _c(
-                            "FormulateInput",
-                            {
-                              staticClass: "overflow-auto",
-                              staticStyle: { "max-height": "40vh" },
-                              attrs: {
-                                type: "group",
-                                name: "emailsToInvalidate",
-                              },
-                            },
-                            _vm._l(this.$props["emails"], function (item) {
-                              return _c("FormulateInput", {
-                                key: item.id,
-                                staticClass: "form-check form-switch",
-                                attrs: {
-                                  label: item.email,
-                                  name: "" + item.id,
-                                  type: "checkbox",
-                                  value: "false",
-                                  "element-class": "form-check-input",
-                                  "label-class": "form-check-label",
-                                },
-                              })
-                            }),
-                            1
-                          ),
-                        ],
-                        1
-                      )
+                    ? _c("div", [
+                        this.$props["emails"].length > 0
+                          ? _c(
+                              "div",
+                              [
+                                _c("hr"),
+                                _vm._v(" "),
+                                _c("h4", [_vm._v("Invited emails")]),
+                                _vm._v(" "),
+                                _c("p", { staticClass: "m-0" }, [
+                                  _vm._v("Mark to invalidate"),
+                                ]),
+                                _vm._v(" "),
+                                _c(
+                                  "FormulateInput",
+                                  {
+                                    staticClass: "overflow-auto",
+                                    staticStyle: { "max-height": "40vh" },
+                                    attrs: {
+                                      type: "group",
+                                      name: "emailsToInvalidate",
+                                    },
+                                  },
+                                  _vm._l(
+                                    this.$props["emails"],
+                                    function (item) {
+                                      return _c("FormulateInput", {
+                                        key: item.id,
+                                        staticClass: "form-check form-switch",
+                                        attrs: {
+                                          label: item.email,
+                                          name: "" + item.id,
+                                          type: "checkbox",
+                                          value: "false",
+                                          "element-class": "form-check-input",
+                                          "label-class": "form-check-label",
+                                        },
+                                      })
+                                    }
+                                  ),
+                                  1
+                                ),
+                              ],
+                              1
+                            )
+                          : _vm._e(),
+                      ])
                     : _vm._e(),
                   _vm._v(" "),
                   _c("hr"),
@@ -88349,7 +88392,7 @@ var render = function () {
                   !_vm.formValues.has_private_token
                     ? _c("div", { staticClass: "font-italic" }, [
                         _vm._v(
-                          "\n          All tokens will be invalidated and removed! The form will become\n          public.\n        "
+                          "\n                    All tokens will be invalidated and removed! The form\n                    will become public.\n                "
                         ),
                       ])
                     : _vm._e(),
@@ -88358,7 +88401,7 @@ var render = function () {
                   _vm.formValues.has_private_token
                     ? _c("div", { staticClass: "font-italic" }, [
                         _vm._v(
-                          "\n          After this, the form will be accessible only through invitation!\n          Write down invited emails below.\n        "
+                          "\n                    After this, the form will be accessible only through\n                    invitation! Write down invited emails below.\n                "
                         ),
                       ])
                     : _vm._e(),
@@ -89306,35 +89349,51 @@ var render = function () {
                     1
                   )
                 : _c("div", [
-                    _vm._m(0),
+                    _c("div", { staticClass: "font-weight-bold" }, [
+                      _vm._v("Private form"),
+                    ]),
                     _vm._v(" "),
-                    _c(
-                      "div",
-                      {
-                        staticClass: "border mb-3 overflow-auto",
-                        staticStyle: { "max-height": "100px" },
-                      },
-                      _vm._l(
-                        this.form.form_private_access_tokens,
-                        function (privateEmail) {
-                          return _c(
+                    this.form.form_private_access_tokens.length === 0
+                      ? _c("div", [
+                          _vm._v(
+                            "\n                        No one has been invited yet.\n                    "
+                          ),
+                        ])
+                      : _c("div", [
+                          _c("div", [
+                            _vm._v(
+                              "\n                            Invited people\n                        "
+                            ),
+                          ]),
+                          _vm._v(" "),
+                          _c(
                             "div",
                             {
-                              key: privateEmail.id,
-                              staticClass: "text-left border-bottom pl-1",
+                              staticClass: "border mb-3 overflow-auto",
+                              staticStyle: { "max-height": "100px" },
                             },
-                            [
-                              _vm._v(
-                                "\n                            " +
-                                  _vm._s(privateEmail.email)
-                              ),
-                              _c("br"),
-                            ]
-                          )
-                        }
-                      ),
-                      0
-                    ),
+                            _vm._l(
+                              this.form.form_private_access_tokens,
+                              function (privateEmail) {
+                                return _c(
+                                  "div",
+                                  {
+                                    key: privateEmail.id,
+                                    staticClass: "text-left border-bottom pl-1",
+                                  },
+                                  [
+                                    _vm._v(
+                                      "\n                                " +
+                                        _vm._s(privateEmail.email)
+                                    ),
+                                    _c("br"),
+                                  ]
+                                )
+                              }
+                            ),
+                            0
+                          ),
+                        ]),
                   ]),
               _vm._v(" "),
               _c(
@@ -89437,17 +89496,7 @@ var render = function () {
       : _vm._e(),
   ])
 }
-var staticRenderFns = [
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", [
-      _c("div", { staticClass: "font-weight-bold" }, [_vm._v("Private form")]),
-      _vm._v("\n                        Invited people\n                    "),
-    ])
-  },
-]
+var staticRenderFns = []
 render._withStripped = true
 
 

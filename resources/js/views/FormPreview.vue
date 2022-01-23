@@ -17,22 +17,38 @@
                     <hr/>
                     <p v-if="this.hasPublicLink" class="font-weight-bold">
                         Public link<br/>
-                        <router-link :to="/form/ + getSlug()" class="font-weight-normal"
+                        <router-link
+                            :to="/form/ + getSlug()"
+                            class="font-weight-normal"
                         >{{ this.publicLink }}
                         </router-link>
                     </p>
                     <div v-else>
-                        <div>
-                            <div class="font-weight-bold">Private form</div>
-                            Invited people
+                        <div class="font-weight-bold">Private form</div>
+                        <div
+                            v-if="
+                                this.form.form_private_access_tokens.length ===
+                                0
+                            "
+                        >
+                            No one has been invited yet.
                         </div>
-                        <div style="max-height: 100px" class="border mb-3 overflow-auto">
+                        <div v-else>
+                            <div>
+                                Invited people
+                            </div>
                             <div
-                                class="text-left border-bottom pl-1"
-                                v-for="privateEmail in this.form.form_private_access_tokens"
-                                :key="privateEmail.id"
+                                style="max-height: 100px"
+                                class="border mb-3 overflow-auto"
                             >
-                                {{ privateEmail.email }}<br/>
+                                <div
+                                    class="text-left border-bottom pl-1"
+                                    v-for="privateEmail in this.form
+                                        .form_private_access_tokens"
+                                    :key="privateEmail.id"
+                                >
+                                    {{ privateEmail.email }}<br/>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -106,10 +122,8 @@
 <script>
 import Form from "../apis/Form";
 import FormElement from "../components/FormElement";
-import ItemModal from "../components/Modals/CreateForm/ItemModal";
 import FormDuplicationModal from "../components/Modals/FormReview/FormDuplicationModal";
 import {duplicateFormStore} from "../store";
-import FormResultsPublicationModal from "../components/Modals/FormResults/FormResultsPublicationModal";
 import FormAccessibilityModal from "../components/Modals/FormReview/FormAccessibilityModal";
 
 export default {
@@ -137,7 +151,10 @@ export default {
                 if (this.dataFetched) {
                     if (this.form.has_private_token) this.hasPublicLink = false;
                     if (this.hasPublicLink)
-                        this.publicLink = `${window.location}`.replace("/preview", "");
+                        this.publicLink = `${window.location}`.replace(
+                            "/preview",
+                            ""
+                        );
                     this.sortElements();
                     this.loading = false;
                 }
@@ -167,7 +184,8 @@ export default {
                     this.errored = true;
                     switch (errorCode) {
                         case 401:
-                            this.errorText = "Requested form doesn't belong to your account!";
+                            this.errorText =
+                                "Requested form doesn't belong to your account!";
                             break;
                         case 404:
                             this.errorText = "Requested form was not found.";
@@ -218,10 +236,15 @@ export default {
                 })
                     .then((res) => {
                         if (res.status === 200) {
-                            this.$toasted.success("Form duplication was successful.");
+                            this.$toasted.success(
+                                "Form duplication was successful."
+                            );
                             if (res.headers.duplicatedformslug) {
                                 window.location =
-                                    `${window.location}`.replace(new RegExp("/preview.*"), "") +
+                                    `${window.location}`.replace(
+                                        new RegExp("/preview.*"),
+                                        ""
+                                    ) +
                                     "/preview/" +
                                     res.headers.duplicatedformslug;
                             } else {
@@ -281,5 +304,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
