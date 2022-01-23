@@ -184,7 +184,6 @@ class FormController extends Controller
                         if ($item['order'] !== $questionOrder) {
                             return response("Invalid order value.", 400);
                         } else $questionOrder++;
-
                     } else return response("Invalid data (missing order value).", 400);
 
                     if ($item['type'] === "new_page") {
@@ -249,7 +248,6 @@ class FormController extends Controller
                             }
                         } else if ($min) $validatedQuestion['min_length'] = $min;
                         else if ($max) $validatedQuestion['max_length'] = $max;
-
                     } catch (Exception $exception) {
                         return response("Unhandled input error (in type-specific values). ({$exception->getMessage()})", 400);
                     }
@@ -317,7 +315,6 @@ class FormController extends Controller
                         } else if ($min) $validatedQuestion['min'] = $min;
                         else if ($max) $validatedQuestion['max'] = $max;
                         $validatedQuestion['can_be_decimal'] = $can_be_decimal;
-
                     } catch (Exception $exception) {
                         return response("Unhandled input error (in type-specific values). ({$exception->getMessage()})", 400);
                     }
@@ -398,19 +395,25 @@ class FormController extends Controller
                             if (is_bool($item['is_multiselect'])) $is_multiselect = $item['is_multiselect'];
 
                             if (array_key_exists('min_amount_of_answers', $item)) {
-                                if (intval($item['min_amount_of_answers']) &&
+                                if (
+                                    intval($item['min_amount_of_answers']) &&
                                     intval($item['min_amount_of_answers']) >= 0 &&
-                                    intval($item['min_amount_of_answers']) < $choicesCount) $min_amount_of_answers = intval($item['min_amount_of_answers']);
+                                    intval($item['min_amount_of_answers']) < $choicesCount
+                                ) $min_amount_of_answers = intval($item['min_amount_of_answers']);
                             }
                             if (array_key_exists('max_amount_of_answers', $item)) {
-                                if (intval($item['max_amount_of_answers']) &&
+                                if (
+                                    intval($item['max_amount_of_answers']) &&
                                     intval($item['max_amount_of_answers']) > 0 &&
-                                    intval($item['max_amount_of_answers']) <= $choicesCount) $max_amount_of_answers = intval($item['max_amount_of_answers']);
+                                    intval($item['max_amount_of_answers']) <= $choicesCount
+                                ) $max_amount_of_answers = intval($item['max_amount_of_answers']);
                             }
                             if (array_key_exists('strict_amount_of_answers', $item)) {
-                                if (intval($item['strict_amount_of_answers']) &&
+                                if (
+                                    intval($item['strict_amount_of_answers']) &&
                                     intval($item['strict_amount_of_answers']) > 0 &&
-                                    intval($item['strict_amount_of_answers']) <= $choicesCount) $strict_amount_of_answers = intval($item['strict_amount_of_answers']);
+                                    intval($item['strict_amount_of_answers']) <= $choicesCount
+                                ) $strict_amount_of_answers = intval($item['strict_amount_of_answers']);
                             }
                         }
 
@@ -432,7 +435,6 @@ class FormController extends Controller
 
                         $validatedQuestion['has_hidden_label'] = $has_hidden_label;
                         $validatedQuestion['choices'] = $choices;
-
                     } catch (Exception $exception) {
                         return response("Unhandled input error (in type-specific values). ({$exception->getMessage()})", 400);
                     }
@@ -578,9 +580,7 @@ class FormController extends Controller
                         }
                     }
                 }
-
             });
-
         } catch (Exception $exception) {
             dd($exception);
             //return response("{$exception->getMessage()}", 500);
@@ -638,7 +638,6 @@ class FormController extends Controller
                     return $form;
                 } else return response('Bad request', 400);
             }
-
         } else return response('Not found', 404);
     }
 
@@ -788,7 +787,6 @@ class FormController extends Controller
                                     'order' => $choice->order,
                                     'select_input_id' => $newSelectInput->id
                                 ]);
-
                             }
                         }
                     } else {
@@ -806,7 +804,6 @@ class FormController extends Controller
                             'email' => $validatedEmail,
                             'form_id' => $newForm->id,
                         ]);
-
                         Mail::to($validatedEmail)->send(new FormInvitation($token, $newForm));
                     }
                 }
@@ -975,15 +972,117 @@ class FormController extends Controller
 
 
             return response("Form was updated successfully", 200);
-
         } else return response("Requested form (update) was not found", 404);
     }
 
 
     public function updateAccess(Request $request, $slug)
     {
-        return response($request, 200);
+        //validate user, existing form
+        if (!$request->all()) return response("Bad request", 400);
+        $user = Auth::user();
+        if ($user) {
+            $form = Form::where(['slug' => $slug, 'user_id' => $user->id])->first();
+            if ($form) {
+                $validatedData = ['has_private_token' => null, 'emailsToInvalidate' => [], 'newInvitedEmails' => []];
+                if (array_key_exists("has_private_token", $request->all())) {
+                    try {
+                        if ($request->all()['has_private_token']) $validatedData['has_private_token'] = true;
+                        else $validatedData['has_private_token'] = false;
+
+                        //invalide and invite
+                        if ($validatedData['has_private_token']) {
+                            $existingTokens = FormPrivateAccessToken::where('form_id', $form->id)->get();
+
+                            if (array_key_exists("newInvitedEmails", $request->all()) && $request->all()['newInvitedEmails']) {
+                                $inviteEmails = explode("\n", $request->all()['newInvitedEmails']);
+                                $existingTokenEmails = $existingTokens->map(function ($x) {
+                                    return $x->email;
+                                })->toArray();
+
+                                foreach ($inviteEmails as $email) {
+                                    if (preg_match('/(.+)@(.+)\.(.+)/', $email)) {
+                                        if (!in_array($email, $existingTokenEmails)) {
+                                            $validatedData['newInvitedEmails'][] = $email;
+                                        } else return response('Invalid data (duplicit emails).', 400);
+                                    } else return response('Invalid data (invalid emails).', 400);
+                                }
+
+                            }
+
+                            //invite emails (was public)
+                            if (!$form->has_private_token) {
+                                DB::transaction(function () use ($validatedData, $form) {
+                                    $form->update(['has_private_token' => true]);
+                                    if ($validatedData['newInvitedEmails']) {
+                                        foreach ($validatedData['newInvitedEmails'] as $validatedEmail) {
+                                            //TODO: try to catch duplicit emails
+                                            $token = Uuid::uuid4()->toString();
+                                            FormPrivateAccessToken::create([
+                                                'token' => $token,
+                                                'email' => $validatedEmail,
+                                                'form_id' => $form->id,
+                                            ]);
+
+                                            Mail::to($validatedEmail)->send(new FormInvitation($token, $form, true));
+                                        }
+                                    }
+                                });
+                            } //invalidate and invite emails (was private)
+                            else {
+                                if (array_key_exists('emailsToInvalidate', $request->all()) && is_array($request->all()['emailsToInvalidate'])) {
+                                    $currentTokenIds = $existingTokens->map(function ($x) {
+                                        return $x->id;
+                                    })->toArray();
+                                    foreach ($request->all()['emailsToInvalidate'] as $key => $value) {
+                                        if (is_numeric($key)) {
+                                            if (in_array(intval($key), $currentTokenIds)) {
+                                                if ($value) {
+                                                    $validatedData['emailsToInvalidate'][] = intval($key);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                DB::transaction(function () use ($validatedData, $form) {
+                                    if ($validatedData['emailsToInvalidate']) {
+                                        FormPrivateAccessToken::whereIn('id', $validatedData['emailsToInvalidate'])->delete();
+                                    }
+                                    if ($validatedData['newInvitedEmails']) {
+                                        foreach ($validatedData['newInvitedEmails'] as $validatedEmail) {
+                                            $token = Uuid::uuid4()->toString();
+                                            FormPrivateAccessToken::create([
+                                                'token' => $token,
+                                                'email' => $validatedEmail,
+                                                'form_id' => $form->id,
+                                            ]);
+
+                                            Mail::to($validatedEmail)->send(new FormInvitation($token, $form, true));
+                                        }
+                                    }
+                                });
+                            }
+                        } //has_private_token was changed to false
+                        else if ($form->has_private_token && !$validatedData['has_private_token']) {
+                            //remove tokens
+                            DB::transaction(function () use ($form) {
+                                FormPrivateAccessToken::where('form_id', $form->id)->delete();
+                                $form->update(['has_private_token' => false]);
+                            });
+                        }
+                    } catch (Exception $e) {
+                        return response($e->getMessage(), $e->getCode());
+                    }
+
+                } else return response("Invalid data (missing has_private_token value)", 400);
+            } else {
+                return response("Not found", 404);
+            }
+        } else return response("Unauthorized", 401);
+        //transaction
+        //set props
     }
+
     /**
      * Remove the specified resource from storage.
      *
