@@ -22,6 +22,13 @@ use PhpOffice\PhpSpreadsheet\Writer\Csv;
 
 class FormCompletionController extends Controller
 {
+    //validate date format
+    private function validateDate($date, $format = 'Y-m-d H:i:s')
+    {
+        $d = DateTime::createFromFormat($format, $date);
+        return $d && $d->format($format) == $date;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -214,14 +221,9 @@ class FormCompletionController extends Controller
                         }
                         default:
                         {
-                            //validate date format
-                            function validateDate($date, $format = 'Y-m-d H:i:s')
-                            {
-                                $d = DateTime::createFromFormat($format, $date);
-                                return $d && $d->format($format) == $date;
-                            }
+                            
 
-                            if (!validateDate($answer['value'], 'Y-m-d')) {
+                            if (!$this->validateDate($answer['value'], 'Y-m-d')) {
                                 return response("Bad request (validation was not successful [date-{$answer['id']} unsupported format])", 400);
                             }
 
