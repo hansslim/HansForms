@@ -165,6 +165,7 @@ export default {
         },
         async submitForm() {
             this.loading = true;
+            const dataBackup = {...this.formValues}
             if (this.slug) {
                 await Form.postFormCompletion(this.formValues, this.slug).then((res) => {
                     if (res.status === 200) {
@@ -191,7 +192,7 @@ export default {
                     }
                 })
             }
-
+            this.formValues = dataBackup;
             this.loading = false;
         }
     },
