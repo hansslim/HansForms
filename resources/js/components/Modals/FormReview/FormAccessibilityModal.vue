@@ -146,10 +146,10 @@ export default {
                             this.$toasted.success(
                                 `Changing accessibility was successful.`
                             );
-                            this.loading = false;
+
                             setTimeout(() => {
-                                //this.$modal.hide(this.$parent.name)
-                                //window.location.reload()
+                                this.$modal.hide(this.$parent.name)
+                                window.location.reload()
                                 this.loading = false;
                             }, 1000);
                         } else {

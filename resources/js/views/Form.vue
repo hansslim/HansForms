@@ -5,13 +5,7 @@
             <h3>{{ this.form.description }}</h3>
             <h4>Opened to {{ this.form.end_time }}</h4>
             <FormulateForm v-model="formValues" @submit="submitForm">
-                <form-element v-for="item in this.form.form_elements" :obj="item" :key="item.order"/>
-                <FormulateInput
-                    type="submit"
-                    name="Submit this form!"
-                    wrapper-class="text-center"
-                    input-class="form-control w-50 m-auto"
-                />
+                <form-elements-component :elements="this.form.form_elements"/>
             </FormulateForm>
         </div>
         <div v-if="this.loading">
@@ -26,12 +20,12 @@
 
 <script>
 import Form from "../apis/Form";
-import FormElement from "../components/FormElement";
+import FormElementsComponent from '../components/FormElementsComponent.vue';
 
 export default {
     name: "Form",
     components: {
-        "form-element": FormElement,
+        "form-elements-component": FormElementsComponent,
     },
     data() {
         return {
