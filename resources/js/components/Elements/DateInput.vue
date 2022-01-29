@@ -10,13 +10,16 @@
             :min="min"
             :max="max"
         />
-        <FormulateErrors/>
+        <FormulateErrors />
     </div>
 </template>
 
 <script>
-
-import {FormElementDefaultComputedProps, FormElementDefaultMethods, FormElementDefaultProps} from "./defaults";
+import {
+    FormElementDefaultComputedProps,
+    FormElementDefaultMethods,
+    FormElementDefaultProps,
+} from "./defaults";
 
 export default {
     name: "DateInput",
@@ -24,29 +27,40 @@ export default {
         return {
             min: "",
             max: "",
-        }
+        };
     },
     props: [...FormElementDefaultProps],
-    computed: {...FormElementDefaultComputedProps,
+    computed: {
+        ...FormElementDefaultComputedProps,
         validationRules() {
             let validation = [];
 
-            if (this.propsIsMandatory) validation.push(['required']);
+            if (this.propsIsMandatory) validation.push(["required"]);
             if (this.propsObj.min) {
-                validation.push(['after', this.propsObj.min]);
+                const fixedDate = new Date(
+                    new Date(this.propsObj.max).getTime() - 24 * 60 * 60 * 1000
+                )
+                    .toISOString()
+                    .split("T")[0];
+                validation.push(["after", fixedDate]);
                 this.min = this.propsObj.min;
             }
             if (this.propsObj.max) {
-                validation.push(['before', this.propsObj.max]);
+                const fixedDate = new Date(
+                    new Date(this.propsObj.max).getTime() + 24 * 60 * 60 * 1000
+                )
+                    .toISOString()
+                    .split("T")[0];
+
+                validation.push(["before", fixedDate]);
                 this.max = this.propsObj.max;
             }
 
             return validation;
-        }},
-    methods: {...FormElementDefaultMethods}
-}
+        },
+    },
+    methods: { ...FormElementDefaultMethods },
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

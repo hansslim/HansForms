@@ -2284,15 +2284,17 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   computed: _objectSpread(_objectSpread({}, _defaults__WEBPACK_IMPORTED_MODULE_0__.FormElementDefaultComputedProps), {}, {
     validationRules: function validationRules() {
       var validation = [];
-      if (this.propsIsMandatory) validation.push(['required']);
+      if (this.propsIsMandatory) validation.push(["required"]);
 
       if (this.propsObj.min) {
-        validation.push(['after', this.propsObj.min]);
+        var fixedDate = new Date(new Date(this.propsObj.max).getTime() - 24 * 60 * 60 * 1000).toISOString().split("T")[0];
+        validation.push(["after", fixedDate]);
         this.min = this.propsObj.min;
       }
 
       if (this.propsObj.max) {
-        validation.push(['before', this.propsObj.max]);
+        var _fixedDate = new Date(new Date(this.propsObj.max).getTime() + 24 * 60 * 60 * 1000).toISOString().split("T")[0];
+        validation.push(["before", _fixedDate]);
         this.max = this.propsObj.max;
       }
 
