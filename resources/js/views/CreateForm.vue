@@ -102,7 +102,7 @@
                                 </div>
                             </div>
                             <div v-else>
-                                (Web validation limited! Please, separate emails by enter. Invalid data will be ignored.)
+                                (Please, separate emails by enter.)
                                 <FormulateInput
                                     type="textarea"
                                     name="emails"
@@ -226,6 +226,13 @@ export default {
                     throw new Error(formElementsError.message)
                 }
 
+                if (this.privateEmailsTextareaInputMode) {
+                    const privateEmailsError = this.validateNewEmails(this.form.private_emails);
+                    if (privateEmailsError.errored) {
+                        throw new Error(privateEmailsError.message)
+                    }
+                }
+
                 //question amount check
                 if (this.form && this.form.items.length >= 1) {
                     await Form.postCreateForm(this.form).then((res) => {
@@ -283,7 +290,31 @@ export default {
             })
 
             return response;
-        }
+        },
+        validateNewEmails(emails) {
+             let response = {
+                errored: false,
+                message: null
+            }
+            if (emails.length === 0) {
+                response.errored = true;
+                response.message = "Missing invited emails"
+                return response;
+            }
+            let hasInvalidEmail = false;
+            const emailRegex = new RegExp("(.+)@(.+)\\.(.+)", "i");
+            emails.split("\n").forEach((x) => {
+                if (!emailRegex.test(x)) {
+                    hasInvalidEmail = true;
+                }
+            });
+            if (hasInvalidEmail) {
+                response.errored = true;
+                response.message = "Invalid invited emails value/s"
+                return response;
+            }
+            else return response;
+        },
     },
     mounted() {
         this.loading = true;

@@ -5300,7 +5300,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _this2 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
-        var min, max, formElementsError;
+        var min, max, formElementsError, privateEmailsError;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
@@ -5357,12 +5357,27 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 throw new Error(formElementsError.message);
 
               case 17:
-                if (!(_this2.form && _this2.form.items.length >= 1)) {
-                  _context.next = 22;
+                if (!_this2.privateEmailsTextareaInputMode) {
+                  _context.next = 21;
                   break;
                 }
 
-                _context.next = 20;
+                privateEmailsError = _this2.validateNewEmails(_this2.form.private_emails);
+
+                if (!privateEmailsError.errored) {
+                  _context.next = 21;
+                  break;
+                }
+
+                throw new Error(privateEmailsError.message);
+
+              case 21:
+                if (!(_this2.form && _this2.form.items.length >= 1)) {
+                  _context.next = 26;
+                  break;
+                }
+
+                _context.next = 24;
                 return _apis_Form__WEBPACK_IMPORTED_MODULE_3__["default"].postCreateForm(_this2.form).then(function (res) {
                   if (res.status === 200) {
                     _this2.$toasted.success("Form creation was successful.");
@@ -5376,31 +5391,31 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   } else throw new Error(res.data.toString());
                 });
 
-              case 20:
-                _context.next = 23;
+              case 24:
+                _context.next = 27;
                 break;
 
-              case 22:
+              case 26:
                 throw new Error("Form creation error (no questions)");
 
-              case 23:
-                _context.next = 29;
+              case 27:
+                _context.next = 33;
                 break;
 
-              case 25:
-                _context.prev = 25;
+              case 29:
+                _context.prev = 29;
                 _context.t0 = _context["catch"](0);
 
                 _this2.$toasted.error("Form creation wasn't successful. (".concat(_context.t0, ")"));
 
                 _this2.loading = false;
 
-              case 29:
+              case 33:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[0, 25]]);
+        }, _callee, null, [[0, 29]]);
       }))();
     },
     validateFormElements: function validateFormElements() {
@@ -5437,6 +5452,32 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }
       });
       return response;
+    },
+    validateNewEmails: function validateNewEmails(emails) {
+      var response = {
+        errored: false,
+        message: null
+      };
+
+      if (emails.length === 0) {
+        response.errored = true;
+        response.message = "Missing invited emails";
+        return response;
+      }
+
+      var hasInvalidEmail = false;
+      var emailRegex = new RegExp("(.+)@(.+)\\.(.+)", "i");
+      emails.split("\n").forEach(function (x) {
+        if (!emailRegex.test(x)) {
+          hasInvalidEmail = true;
+        }
+      });
+
+      if (hasInvalidEmail) {
+        response.errored = true;
+        response.message = "Invalid invited emails value/s";
+        return response;
+      } else return response;
     }
   },
   mounted: function mounted() {
@@ -89289,7 +89330,7 @@ var render = function () {
                                   "div",
                                   [
                                     _vm._v(
-                                      "\n                            (Web validation limited! Please, separate emails by enter. Invalid data will be ignored.)\n                            "
+                                      "\n                            (Please, separate emails by enter.)\n                            "
                                     ),
                                     _c("FormulateInput", {
                                       attrs: {
