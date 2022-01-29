@@ -6481,7 +6481,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       return Object.keys(this.formResults.results_table[2]);
     },
     handleGoBack: function handleGoBack() {
-      this.$router.go(-1);
+      if (this.$route.path.includes('/results/')) this.$router.push('/form/preview/' + this.$route.params['slug']);else this.$router.push('/');
     },
     handleDownload: function handleDownload() {
       var _this2 = this;

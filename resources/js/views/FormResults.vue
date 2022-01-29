@@ -157,7 +157,8 @@ export default {
             return Object.keys(this.formResults.results_table[2])
         },
         handleGoBack() {
-            this.$router.go(-1);
+            if (this.$route.path.includes('/results/')) this.$router.push('/form/preview/'+this.$route.params['slug'])
+            else this.$router.push('/')
         },
         async handleDownload() {
             this.loading = true;
