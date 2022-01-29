@@ -15,7 +15,7 @@ class CreateTextInputsAnswersTable extends Migration
     {
         Schema::create('text_inputs_answers', function (Blueprint $table) {
             $table->id();
-            $table->string("value")->nullable();
+            $table->string("value", 1024)->nullable();
             $table->timestamps();
 
             //fk: form_completion_id, text_input_id

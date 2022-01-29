@@ -23,7 +23,6 @@ class SelectInputChoiceFactory extends Factory
     {
         return [
             'text' => $this->faker->sentence(),
-            'description' =>  $this->faker->sentence(5),
             'hidden_label' => -1,
             'order' => -1,
             'select_input_id' => 1

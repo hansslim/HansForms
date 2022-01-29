@@ -16,8 +16,8 @@ class CreateFormsTable extends Migration
         Schema::create('forms', function (Blueprint $table) {
             $table->id();
             $table->string("slug")->unique(); //type uuid
-            $table->string("name");
-            $table->string("description")->nullable();
+            $table->string("name", 128);
+            $table->string("description", 512)->nullable();
             $table->dateTime("start_time");
             $table->dateTime("end_time");
             $table->boolean("has_public_results")->default(false);

@@ -15,8 +15,8 @@ class CreateInputElementsTable extends Migration
     {
         Schema::create('input_elements', function (Blueprint $table) {
             $table->id();
-            $table->string("header");
-            $table->string("description")->nullable();
+            $table->string("header", 128);
+            //column description deleted
             $table->boolean("is_mandatory");
             $table->boolean("has_public_results")->default(false);
             $table->timestamps();

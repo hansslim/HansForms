@@ -29,7 +29,7 @@ class FormFactory extends Factory
             'has_private_token' => false,
             'user_id' => 1,
             'start_time' => new DateTime('2020-01-01 00:00:00'),
-            'end_time' => new DateTime('2025-01-01 00:00:00')
+            'end_time' => new DateTime('3000-01-01 00:00:00')
         ];
     }
 }

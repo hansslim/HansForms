@@ -16,6 +16,7 @@ class CreateNewPagesTable extends Migration
         Schema::create('new_pages', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            //page_name???
 
             //fk: form_element_id
             $table->foreignId('form_element_id')->unique()->constrained('form_elements')->onDelete('cascade');

@@ -23,7 +23,6 @@ class InputElementFactory extends Factory
     {
         return [
             'header' => substr_replace($this->faker->sentence(), "?", -1),
-            'description' =>  $this->faker->sentence(12),
             'is_mandatory' => true,
             'form_element_id' => 1
         ];

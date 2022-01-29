@@ -15,8 +15,8 @@ class CreateSelectInputChoicesTable extends Migration
     {
         Schema::create('select_input_choices', function (Blueprint $table) {
             $table->id();
-            $table->string("text");
-            $table->string("description")->nullable();
+            $table->string("text", 64);
+            //column description deleted
             $table->integer("hidden_label")->nullable();
             $table->integer("order");
             $table->timestamps();
