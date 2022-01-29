@@ -1,47 +1,69 @@
 <template>
     <div>
-      <h1>Your profile</h1>
-        <p>
-            {{this.user}}
-        </p>
+        <div class="container" v-if="!this.loading">
+            <h1>Your profile</h1>
+            <hr>
+            <div class="text-left container">
+                <h4>Name: {{ this.user.name }}</h4>
+                <hr />
+                <h4>Email: {{ this.user.email }}</h4>
+                <hr />
+                <h5>Registered in {{ this.user.created_at }}</h5>
+                <hr />
+                <div>
+                    <FormulateInput
+                        type="button"
+                        label="Change password"
+                        @click="handleChangePassword"
+                    />
+                    <FormulateInput
+                        type="button"
+                        label="Delete account"
+                        @click="handleDeleteAccount"
+                    />
+                </div>
+            </div>
+        </div>
+        <loading v-else/>
     </div>
 </template>
 
 <script>
 import User from "../apis/User";
+import Loading from '../components/Loading.vue';
 
 export default {
+  components: { Loading },
     name: "Profile",
     data() {
         return {
             user: {
-                name: '',
-                email: '',
-            }
-        }
+                name: "",
+                email: "",
+                created_at: "",
+            },
+            loading: true,
+        };
     },
-    mounted() {
-        this.getUser();
+    async mounted() {
+        this.loading = true;
+        await User.loggedUser().then((res) => {
+            if (res.status === 200) {
+                this.user = res.data;
+                this.user.created_at = this.user.created_at.split("T")[0];
+            } else {
+                this.$store.dispatch("logout");
+            }
+        });
+        this.loading = false
     },
     methods: {
-        async getUser() {
-            const response = await User.loggedUser();
-
-            if (response.data === '') {
-                this.$store.dispatch('logout');
-                await User.logout();
-            }
-            else {
-                this.user = response.data;
-
-                /*this.user.name = response.data.name;
-                this.user.email = response.data.email;*/
-            }
-        }
-    }
-}
+        handleChangePassword() {
+            this.$router.push('/change_password');
+        },
+        handleDeleteAccount() {},
+    },
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
