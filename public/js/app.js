@@ -7042,6 +7042,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -7091,9 +7092,51 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   methods: {
     handleChangePassword: function handleChangePassword() {
-      this.$router.push('/change_password');
+      this.$router.push("/change_password");
     },
-    handleDeleteAccount: function handleDeleteAccount() {}
+    handleDeleteAccount: function handleDeleteAccount() {
+      var _this2 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
+        var confirmPass;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                confirmPass = window.prompt("Are you sure that you want delete your account? After this, all your forms will be deleted.\nWrite password to confirm.");
+
+                if (confirmPass === null || confirmPass === "") {
+                  _context2.next = 5;
+                  break;
+                }
+
+                _this2.loading = true;
+                _context2.next = 5;
+                return _apis_User__WEBPACK_IMPORTED_MODULE_1__["default"].deleteAccount({
+                  password: confirmPass
+                }).then(function (res) {
+                  if (res.status === 200) {
+                    _this2.$store.dispatch("logout");
+
+                    _this2.$toasted.success("Account has been deleted successfully.");
+
+                    _this2.$router.push('/login');
+                  } else {
+                    _this2.$toasted.error(res.data);
+                  }
+                });
+
+              case 5:
+                _this2.loading = false;
+
+              case 6:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }))();
+    }
   }
 });
 
@@ -8198,6 +8241,22 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           }
         }
       }, _callee3);
+    }))();
+  },
+  deleteAccount: function deleteAccount(password) {
+    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4() {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee4$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              return _context4.abrupt("return", _Api__WEBPACK_IMPORTED_MODULE_1__["default"].post('/delete_account', password));
+
+            case 1:
+            case "end":
+              return _context4.stop();
+          }
+        }
+      }, _callee4);
     }))();
   }
 });
@@ -90519,7 +90578,11 @@ var render = function () {
                   }),
                   _vm._v(" "),
                   _c("FormulateInput", {
-                    attrs: { type: "button", label: "Delete account" },
+                    attrs: {
+                      type: "button",
+                      label: "Delete account",
+                      "input-class": "btn btn-danger w-100",
+                    },
                     on: { click: _vm.handleDeleteAccount },
                   }),
                 ],
@@ -90609,7 +90672,7 @@ var render = function () {
                   attrs: {
                     type: "password",
                     label: "Password",
-                    validation: [["required"]],
+                    validation: "^required|min:8,length",
                     "input-class": "form-control",
                     placeholder: "Enter Password",
                   },
@@ -90627,7 +90690,7 @@ var render = function () {
                   attrs: {
                     type: "password",
                     label: "Password Confirmation",
-                    validation: [["required"]],
+                    validation: "^required|min:8,length",
                     "input-class": "form-control",
                     placeholder: "Repeat Password",
                   },

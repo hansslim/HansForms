@@ -27,7 +27,7 @@
                     type="password"
                     v-model="user.password"
                     label="Password"
-                    :validation="[['required']]"
+                    validation="^required|min:8,length"
                     input-class="form-control"
                     placeholder="Enter Password"
                 />
@@ -36,7 +36,7 @@
                     type="password"
                     v-model="user.password_confirmation"
                     label="Password Confirmation"
-                    :validation="[['required']]"
+                    validation="^required|min:8,length"
                     input-class="form-control"
                     placeholder="Repeat Password"
                 />

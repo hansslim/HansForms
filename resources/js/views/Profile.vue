@@ -2,7 +2,7 @@
     <div>
         <div class="container" v-if="!this.loading">
             <h1>Your profile</h1>
-            <hr>
+            <hr />
             <div class="text-left container">
                 <h4>Name: {{ this.user.name }}</h4>
                 <hr />
@@ -19,21 +19,22 @@
                     <FormulateInput
                         type="button"
                         label="Delete account"
+                        input-class="btn btn-danger w-100"
                         @click="handleDeleteAccount"
                     />
                 </div>
             </div>
         </div>
-        <loading v-else/>
+        <loading v-else />
     </div>
 </template>
 
 <script>
 import User from "../apis/User";
-import Loading from '../components/Loading.vue';
+import Loading from "../components/Loading.vue";
 
 export default {
-  components: { Loading },
+    components: { Loading },
     name: "Profile",
     data() {
         return {
@@ -55,13 +56,33 @@ export default {
                 this.$store.dispatch("logout");
             }
         });
-        this.loading = false
+        this.loading = false;
     },
     methods: {
         handleChangePassword() {
-            this.$router.push('/change_password');
+            this.$router.push("/change_password");
         },
-        handleDeleteAccount() {},
+        async handleDeleteAccount() {
+            const confirmPass = window.prompt(
+                "Are you sure that you want delete your account? After this, all your forms will be deleted.\nWrite password to confirm."
+            );
+            
+            if (!(confirmPass === null || confirmPass === "")) {
+                this.loading = true;
+                await User.deleteAccount({password: confirmPass}).then((res)=>{
+                    if (res.status === 200) {
+                        this.$store.dispatch("logout");
+                        this.$toasted.success("Account has been deleted successfully.");
+                        this.$router.push('/login');
+                    }
+                    else {
+                        this.$toasted.error(res.data);
+                    }
+                })
+            }
+
+            this.loading = false;
+        },
     },
 };
 </script>

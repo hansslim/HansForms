@@ -17,4 +17,7 @@ export default {
     async changePassword(data) {
         return Api.put('/change_password', data);
     },
+    async deleteAccount(password) {
+        return Api.post('/delete_account', password);
+    },
 };

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -10,7 +11,8 @@ use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
-    public function register(Request $request) {
+    public function register(Request $request)
+    {
         $fields = $request->validate([
             'name' => 'required|string',
             'email' => 'required|string|unique:users,email',
@@ -24,7 +26,8 @@ class UserController extends Controller
         ]);
     }
 
-    public function login(Request $request) {
+    public function login(Request $request)
+    {
         $request->validate([
             'email' => 'required|string',
             'password' => 'required|string'
@@ -39,16 +42,17 @@ class UserController extends Controller
         ]);
     }
 
-    public function logout(Request $request) {
+    public function logout(Request $request)
+    {
         Auth::guard('web')->logout();
     }
 
-    public function show(Request $request) {
+    public function show(Request $request)
+    {
         $user = Auth::user();
         if ($user) {
             return $user;
-        }
-        else return response('Unauthorized', 401);
+        } else return response('Unauthorized', 401);
     }
 
     public function changePassword(Request $request)
@@ -60,7 +64,7 @@ class UserController extends Controller
                 'new_password' => 'required|string|min:8',
                 'new_password_confirmation' => 'required|string|min:8'
             ]);
-            
+
             if (!password_verify($fields['old_password'], $user->password)) {
                 return response('Old password is incorrect.', 400);
             }
@@ -76,12 +80,23 @@ class UserController extends Controller
                 'password' => bcrypt($fields['new_password'])
             ]);
             return response('Password was changed successfully.', 200);
-        }
-        else return response('Unauthorized', 401);
+        } else return response('Unauthorized', 401);
     }
 
     public function destroy(Request $request)
     {
-        
+        $fields = $request->validate([
+            'password' => 'required|string',
+        ]);
+        $user = Auth::user();
+
+        if ($user) {
+            if (!password_verify($fields['password'], $user->password)) {
+                return response('Password is incorrect.', 400);
+            } else {
+                User::find($user->id)->delete();
+                return response('Account has been deleted successfully.', 200);
+            }
+        } else return response('Unauthorized', 401);
     }
 }
