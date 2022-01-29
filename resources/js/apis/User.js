@@ -20,4 +20,10 @@ export default {
     async deleteAccount(password) {
         return Api.post('/delete_account', password);
     },
+    async forgotPassword(email) {
+        return Api.post('/forgot_password', email);
+    },
+    async resetPassword(data) {
+        return Api.post('/reset_password', data);
+    },
 };

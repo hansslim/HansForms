@@ -14,6 +14,8 @@ import FormPreview from "../views/FormPreview";
 import FormResults from "../views/FormResults";
 import UpdateForm from "../views/UpdateForm";
 import ChangePassword from "../views/ChangePassword";
+import ForgotPassword from "../views/ForgotPassword";
+import ResetPassword from "../views/ResetPassword";
 
 Vue.use(VueRouter);
 
@@ -51,6 +53,18 @@ const routes = [
         name: "ChangePassword",
         component: ChangePassword,
         meta: {requiresAuth: true}
+    },
+    {
+        path: "/forgot_password",
+        name: "ForgotPassword",
+        component: ForgotPassword,
+        meta: {requiresGuest: true}
+    },
+    {
+        path: "/password/reset*",
+        name: "ResetPassword",
+        component: ResetPassword,
+        meta: {requiresGuest: true}
     },
     {
         path: "/form/:slug",

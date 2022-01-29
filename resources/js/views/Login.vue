@@ -22,6 +22,7 @@
                     input-class="form-control"
                     placeholder="Enter Password"
                 />
+                <div class="mb-3"><router-link to="/forgot_password">Forgot your password?</router-link></div>
                 <FormulateInput
                     type="submit"
                     label="Login"

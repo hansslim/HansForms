@@ -20,6 +20,9 @@ Route::post('/login', [UserController::class, 'login']);
 Route::post('/register', [UserController::class, 'register']);
 Route::get('/logged_user', [UserController::class, 'show']);
 
+Route::post('/forgot_password', [UserController::class, 'forgotPassword']);
+Route::post('/reset_password', [UserController::class, 'resetPassword']);
+
 Route::get('/form/{slug}', [FormController::class, 'show']);
 Route::get('/private_form/{token}', [FormController::class, 'privateShow']);
 
