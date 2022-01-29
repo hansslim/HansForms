@@ -42,4 +42,7 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::put('/forms/update_access/{slug}', [FormController::class, 'updateAccess']);
 
     Route::post('/logout', [UserController::class, 'logout']);
+    Route::put('/change_password', [UserController::class, 'changePassword']);
+    //Route::delete('/delete_account', [UserController::class, 'destroy']);
+
 });

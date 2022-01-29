@@ -14,7 +14,7 @@ class UserController extends Controller
         $fields = $request->validate([
             'name' => 'required|string',
             'email' => 'required|string|unique:users,email',
-            'password' => 'required|string|confirmed'
+            'password' => 'required|string|confirmed|min:8'
         ]);
 
         User::create([
@@ -22,15 +22,6 @@ class UserController extends Controller
             'email' => $fields['email'],
             'password' => bcrypt($fields['password'])
         ]);
-
-        /*$token = $user->createToken('myapptoken')->plainTextToken;*/
-
-        // $response = [
-        //     'user' => $user,
-        //     'token' => $token
-        // ];
-
-        // return response($response, 201);
     }
 
     public function login(Request $request) {
@@ -53,6 +44,44 @@ class UserController extends Controller
     }
 
     public function show(Request $request) {
-        return Auth::user();
+        $user = Auth::user();
+        if ($user) {
+            return $user;
+        }
+        else return response('Unauthorized', 401);
+    }
+
+    public function changePassword(Request $request)
+    {
+        $user = Auth::user();
+        if ($user) {
+            $fields = $request->validate([
+                'old_password' => 'required|string',
+                'new_password' => 'required|string|min:8',
+                'new_password_confirmation' => 'required|string|min:8'
+            ]);
+            
+            if (!password_verify($fields['old_password'], $user->password)) {
+                return response('Old password is incorrect.', 400);
+            }
+
+            if ($fields['old_password'] === $fields['new_password']) {
+                return response('New password cannot be same as old password.', 400);
+            }
+            if ($fields['new_password_confirmation'] !== $fields['new_password']) {
+                return response("New password and it's confirmation aren't same.", 400);
+            }
+
+            User::find($user->id)->update([
+                'password' => bcrypt($fields['new_password'])
+            ]);
+            return response('Password was changed successfully.', 200);
+        }
+        else return response('Unauthorized', 401);
+    }
+
+    public function destroy(Request $request)
+    {
+        
     }
 }

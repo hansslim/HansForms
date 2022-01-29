@@ -13,6 +13,7 @@ import CreateForm from "../views/CreateForm";
 import FormPreview from "../views/FormPreview";
 import FormResults from "../views/FormResults";
 import UpdateForm from "../views/UpdateForm";
+import ChangePassword from "../views/ChangePassword";
 
 Vue.use(VueRouter);
 
@@ -43,6 +44,12 @@ const routes = [
         path: "/profile",
         name: "Profile",
         component: Profile,
+        meta: {requiresAuth: true}
+    },
+    {
+        path: "/change_password",
+        name: "ChangePassword",
+        component: ChangePassword,
         meta: {requiresAuth: true}
     },
     {

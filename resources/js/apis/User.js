@@ -13,5 +13,8 @@ export default {
     },
     async loggedUser() {
         return Api.get('/logged_user');
-    }
+    },
+    async changePassword(data) {
+        return Api.put('/change_password', data);
+    },
 };

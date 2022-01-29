@@ -39,7 +39,8 @@ class User extends Authenticatable
 
     protected $visible = [
       'name',
-      'email'
+      'email',
+      'created_at'
     ];
 
     /**
