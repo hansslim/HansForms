@@ -6350,6 +6350,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
 
 
 
@@ -6389,7 +6390,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   console.log(resFormRes);
 
                   if (resFormRes.status === 200) {
-                    _this.formResults = resFormRes.data;
+                    _this.formResults = resFormRes.data; //filtered on BE -> returns object of objects
+
+                    _this.formResults.form_elements = Object.values(_this.formResults.form_elements).filter(function (x) {
+                      return x.input_element;
+                    });
                     _this.loading = false;
                   } else {
                     _this.errorCode = resFormRes.status;
@@ -6420,7 +6425,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               } else if (!_this.arePublicResults && _this.$store.getters['authenticated']) {
                 _apis_Form__WEBPACK_IMPORTED_MODULE_1__["default"].getFormResults(_this.getSlug()).then(function (resFormRes) {
                   if (resFormRes.status === 200) {
-                    _this.formResults = resFormRes.data;
+                    _this.formResults = resFormRes.data; //all questions (with pages) -> returns array of objects
+
+                    _this.formResults.form_elements = _this.formResults.form_elements.filter(function (x) {
+                      return x.input_element;
+                    });
                     _this.loading = false;
                   } else {
                     _this.errorCode = resFormRes.status;
@@ -6517,8 +6526,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.detailedSummaryView = !this.detailedSummaryView;
     },
     handlePublication: function handlePublication() {
+      console.log(this.formResults.form_elements);
       this.$modal.show(_components_Modals_FormResults_FormResultsPublicationModal__WEBPACK_IMPORTED_MODULE_4__["default"], {
-        questions: this.formResults.form_elements.map(function (x) {
+        questions: this.formResults.form_elements.filter(function (y) {
+          return y.input_element;
+        }).map(function (x) {
           return {
             id: "".concat(x.input_element.id),
             header: x.input_element.header,
@@ -89849,17 +89861,21 @@ var render = function () {
           [
             _c("hr"),
             _vm._v(" "),
-            _vm._l(this.formResults.form_elements, function (item) {
-              return !_vm.detailedSummaryView
-                ? _c("result-component", {
-                    key: item.order,
-                    attrs: {
-                      obj: item,
-                      completionsIds: _vm.getCompletionsIds(),
-                    },
-                  })
-                : _vm._e()
-            }),
+            !_vm.detailedSummaryView
+              ? _c(
+                  "div",
+                  _vm._l(this.formResults.form_elements, function (item) {
+                    return _c("result-component", {
+                      key: item.order,
+                      attrs: {
+                        obj: item,
+                        completionsIds: _vm.getCompletionsIds(),
+                      },
+                    })
+                  }),
+                  1
+                )
+              : _vm._e(),
             _vm._v(" "),
             _vm.detailedSummaryView
               ? _c("results-table", {
@@ -89867,7 +89883,7 @@ var render = function () {
                 })
               : _vm._e(),
           ],
-          2
+          1
         )
       : _vm._e(),
   ])

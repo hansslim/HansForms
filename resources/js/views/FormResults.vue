@@ -39,13 +39,14 @@
         </div>
         <div v-if="!this.loading && !this.errored">
             <hr>
-            <result-component
-                v-if="!detailedSummaryView"
-                v-for="item in this.formResults.form_elements"
-                :key="item.order"
-                :obj="item"
-                :completionsIds="getCompletionsIds()"
-            />
+            <div v-if="!detailedSummaryView">
+                <result-component
+                    v-for="item in this.formResults.form_elements"
+                    :key="item.order"
+                    :obj="item"
+                    :completionsIds="getCompletionsIds()"
+                />
+            </div>
             <results-table
                 v-if="detailedSummaryView"
                 :obj="this.formResults.results_table"
@@ -84,6 +85,8 @@ export default {
                 console.log(resFormRes)
                 if (resFormRes.status === 200) {
                     this.formResults = resFormRes.data;
+                    //filtered on BE -> returns object of objects
+                    this.formResults.form_elements = Object.values(this.formResults.form_elements).filter(x=>x.input_element)
                     this.loading = false;
                 }
                 else {
@@ -113,6 +116,8 @@ export default {
             Form.getFormResults(this.getSlug()).then((resFormRes) => {
                 if (resFormRes.status === 200) {
                     this.formResults = resFormRes.data;
+                    //all questions (with pages) -> returns array of objects
+                    this.formResults.form_elements = this.formResults.form_elements.filter(x=>x.input_element)
                     this.loading = false;
                 }
                 else {
@@ -177,10 +182,11 @@ export default {
             this.detailedSummaryView = !this.detailedSummaryView;
         },
         handlePublication() {
+            console.log(this.formResults.form_elements);
             this.$modal.show(
                 FormResultsPublicationModal,
                 {
-                    questions: this.formResults.form_elements.map((x)=>{
+                    questions: this.formResults.form_elements.filter((y)=>y.input_element).map((x)=>{
                         return {
                             id: `${x.input_element.id}`,
                             header: x.input_element.header,
