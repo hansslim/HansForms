@@ -1,6 +1,5 @@
 <template>
     <div>
-        {{ "boolean" }}
         <FormulateInput
             :name="this.propsId('boolean')"
             type="radio"

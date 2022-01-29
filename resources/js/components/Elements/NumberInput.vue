@@ -1,6 +1,5 @@
 <template>
     <div>
-        {{ "number" }}
         <FormulateInput
             :name="this.propsId('number')"
             type="number"

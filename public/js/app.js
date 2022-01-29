@@ -2198,7 +2198,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 //
 //
 //
-//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "BooleanInput",
@@ -2351,7 +2350,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 //
 //
 //
-//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "NumberInput",
@@ -2414,7 +2412,6 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToAr
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-//
 //
 //
 //
@@ -2531,7 +2528,6 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToAr
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-//
 //
 //
 //
@@ -86779,7 +86775,6 @@ var render = function () {
   return _c(
     "div",
     [
-      _vm._v("\n    " + _vm._s("boolean") + "\n    "),
       _c("FormulateInput", {
         attrs: {
           name: this.propsId("boolean"),
@@ -86867,7 +86862,6 @@ var render = function () {
   return _c(
     "div",
     [
-      _vm._v("\n    " + _vm._s("number") + "\n    "),
       _c("FormulateInput", {
         attrs: {
           name: this.propsId("number"),
@@ -86911,7 +86905,6 @@ var render = function () {
   return _c(
     "div",
     [
-      _vm._v("\n    " + _vm._s(this.type) + "\n    "),
       _c("FormulateInput", {
         attrs: {
           name: this.propsId("select"),
@@ -86955,7 +86948,6 @@ var render = function () {
   return _c(
     "div",
     [
-      _vm._v("\n    " + _vm._s("text") + "\n    "),
       _c("FormulateInput", {
         attrs: {
           name: this.propsId("text"),
