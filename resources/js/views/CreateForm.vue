@@ -235,6 +235,16 @@ export default {
 
                 //question amount check
                 if (this.form && this.form.items.length >= 1) {
+                    //at least one question must be mandatory
+                    let atLeastOneQuestionMandatory = false;
+                    this.form.items.forEach((x)=>{
+                        if (x.is_mandatory) {
+                            atLeastOneQuestionMandatory = true;
+                            return;
+                        }
+                    })
+                    if (!atLeastOneQuestionMandatory) throw new Error('At least one question must be mandatory')
+
                     await Form.postCreateForm(this.form).then((res) => {
                         if (res.status === 200) {
                             this.$toasted.success(`Form creation was successful.`);

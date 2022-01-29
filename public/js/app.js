@@ -5300,7 +5300,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _this2 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
-        var min, max, formElementsError, privateEmailsError;
+        var min, max, formElementsError, privateEmailsError, atLeastOneQuestionMandatory;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
@@ -5373,11 +5373,29 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
               case 21:
                 if (!(_this2.form && _this2.form.items.length >= 1)) {
+                  _context.next = 30;
+                  break;
+                }
+
+                //at least one question must be mandatory
+                atLeastOneQuestionMandatory = false;
+
+                _this2.form.items.forEach(function (x) {
+                  if (x.is_mandatory) {
+                    atLeastOneQuestionMandatory = true;
+                    return;
+                  }
+                });
+
+                if (atLeastOneQuestionMandatory) {
                   _context.next = 26;
                   break;
                 }
 
-                _context.next = 24;
+                throw new Error('At least one question must be mandatory');
+
+              case 26:
+                _context.next = 28;
                 return _apis_Form__WEBPACK_IMPORTED_MODULE_3__["default"].postCreateForm(_this2.form).then(function (res) {
                   if (res.status === 200) {
                     _this2.$toasted.success("Form creation was successful.");
@@ -5391,31 +5409,31 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   } else throw new Error(res.data.toString());
                 });
 
-              case 24:
-                _context.next = 27;
+              case 28:
+                _context.next = 31;
                 break;
 
-              case 26:
+              case 30:
                 throw new Error("Form creation error (no questions)");
 
-              case 27:
-                _context.next = 33;
+              case 31:
+                _context.next = 37;
                 break;
 
-              case 29:
-                _context.prev = 29;
+              case 33:
+                _context.prev = 33;
                 _context.t0 = _context["catch"](0);
 
                 _this2.$toasted.error("Form creation wasn't successful. (".concat(_context.t0, ")"));
 
                 _this2.loading = false;
 
-              case 33:
+              case 37:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[0, 29]]);
+        }, _callee, null, [[0, 33]]);
       }))();
     },
     validateFormElements: function validateFormElements() {
@@ -7290,7 +7308,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _this2 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
-        var min, max, formElementsError;
+        var min, max, formElementsError, atLeastOneQuestionMandatory;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
@@ -7349,11 +7367,29 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
               case 18:
                 if (!(_this2.form && _this2.form.items.length >= 1)) {
+                  _context.next = 27;
+                  break;
+                }
+
+                //at least one question must be mandatory
+                atLeastOneQuestionMandatory = false;
+
+                _this2.form.items.forEach(function (x) {
+                  if (x.is_mandatory) {
+                    atLeastOneQuestionMandatory = true;
+                    return;
+                  }
+                });
+
+                if (atLeastOneQuestionMandatory) {
                   _context.next = 23;
                   break;
                 }
 
-                _context.next = 21;
+                throw new Error('At least one question must be mandatory');
+
+              case 23:
+                _context.next = 25;
                 return _apis_Form__WEBPACK_IMPORTED_MODULE_3__["default"].putUpdateForm(_this2.form, _this2.$route.params['slug']).then(function (res) {
                   if (res.status === 200) {
                     _this2.$toasted.success("Form update was successful.");
@@ -7367,31 +7403,31 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   } else throw new Error(res.data.toString());
                 });
 
-              case 21:
-                _context.next = 24;
+              case 25:
+                _context.next = 28;
                 break;
 
-              case 23:
+              case 27:
                 throw new Error("Form update error (no questions)");
 
-              case 24:
-                _context.next = 30;
+              case 28:
+                _context.next = 34;
                 break;
 
-              case 26:
-                _context.prev = 26;
+              case 30:
+                _context.prev = 30;
                 _context.t0 = _context["catch"](0);
 
                 _this2.$toasted.error("Form update wasn't successful. (".concat(_context.t0, ")"));
 
                 _this2.loading = false;
 
-              case 30:
+              case 34:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[0, 26]]);
+        }, _callee, null, [[0, 30]]);
       }))();
     },
     validateFormElements: function validateFormElements() {
