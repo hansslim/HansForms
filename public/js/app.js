@@ -7970,7 +7970,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
                           Object.keys(element).forEach(function (k) {
                             return element[k] == null && delete element[k];
-                          });
+                          }); //to handle same ids from DB (taking ids from specific input types that can be same)
+
+                          //to handle same ids from DB (taking ids from specific input types that can be same)
+                          element.id = (0,uuid__WEBPACK_IMPORTED_MODULE_5__["default"])();
                           _store__WEBPACK_IMPORTED_MODULE_4__.createFormStore.addItem(element);
                         });
                         _this3.form.items = _store__WEBPACK_IMPORTED_MODULE_4__.createFormStore.getItems();

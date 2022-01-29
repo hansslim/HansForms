@@ -358,6 +358,9 @@ export default {
                                 }
 
                                 Object.keys(element).forEach((k) => element[k] == null && delete element[k]);
+                                
+                                //to handle same ids from DB (taking ids from specific input types that can be same)
+                                element.id = uuidv4();
 
                                 createFormStore.addItem(element);
                             })
