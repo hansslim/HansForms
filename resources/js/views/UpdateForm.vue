@@ -30,14 +30,15 @@
                             type="text"
                             v-model="form.header"
                             label="Form header"
-                            :validation="[['required']]"
+                            validation="required|max:127,length"
                             input-class="form-control"
                         />
                         <FormulateInput
                             class="col m-0"
                             v-model="form.description"
                             label="Form description"
-                            type="text"
+                            validation="max:511,length"
+                            type="textarea"
                             input-class="form-control"
                         />
                         <div class="row mt-1">

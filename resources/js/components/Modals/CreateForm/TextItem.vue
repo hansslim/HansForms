@@ -7,6 +7,8 @@
                 label="Minimal length"
                 type="number"
                 min="0"
+                max="1022"
+                validation="min:0|max:1022"
                 v-model="min_length"
             />
             <FormulateInput
@@ -15,6 +17,8 @@
                 label="Maximal length"
                 type="number"
                 min="0"
+                max="1023"
+                validation="min:0|max:1023"
                 v-model="max_length"
             />
         </div>
@@ -25,6 +29,9 @@
                 label="Strict length"
                 type="number"
                 v-model="strict_length"
+                max="1023"
+                min="0"
+                validation="min:0|max:1023"
             />
         </div>
     </div>

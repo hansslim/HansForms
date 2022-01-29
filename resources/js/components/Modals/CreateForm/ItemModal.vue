@@ -23,7 +23,7 @@
                     label="Question"
                     type="text"
                     v-model="item.question"
-                    :validation="[['required']]"
+                    validation="required|max:127,length"
                 />
                 <FormulateInput
                     name="is_mandatory"
@@ -261,7 +261,7 @@ export default {
                                     else uniqueLabelsValidation = false;
                                 })
                                 if (!uniqueLabelsValidation) {
-                                    this.trivialFormulateErrorHandler("Hidden labels should be unique.");
+                                    this.trivialFormulateErrorHandler("Hidden labels must be unique.");
                                     return false;
                                 }
                             }

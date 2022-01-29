@@ -24,6 +24,7 @@ Vue.use(VueFormulate, {
         inputHasErrors: 'is-invalid',
         help: 'form-text text-muted',
         errors: 'list-unstyled text-danger m-0',
+        formErrors: 'list-unstyled text-danger',
     },
 });
 Vue.use(VModal, { dynamicDefault: { height: 'auto', width: '60%', adaptive: true, scrollable: true } })

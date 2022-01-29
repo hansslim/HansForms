@@ -8,17 +8,21 @@
                   type="text"
                   placeholder="Write a choice."
                   v-model="choiceText"
+                  validation="required|max:63,length"
+                  error-behavior="value"
               />
               <FormulateInput
                   v-if="showHiddenLabel"
                   name="hidden_label"
                   type="number"
                   placeholder="Write a hidden label."
+                  validation="required"
+                  error-behavior="value"
                   v-model="hiddenLabel"
               />
-              <FormulateInput v-if="this.$props['purpose'] === 'add'" type="button" @click="handleAddItem" label="Add"/>
-              <FormulateInput v-if="this.$props['purpose'] === 'update'" type="button" @click="handleUpdateItem" label="Update"/>
-              <FormulateInput v-if="this.$props['purpose'] === 'update'" type="button" @click="handleDeleteItem" label="Delete"/>
+              <FormulateInput v-if="this.$props['purpose'] === 'add'" type="submit" @click="handleAddItem" label="Add"/>
+              <FormulateInput v-if="this.$props['purpose'] === 'update'" type="submit" @click="handleUpdateItem" label="Update"/>
+              <FormulateInput v-if="this.$props['purpose'] === 'update'" type="submit" @click="handleDeleteItem" label="Delete"/>
           </div>
           <FormulateErrors/>
       </FormulateForm>
@@ -45,16 +49,9 @@ export default {
     methods: {
         handleAddItem() {
             let isValid = true;
-            if (this.$props['hasHiddenLabel']) {
-                if (this.hiddenLabel === "") {
-                    isValid = false;
-                    this.trivialFormulateErrorHandler("Hidden label is required.")
-                }
-            }
-            if (this.choiceText === "") {
-                isValid = false;
-                this.trivialFormulateErrorHandler("Choice is required.")
-            }
+            if (this.$props['hasHiddenLabel']) if (this.hiddenLabel === "") isValid = false;
+            if (this.choiceText === "") isValid = false;
+            if (this.choiceText.length > 63) isValid = false;
             if (isValid) {
                 createFormChoicesStore.addItem({
                     id: uuidv4(),
@@ -65,8 +62,12 @@ export default {
             }
         },
         handleUpdateItem() {
-            if (this.choiceText) {
-                createFormChoicesStore.changeItem({
+            let isValid = true;
+            if (this.$props['hasHiddenLabel']) if (this.hiddenLabel === "") isValid = false;
+            if (this.choiceText === "") isValid = false;
+            if (this.choiceText.length > 63) isValid = false;
+            if (isValid) {
+                    createFormChoicesStore.changeItem({
                     id: this.id,
                     text: this.choiceText,
                     hidden_label: this.hiddenLabel,
@@ -74,7 +75,6 @@ export default {
                 })
                 this.$modal.hide(this.$parent.name)
             }
-            else this.trivialFormulateErrorHandler("Choice is required.")
         },
         handleDeleteItem() {
             createFormChoicesStore.deleteItem({
@@ -85,17 +85,6 @@ export default {
             })
             this.$modal.hide(this.$parent.name)
         },
-        trivialFormulateErrorHandler(error = null) {
-            if (error) {
-                this.$formulate.handle({
-                    formErrors: [error.toString()]
-                }, 'selectChoiceModalForm');
-            } else {
-                this.$formulate.handle({
-                    formErrors: []
-                }, 'selectChoiceModalForm');
-            }
-        }
     },
     mounted() {
         if (this.$props['purpose'] === 'update') {

@@ -3445,7 +3445,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                   });
 
                   if (!uniqueLabelsValidation) {
-                    this.trivialFormulateErrorHandler("Hidden labels should be unique.");
+                    this.trivialFormulateErrorHandler("Hidden labels must be unique.");
                     return false;
                   }
                 }
@@ -3699,6 +3699,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -3717,18 +3721,9 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     handleAddItem: function handleAddItem() {
       var isValid = true;
-
-      if (this.$props['hasHiddenLabel']) {
-        if (this.hiddenLabel === "") {
-          isValid = false;
-          this.trivialFormulateErrorHandler("Hidden label is required.");
-        }
-      }
-
-      if (this.choiceText === "") {
-        isValid = false;
-        this.trivialFormulateErrorHandler("Choice is required.");
-      }
+      if (this.$props['hasHiddenLabel']) if (this.hiddenLabel === "") isValid = false;
+      if (this.choiceText === "") isValid = false;
+      if (this.choiceText.length > 63) isValid = false;
 
       if (isValid) {
         _store__WEBPACK_IMPORTED_MODULE_0__.createFormChoicesStore.addItem({
@@ -3740,7 +3735,12 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     handleUpdateItem: function handleUpdateItem() {
-      if (this.choiceText) {
+      var isValid = true;
+      if (this.$props['hasHiddenLabel']) if (this.hiddenLabel === "") isValid = false;
+      if (this.choiceText === "") isValid = false;
+      if (this.choiceText.length > 63) isValid = false;
+
+      if (isValid) {
         _store__WEBPACK_IMPORTED_MODULE_0__.createFormChoicesStore.changeItem({
           id: this.id,
           text: this.choiceText,
@@ -3748,7 +3748,7 @@ __webpack_require__.r(__webpack_exports__);
           order: this.order
         });
         this.$modal.hide(this.$parent.name);
-      } else this.trivialFormulateErrorHandler("Choice is required.");
+      }
     },
     handleDeleteItem: function handleDeleteItem() {
       _store__WEBPACK_IMPORTED_MODULE_0__.createFormChoicesStore.deleteItem({
@@ -3758,19 +3758,6 @@ __webpack_require__.r(__webpack_exports__);
         order: this.order
       });
       this.$modal.hide(this.$parent.name);
-    },
-    trivialFormulateErrorHandler: function trivialFormulateErrorHandler() {
-      var error = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-
-      if (error) {
-        this.$formulate.handle({
-          formErrors: [error.toString()]
-        }, 'selectChoiceModalForm');
-      } else {
-        this.$formulate.handle({
-          formErrors: []
-        }, 'selectChoiceModalForm');
-      }
     }
   },
   mounted: function mounted() {
@@ -4044,6 +4031,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -5224,6 +5218,7 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+//
 //
 //
 //
@@ -7682,6 +7677,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
 
 
 
@@ -8569,7 +8565,8 @@ vue__WEBPACK_IMPORTED_MODULE_7__["default"].use(_braid_vue_formulate__WEBPACK_IM
     },
     inputHasErrors: 'is-invalid',
     help: 'form-text text-muted',
-    errors: 'list-unstyled text-danger m-0'
+    errors: 'list-unstyled text-danger m-0',
+    formErrors: 'list-unstyled text-danger'
   }
 });
 vue__WEBPACK_IMPORTED_MODULE_7__["default"].use((vue_js_modal__WEBPACK_IMPORTED_MODULE_5___default()), {
@@ -88609,7 +88606,7 @@ var render = function () {
                       name: "header",
                       label: "Question",
                       type: "text",
-                      validation: [["required"]],
+                      validation: "required|max:127,length",
                     },
                     model: {
                       value: _vm.item.question,
@@ -88828,6 +88825,8 @@ var render = function () {
                   name: "text",
                   type: "text",
                   placeholder: "Write a choice.",
+                  validation: "required|max:63,length",
+                  "error-behavior": "value",
                 },
                 model: {
                   value: _vm.choiceText,
@@ -88844,6 +88843,8 @@ var render = function () {
                       name: "hidden_label",
                       type: "number",
                       placeholder: "Write a hidden label.",
+                      validation: "required",
+                      "error-behavior": "value",
                     },
                     model: {
                       value: _vm.hiddenLabel,
@@ -88857,21 +88858,21 @@ var render = function () {
               _vm._v(" "),
               this.$props["purpose"] === "add"
                 ? _c("FormulateInput", {
-                    attrs: { type: "button", label: "Add" },
+                    attrs: { type: "submit", label: "Add" },
                     on: { click: _vm.handleAddItem },
                   })
                 : _vm._e(),
               _vm._v(" "),
               this.$props["purpose"] === "update"
                 ? _c("FormulateInput", {
-                    attrs: { type: "button", label: "Update" },
+                    attrs: { type: "submit", label: "Update" },
                     on: { click: _vm.handleUpdateItem },
                   })
                 : _vm._e(),
               _vm._v(" "),
               this.$props["purpose"] === "update"
                 ? _c("FormulateInput", {
-                    attrs: { type: "button", label: "Delete" },
+                    attrs: { type: "submit", label: "Delete" },
                     on: { click: _vm.handleDeleteItem },
                   })
                 : _vm._e(),
@@ -89093,6 +89094,8 @@ var render = function () {
                 label: "Minimal length",
                 type: "number",
                 min: "0",
+                max: "1022",
+                validation: "min:0|max:1022",
               },
               on: { input: _vm.showWantedInputs },
               model: {
@@ -89110,6 +89113,8 @@ var render = function () {
                 label: "Maximal length",
                 type: "number",
                 min: "0",
+                max: "1023",
+                validation: "min:0|max:1023",
               },
               on: { input: _vm.showWantedInputs },
               model: {
@@ -89134,6 +89139,9 @@ var render = function () {
                 name: "strict_length",
                 label: "Strict length",
                 type: "number",
+                max: "1023",
+                min: "0",
+                validation: "min:0|max:1023",
               },
               on: { input: _vm.showWantedInputs },
               model: {
@@ -90033,7 +90041,7 @@ var render = function () {
                         attrs: {
                           type: "text",
                           label: "Form header",
-                          validation: [["required"]],
+                          validation: "required|max:127,length",
                           "input-class": "form-control",
                         },
                         model: {
@@ -90049,7 +90057,8 @@ var render = function () {
                         staticClass: "col m-0",
                         attrs: {
                           label: "Form description",
-                          type: "text",
+                          validation: "max:511,length",
+                          type: "textarea",
                           "input-class": "form-control",
                         },
                         model: {
@@ -91418,7 +91427,7 @@ var render = function () {
                             attrs: {
                               type: "text",
                               label: "Form header",
-                              validation: [["required"]],
+                              validation: "required|max:127,length",
                               "input-class": "form-control",
                             },
                             model: {
@@ -91434,7 +91443,8 @@ var render = function () {
                             staticClass: "col m-0",
                             attrs: {
                               label: "Form description",
-                              type: "text",
+                              validation: "max:511,length",
+                              type: "textarea",
                               "input-class": "form-control",
                             },
                             model: {
