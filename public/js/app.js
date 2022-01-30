@@ -5370,6 +5370,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
 
 
 
@@ -7523,6 +7524,7 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+//
 //
 //
 //
@@ -88320,7 +88322,7 @@ var render = function () {
                 staticClass: "text-muted",
                 staticStyle: { color: "white !important", opacity: "70%" },
               },
-              [_vm._v("Alpha")]
+              [_vm._v("Beta")]
             ),
           ]),
         ]),
@@ -90319,10 +90321,14 @@ var render = function () {
                 [
                   _c(
                     "div",
-                    { staticClass: "m-2" },
+                    { staticClass: "m-1" },
                     [
                       _c("FormulateInput", {
-                        attrs: { type: "submit", label: "Create this form" },
+                        attrs: {
+                          type: "submit",
+                          label: "Create this form",
+                          "outer-class": "m-0",
+                        },
                       }),
                     ],
                     1
@@ -90605,7 +90611,7 @@ var render = function () {
               _vm._v(" "),
               _c(
                 "div",
-                { staticClass: "d-flex justify-content-center" },
+                { staticClass: "col-md justify-content-center" },
                 [
                   _c("FormulateInput", {
                     staticClass: "btn",
@@ -91555,12 +91561,13 @@ var render = function () {
                     [
                       _c(
                         "div",
-                        { staticClass: "m-2" },
+                        { staticClass: "m-1" },
                         [
                           _c("FormulateInput", {
                             attrs: {
                               type: "submit",
-                              label: "Update this form",
+                              label: "Create this form",
+                              "outer-class": "m-0",
                             },
                           }),
                         ],

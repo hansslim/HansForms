@@ -137,10 +137,11 @@
                     </div>
                 </div>
                 <div class="d-flex justify-content-center fixed-bottom bg-info" style="z-index: 0">
-                    <div class="m-2">
+                    <div class="m-1">
                         <FormulateInput
                             type="submit"
-                            label="Update this form"
+                            label="Create this form"
+                            outer-class="m-0"
                         />
                     </div>
                 </div>

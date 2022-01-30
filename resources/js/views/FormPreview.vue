@@ -53,7 +53,7 @@
                         </div>
                     </div>
 
-                    <div class="d-flex justify-content-center">
+                    <div class="col-md justify-content-center">
                         <FormulateInput
                             class="btn"
                             @click="handleDuplicate"
