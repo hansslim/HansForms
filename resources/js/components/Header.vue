@@ -3,8 +3,8 @@
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
             <router-link class="navbar-brand" to="/">
                 <span class="h3 font-size-bold">
-                    <!-- todo: remove alpha -->
-                    HansForms <small class="text-muted" style="color: white !important; opacity: 70%;">Alpha</small>
+                    <!-- todo: remove beta -->
+                    HansForms <small class="text-muted" style="color: white !important; opacity: 70%;">Beta</small>
                 </span>
             </router-link>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown">
