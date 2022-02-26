@@ -1091,17 +1091,17 @@ class FormController extends Controller
      */
     public function destroy($slug)
     {
-        if (!Auth::user()) return response("Unauthorized - log in to delete forms...", 401);
+        $user = Auth::user();
+        if (!$user) return response("Unauthorized - log in to delete forms...", 401);
         else {
-            DB::transaction(function () use ($slug) {
-                $form = Form::where('slug', $slug)->first();
+            DB::transaction(function () use ($slug, $user) {
+                $form = Form::where(["slug" => $slug, "user_id" => $user->id])->first();
                 if ($form) {
                     if ($form->user_id == Auth::user()->id) {
                         if ($form->delete()) {
                             return response("Form was deleted.", 200);
                         } else return response("Form deletion failed.", 500);
                     }
-                    return response("Form was not deleted - you are not the owner of this form.", 500);
                 } else return response("Requested form (delete) was not found", 404);
             });
         }
