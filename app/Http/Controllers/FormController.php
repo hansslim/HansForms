@@ -66,6 +66,9 @@ class FormController extends Controller
         $formProps['start_time'] = null;
         $formProps['end_time'] = null;
 
+        //basic information validation
+        if (!$request->all()) return response("Invalid data (expected data).", 400);
+
         if (array_key_exists('start_time', $request->all()) && array_key_exists('end_time', $request->all())) {
             $startDate = str_replace("T", " ", $request->all()['start_time']);
             $endDate = str_replace("T", " ", $request->all()['end_time']);
@@ -131,8 +134,6 @@ class FormController extends Controller
             } else return response("Invalid data (missing array of private emails).", 400);
         }
 
-        if (!$request->all()) return response("Invalid data (expected data).", 400);
-
         if (!array_key_exists('items', $request->all()))
             return response("Invalid data (missing array of questions).", 400);
 
@@ -158,6 +159,7 @@ class FormController extends Controller
         $validatedQuestions = [];
         $atLeastOneMandatory = false;
 
+        //questions validation (+ order validation)
         foreach ($request->all()['items'] as $item) {
             $validatedQuestion = [];
             //main props: header, is_mandatory, order, type
@@ -447,6 +449,7 @@ class FormController extends Controller
             $validatedQuestions[] = $validatedQuestion;
         }
 
+        //at least one mandatory validation
         if (!$atLeastOneMandatory) return response("Invalid form (expected at least one mandatory question).", 400);
 
         //new pages validation
