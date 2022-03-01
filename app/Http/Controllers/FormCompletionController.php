@@ -81,7 +81,7 @@ class FormCompletionController extends Controller
                 $wantedFormResults->results_table = (new FormCompletionsExport($wantedFormResults))->array();
                 return $wantedFormResults;
             }
-            return $wantedFormResults;
+            else return response("No content.", 204);
         }
         else return response("Not found", 404);
     }
@@ -115,10 +115,10 @@ class FormCompletionController extends Controller
     public function store(Request $request, $slug, $privateForm = false) : \Illuminate\Http\Response
     {
         $answeredForm = Form::where('slug', $slug)->first();
-        if (!$answeredForm) return response("Bad request (form doesn't exist)", 400);
+        if (!$answeredForm) return response("Not Found", 404);
 
         if ($answeredForm->has_private_token) {
-            if (!$privateForm) return response("Bad request ()", 400);
+            if (!$privateForm) return response("Bad request (access denied)", 400);
         }
 
         //answering not published/expired form validation
@@ -158,8 +158,8 @@ class FormCompletionController extends Controller
                 $corresponding['id'] = $specificInputId;
                 $corresponding['value'] = '';
                 return $corresponding;
-            } else {
-                //response is null (for forms that have all questions non-required)
+            } else { //useless? at least one must be mandatory
+                //response is null (for forms that have some questions non-required)
                 $corresponding['type'] = $type;
                 $corresponding['id'] = $specificInputId;
                 $corresponding['value'] = '';

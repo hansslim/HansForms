@@ -23,6 +23,8 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Ramsey\Uuid\Uuid;
 
+use function PHPUnit\Framework\returnSelf;
+
 class FormController extends Controller
 {
     private function validateDate($date, $format = 'Y-m-d H:i:s')
@@ -971,6 +973,8 @@ class FormController extends Controller
                 DB::commit();
             } catch (Exception $e) {
                 DB::rollback();
+                if ($e->getMessage() === "Bad request") return $storeResponse;
+                else return response("Form update has failed due to unhandled error.", 500);
             }
 
 
