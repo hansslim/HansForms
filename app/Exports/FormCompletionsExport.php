@@ -4,6 +4,7 @@ namespace App\Exports;
 
 use App\Models\Form;
 use App\Models\FormCompletion;
+use Exception;
 use Maatwebsite\Excel\Concerns\FromArray;
 
 class FormCompletionsExport implements FromArray
@@ -31,14 +32,12 @@ class FormCompletionsExport implements FromArray
         $headerRow = ["Completion ID"]; //corner value
         $completionRows = [];
 
-        //todo remove dd()
         $correspondingCompletionsIds = [];
         foreach (FormCompletion::where(['form_id' => $this->formData->id])->get() as $item) {
             array_push($correspondingCompletionsIds, $item->id);
             $completionRows[$item->id] = [$item->id];
         }
 
-        $elementCount = 0;
         foreach ($this->formData->formElements as $element) {
             $answers = [];
             $notAnsweredYet = $correspondingCompletionsIds;
@@ -70,19 +69,19 @@ class FormCompletionsExport implements FromArray
                             array_push($arrById[$item->form_completion_id], $text);
                         }
                     }
-
+                    
                     foreach ($arrById as $key => $value) {
                         if (in_array($key, $notAnsweredYet)) {
                             if (($thisKey = array_search($key, $notAnsweredYet)) !== false) unset($notAnsweredYet[$thisKey]);
                             array_push($completionRows[$key], implode(";", $value));
                         }
-                        else dd("error 1");
+                        else throw new Exception("Internal sheet creation error (values doesn't match)");
                     }
 
-                    if (count($notAnsweredYet) > 0) dd("error 2", $notAnsweredYet, $answers);
+                    if (count($notAnsweredYet) > 0) throw new Exception("Internal sheet creation error (not all of required select values were filled)");
 
                     $mandatoryPart = "";
-                    if ($inputElement->is_mandatory == true) $mandatoryPart = " (mandatory)";
+                    if ($inputElement->is_mandatory == true) $mandatoryPart = " *";
                     array_push($headerRow, $inputElement->header . $mandatoryPart);
                     continue;
                 }
@@ -93,16 +92,15 @@ class FormCompletionsExport implements FromArray
                         if ($answer->value === false) array_push($completionRows[$answer->form_completion_id], "false");
                         else if ($answer->value === true) array_push($completionRows[$answer->form_completion_id], "true");
                         else array_push($completionRows[$answer->form_completion_id], $answer->value);
-                    } else dd("error 1");
+                    } else throw new Exception("Internal sheet creation error (values doesn't match)");
                 }
 
-                if (count($notAnsweredYet) > 0) dd("error 2", $notAnsweredYet, $answers);
+                if (count($notAnsweredYet) > 0) throw new Exception("Internal sheet creation error (not all of required select values were filled)");
 
                 $mandatoryPart = "";
-                if ($inputElement->is_mandatory == true) $mandatoryPart = " (mandatory)";
+                if ($inputElement->is_mandatory == true) $mandatoryPart = "*";
                 array_push($headerRow, $inputElement->header . $mandatoryPart);
             }
-            $elementCount++;
         }
 
         return [$formName, $headerRow, $completionRows];
