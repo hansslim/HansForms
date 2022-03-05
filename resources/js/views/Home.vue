@@ -74,12 +74,13 @@ export default {
         async getForms() {
             if (this.$store.getters['authenticated']) {
                 try {
-                    const getForms = await Form.getAllForms();
-                    if (getForms && getForms.status === 200) {
-                        this.forms = getForms.data;
-                    } else throw new Error(getForms.status.toString())
+                    await Form.getAllForms().then(res => {
+                        if (res.status === 200) {
+                            this.forms = res.data;
+                        } else throw new Error(res.statusText.toString())
+                    })
                 } catch (e) {
-                    console.log(e);
+                    this.$toasted.error(e)
                 }
             }
 

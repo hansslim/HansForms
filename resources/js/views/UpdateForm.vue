@@ -140,7 +140,7 @@
                     <div class="m-1">
                         <FormulateInput
                             type="submit"
-                            label="Create this form"
+                            label="Update this form"
                             outer-class="m-0"
                         />
                     </div>
