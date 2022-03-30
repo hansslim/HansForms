@@ -62,3 +62,13 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## CZ - Návod ke spuštění aplikace
+
+1. stáhnout data z repozitáře (https://github.com/JanHubeny1/HansForms)
+2. upravit .env soubor ve složce projektu (nutné např. vyplnit údaje o databázi)
+3. spustit příkazový řádek/terminál, ve kterém se přemístit do adresáře projektu z repozitáře
+4. spustit příkaz 'composer install' (stažení balíčků pro backend)
+5. spustit příkaz 'npm install' (stažení balíčků pro frontend)
+5. spustit příkaz 'npm run dev' nebo 'npm run production' (kompilace frontendu)
+6. spustit příkaz 'php artisan serve' (spuštění PHP serveru s aplikací)
