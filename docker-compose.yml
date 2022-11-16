@@ -29,11 +29,10 @@ services:
       - "MAIL_ENCRYPTION=null"
       - "MAIL_FROM_ADDRESS=null"
       - "MAIL_FROM_NAME=HansForms"
-      - "SANCTUM_STATEFUL_DOMAINS=localhost,localhost:8080,127.0.0.1:8080"
+      - "SANCTUM_STATEFUL_DOMAINS=localhost,localhost:8000,127.0.0.1:8000"
       - "SESSION_DRIVER=cookie"
       - "APP_TIMEZONE=Europe/Prague"
       - "SESSION_LIFETIME=14400"
-      # - "MIX_API_BASE_URL=http://localhost:8000/api"
       - "PRIVATE_FORM_BASE_URL=http://localhost:8000"
     depends_on:
       - "postgres"
